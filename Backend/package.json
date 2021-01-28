@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend for TimeKeepers",
+  "main": "Server.js",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "npm": "^7.4.3"
+  },
+  "scripts": {
+    "test": "node Server.js",
+    "start": "node server.js"
+  },
+  "author": "TimeKeepers",
+  "license": "ISC"
+}
