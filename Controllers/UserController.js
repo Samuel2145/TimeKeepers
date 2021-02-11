@@ -1,5 +1,9 @@
 import bcrypt from 'bcrypt'
+import mysql from 'mysql'
+import dotenv from 'dotenv';
 
+const DB_URL = process.env.JAWSDB_MARIA_URL || 'mysql://n9qa33fb24h5ojln:w5ie9n0wkv2mlpvs@ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/zry2wsgus6t4stzn';
+const conn = mysql.createConnection(DB_URL);
 
 export const createUser = (req, res) => {
 
@@ -7,10 +11,28 @@ export const createUser = (req, res) => {
 
         bcrypt.hash(req.body.user.password, salt, function(err, hash) {
 
-            console.log("Data to store")
-            console.log(req.body.user.userName)
-            console.log(hash)
+            if (err){
+                res.status(400).send('Could not hash password')
+                throw err;
+            }
 
+            const userName = req.body.user.userName;
+            const email = req.body.user.email;
+            const phone = req.body.user.phone;
+
+            const insertQ = "INSERT INTO TestUsers (userName, password, email, phoneNo) VALUES (\'"
+                                + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + phone + "\')";
+
+            conn.query(insertQ, function(err, result) {
+
+                if(err){
+                    res.status(400).send('Insertion failed');
+                    throw err;
+                }else{
+                    res.status(200).send('Stored');
+                }
+
+            });
         });
     });
 }
@@ -18,6 +40,31 @@ export const createUser = (req, res) => {
 
 export const userLogin = (req, res) => {
 
+    const userName = req.body.user.userName;
+    const password = req.body.user.password;
 
+    const insertQ = "SELECT password FROM TestUsers WHERE userName=\'" + userName +"\'"
 
+    conn.query(insertQ, function(err, result) {
+
+        if(result.length === 0){
+            res.status(404).send('User does not exist');
+        }else{
+
+            const hashed = result[0].password;
+
+            bcrypt.compare(password,  hashed, (err, same) => {
+
+                if(same){
+
+                    //let token = jwt.sign(toSend, 'shhhhh');
+
+                    //res.cookie('Token', token, {expire: 604800 + Date.now(), httpOnly: true}).status(200);
+                    res.status(200).send("Successfully logged in");
+                }else{
+                    res.status(400).send('Password is incorrect!');
+                }
+            });
+        }
+    });
 }
