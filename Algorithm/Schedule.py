@@ -21,6 +21,7 @@ class Schedule:
     def __init__(self, employees, constraints):
         self.roster = Roster(employees) # this is a map of employee numbers to employees which are intended to be placed into the schedule
         self.placed = {} #this is a set of employee numbers that have already been placed into the schedule
+        self.hours = 0
         self.schedule = {            
             'MONDAY': [],
             'TUESDAY' : [],

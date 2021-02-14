@@ -20,7 +20,7 @@ import Schedule
                     unfilledPenalty = 
                     availPenalty = shift.shiftEnd - shift.shiftStart # the penalty represents how much of a shift is outside of the corresponding employee's availability 
                     for availability in schedule_.roster[shift.employeeID].avails[day]: # here we will check the corresponding employee's availability tuples for that day
-                        availPenalty -= shiftCompare(shift, availability)
+                        availPenalty -= _shiftCompare(shift, availability)
                         if (availPenalty == 0):
                             break
                     softScore -= availPenalty
@@ -28,7 +28,7 @@ import Schedule
             return hardScore, softScore 
 
     # helper method to compare a shift with an availability tuple. returns a number representing how much of that shift is covered by the tuple.
-    def shiftCompare(shift, availability):
+    def _shiftCompare(shift, availability):
         if (shift.shiftEnd < availability[0] or shift.shiftStart > availability[1]):
             return 0 # shift is completely outside of the availability tuple.
         if (shift.shiftEnd < avail[1]):

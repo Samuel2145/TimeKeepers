@@ -18,10 +18,16 @@ def tryToPlaceBasic(currentState, entity, constraints):
         for sLen in constraints.shiftSizes:
             for start in range(constraints.schedStart, constraints.schedEnd-sLen):
                 newShift = createShift(entity.ID,sLen,start)
-                newState = copy.deepcopy(currentState).insertShift(newShift) # create a copy of the currentstate and add the newly generated shift
+                # create a copy of the currentstate and add the newly generated shift.
+                # note: this probably will end up using a lot of memory. 
+                # Hopefully can find a way to only copy certain parts of the schedule
+                newState = copy.deepcopy(currentState).insertShift(newShift) 
                 for i in range(newShift.shiftStart, newShift.shiftEnd):
                     newState.unfilled.discard(i) #remove unfilled spots from set within the new state
+                newState.hours += sLen
                 possibleStates.append(newState) # add another potential state to the list
+    return possibleStates
+
 
              
 
