@@ -17,7 +17,8 @@ def createShift(employeeID, length, start):
     else
         return (Shift(employeeID, start, 48), Shift(employeeID, 0, length - (48 - start)))
 
-#This attempts to place a given entity in a given schedulestate without moving other entities.
+# This attempts to place a given entity in a given schedule state without moving other entities.
+# returns a list of possible states to be run through the scorer
 def tryToPlaceBasic(currentState, entity, constraints):
     possibleStates = []
     for day in currentState.schedule:
