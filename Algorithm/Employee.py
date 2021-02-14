@@ -7,6 +7,7 @@ class Employee:
 
     def __init__(self, ID):
         self.ID = ID
+        self.currentHours = 0
         self.avails = { 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([]),
@@ -18,7 +19,7 @@ class Employee:
             } # a 3d array representing when the user is available
         #each of these will contain an array of pairs
        #each pair represents a block of time the employee is available for. time starts from 0 (12:00AM ) and ends at 48 (11:59PM), incrementing in 30 minute blocks
-       self.currentHours = 0
+       
     
     @property
     def ID(self):
