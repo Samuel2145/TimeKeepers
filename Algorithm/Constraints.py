@@ -9,3 +9,6 @@ class Constraints:
         self.maxDailyHours = maxDailyHours # maximum hours any employee may work per day. May be moved into employee object
         self.schedStart = schedStart # when the workday begins
         self.schedEnd = schedEnd # when the workday ends. startTime to endTime must be filled completely with employees to generate a good schedule.
+
+
+    

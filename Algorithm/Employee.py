@@ -35,7 +35,7 @@ class Employee:
   #TODO: implement a way to ensure time blocks do not intersect. May need to go beyond pairs and make availability blocks into actual objects
     @avails.setter
     def avails(self, avails):
-        self.__avails = avails.
+        self.__avails = avails
 
     @property
     def currentHours(self):

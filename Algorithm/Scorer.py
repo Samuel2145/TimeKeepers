@@ -9,9 +9,27 @@ import Schedule
     def calculateScoreSimple(schedule_):
             score = 0
 
-            # overall complexity: 7 * s * n * a. s = shifts, n = employees, a = availabilities. All variables besides employees should be small, so should be O(n)
-            for employee in placed: # this is where most of the complexity stems from, especially when employee numbers start entering triple digits
-                    for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity
-                        for shift in schedule_.schedule[day]: #this is likely to be a constant from 2-3, so doesn't add much to complexity
-                                for availabilities in employee.avails[day]: #here we will check each availability tuple for a given day
+            for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity
+                for shift in schedule_.schedule[day]: #this is likely to be a constant from 2-3, so doesn't add much to complexity
+                    penalty = shift.shiftEnd - shift.shiftStart # the penalty represents how much of a shift is outside of the corresponding employee's availability 
+                    for availability in schedule_.roster[shift.employeeID].avails[day]: # here we will check the corresponding employee's availability tuples for that day
+                        penalty -= shiftCompare(shift, availability)
+                        if (penalty == 0):
+                            break
 
+    # helper method to compare a shift with an availability tuple. returns a number representing how much of that shift is covered by the tuple.
+    def shiftCompare(shift, availability):
+        if (shift.shiftEnd < availability[0] or shift.shiftStart > availability[1]):
+            return 0 # shift is completely outside of the availability tuple.
+        if (shift.shiftEnd < avail[1]):
+            if(shift.shiftStart < avail[0]):  #case 1, intersect at start of availability tuple. Return length of intersection
+                return shift.shiftEnd - availability[0]
+            else:                             #case 2, shift is completely encompassed by availability. Return full length of shift
+                return shift.shiftEnd - shift.shiftStart
+        else:
+            if(shift.shiftStart > avail [0]): # case 3, shift intersects at end of availability. Return length of intersection
+                return avail[1] - shift.shiftStart
+            else:                             # case 4 availability block completely encompassed by shift. Return length of availability block
+                return avail[1] - avail[0]
+                
+        
