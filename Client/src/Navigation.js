@@ -1,36 +1,57 @@
 import React, { Component } from 'react';
-import {
-  Route,
-  NavLink,
-  HashRouter
-} from "react-router-dom";
-
-
+import { Switch, Route, Link } from 'react-router-dom';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavItem from 'react-bootstrap/NavItem';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
+import Button from 'react-bootstrap/Button';
+import Home from "./Home";
+import Employee from "./Employee";
+import Admin from "./Admin";
+import Calendar from "./Calendar";
+import Login from "./Login";
 
 class Navigation extends Component {
   render() {
-    //array to hold navlink names, doesn't work for default home so we wont keep this for now
-    const sections = ['Home', 'Employee', 'Admin', 'Calendar',];
-    //.map loops through each index of array
-    //return {navLinks}
-    const navLinks = sections.map( section => {
-      return (
-          <li><a href={'#' + section}>{section}</a></li>
-      )
-
-    });
-    return(
-<HashRouter>
-  <nav>
-    <h2 className = "logo" >{this.props.logoTitle}</h2>
-    <ul>
-      <li><NavLink to="/">Home</NavLink></li>
-      <li><NavLink to="/employee">Employee</NavLink></li>
-      <li><NavLink to="/admin">Admin</NavLink></li>
-    </ul>
-  </nav>
-
-</HashRouter>
+    return (
+      <div>
+        <div>
+          <Navbar bg = "primary" variant ="dark">
+            <Navbar.Brand as={Link} to="/" >Schedugator</Navbar.Brand>
+            <Navbar.Collapse>
+              <Nav className="mr-auto">
+                <NavItem eventkey={1} href="/">
+                  <Nav.Link as={Link} to="/" >Home</Nav.Link>
+                </NavItem>
+                <NavItem eventkey={2} href="/employee">
+                  <Nav.Link as={Link} to="/employee" >Employee Portal</Nav.Link>
+                </NavItem>
+                <NavItem eventkey={3} href="/admin">
+                  <Nav.Link as={Link} to="/admin" >Admin Portal</Nav.Link>
+                </NavItem>
+                <NavItem eventkey={4} href="/calendar">
+                  <Nav.Link as={Link} to="/calendar" >Calendar</Nav.Link>
+                </NavItem>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+        </div>
+        <div>
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/employee' component={Login} />
+            <Route exact path='/admin' component={Login} />
+            <Route exact path='/calendar' component={Calendar} />
+            <Route exact path='/login' component={Login} />
+            <Route render={function () {
+              return <p>Not found</p>
+            }} />
+          </Switch>
+        </div>
+      </div>
     );
   }
 }

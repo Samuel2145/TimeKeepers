@@ -4,6 +4,7 @@ import {
   NavLink,
   HashRouter
 } from "react-router-dom";
+import {BrowserRouter} from 'react-router-dom';
 import ReactDOM from 'react-dom';
 //import './index.css';
 //import App from './App';
@@ -14,27 +15,29 @@ import Calendar from './Calendar'
 import Home from "./Home";
 import Employee from "./Employee";
 import Admin from "./Admin";
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
   render(){
     return(
-      <HashRouter>
-        <Navigation logoTitle = "Schedugator" />
-
-        <main> 
-          <Route exact path="/" component={Home} />
-          <Route path="/employee" component={Employee} />
-          <Route path="/admin" component={Admin} />  
-        </main>
-      </HashRouter>
+      <div id="App">
+        <Navigation />
+      </div>
     );
   }
 }
 
 ReactDOM.render(
-  <React.StrictMode>
+  <BrowserRouter>
     <App />
-  </React.StrictMode>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
