@@ -1,4 +1,4 @@
-import Roster
+from Roster import Roster
 # Author: Will Pascuzzi
 
 #shifts are the blocks that make up a schedule
@@ -9,12 +9,12 @@ class Shift:
         self.shiftEnd = shiftEnd
         # may need to create a "day" property. May not if each day is discrete.      
          
-        # creates a shift given a start time, length, and employeeID. May move this to Schedule.py
-        def createShift(employeeID, length, start):
-            if(start + length <= 48) #if this fits within a single day, return a single shift object
-                return Shift(employeeID, start, start + length)
-            else
-                return (Shift(employeeID, start, 48), Shift(employeeID, 0, length - (48 - start)))  
+    # creates a shift given a start time, length, and employeeID. May move this to Schedule.py
+    def createShift(employeeID, length, start):
+        if((start + length) <= 48): # if this fits within a single day, return a single shift object
+            return Shift(employeeID, start, start + length)
+        else:
+            return (Shift(employeeID, start, 48), Shift(employeeID, 0, length - (48 - start)))  
 
 # This represents a given schedule's state. 
 class Schedule:

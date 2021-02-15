@@ -2,7 +2,7 @@ import numpy as np
 # Author: Will Pascuzzi
 #this object will define the constraints set by the employer. These constraints are what the scheduler will seek to satisfy.
 class Constraints:
-    def __init__(self, ID, shiftSizes, numSimultaneous, maxHours, schedStart):
+    def __init__(self, shiftSizes, schedStart, schedEnd, numSimultaneous, maxWeeklyHours, maxDailyHours):
         # Hardest Constraint level. These are built into the stepper.
         self.shiftSizes = shiftSizes # an integer array of shift sizes, in hours. 
         self.schedStart = schedStart # when the workday begins

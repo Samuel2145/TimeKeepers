@@ -1,4 +1,4 @@
-import Schedule
+from Schedule import Schedule 
 import Constraints
 import Scorer
 import Stepper
@@ -12,7 +12,7 @@ import Stepper
     #this will round robin select employees for work. In the future this will be changed to be based off of how many hours an employee can/is expected to work
 def buildSchedule(employees, constraints):
     schedule = Schedule(employees, constraints)   
-    while (schedule.hours < constraints.weeklyHours):
+    while (schedule.hours < constraints.maxWeeklyHours):
         for employee in employees:
             possibleStates = Stepper.tryToPlaceBasic(schedule, employee, constraints)
             schedule = selectStep(possibleStates)
@@ -25,7 +25,8 @@ def selectStep(schedules):
         softScores[state]= Scorer.calculateScoreSimple(state)[1]
     bestHardScore = max(hardScores)
     candidates = hardScores[bestHardScore]
-    finalCandidates = { state: [softScores.get(state) for state in candidates]
-    return max(finalCandidates, key = finalCandidates.get) #returns the candidate with the highest hardscore, and of those with matching hardscores, the highest softscore
+    finalCandidates = { state: [softScores.get(state) for state in candidates]}
+    best = max(finalCandidates, key = finalCandidates.get) 
+    return best #returns the candidate with the highest hardscore, and of those with matching hardscores, the highest softscore
 
     

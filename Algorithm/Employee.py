@@ -43,6 +43,6 @@ class Employee:
         return self.__currentHours
 
     @currentHours.setter
-    def ID(self, currentHours):
+    def currentHours(self, currentHours):
         self.__currentHours = currentHours
   
