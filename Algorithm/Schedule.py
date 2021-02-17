@@ -1,3 +1,5 @@
+import itertools
+from prettytable import PrettyTable
 from Roster import Roster
 # Author: Will Pascuzzi
 
@@ -49,13 +51,38 @@ class Schedule:
                 self.unfilled[day].discard(i) #remove unfilled spots from set within the new state
         self.hours += shift.shiftEnd - shift.shiftStart
 
-    def displaySchedule(self):
-        for day in self.schedule:
-            print(day ,': ')
-            for shift in self.schedule[day]:
-                print ('ID: ', shift.employeeID)
-                print ('start: ', shift.shiftStart)
-                print ('end: ', shift.shiftEnd)
+    def displaySchedule(self):       
+        days = self.schedule.keys()
+        for d in days:
+            print(d, end='  ')
+        items = self.schedule.values()
+        longest = max(len(shifts) for shifts in items)
+        table =   {          
+            'MONDAY': [],
+            'TUESDAY' : [],
+            'WEDNESDAY' : [], 
+            'THURSDAY' : [], 
+            'FRIDAY' : [], 
+            'SATURDAY' : [], 
+            'SUNDAY' : [],
+        }
+        for x in range(longest):
+            for day in days:                
+                if(len(self.schedule[day]) > x):
+                    shift = self.schedule[day][x]                   
+                    shiftText = ('**********' +
+                    '\nID: ' + str(shift.employeeID) +
+                    '\nstart: ' + str(shift.shiftStart) +
+                    '\nend: ' + str(shift.shiftEnd) +
+                    '\n**********\n')    
+                    table[day].append(shiftText)                
+                else:
+                    table[day].append('**********\n\n\n\n**********')
+        pretty = PrettyTable()
+        for key,val in iter(table.items()):
+            pretty.add_column(key, sorted(val))
+        print(pretty)
+
 
 
         #more properies such as "isFilled" and "totalHours" may need to be added.
