@@ -53,8 +53,6 @@ class Schedule:
 
     def displaySchedule(self):       
         days = self.schedule.keys()
-        for d in days:
-            print(d, end='  ')
         items = self.schedule.values()
         longest = max(len(shifts) for shifts in items)
         table =   {          
@@ -82,8 +80,6 @@ class Schedule:
         for key,val in iter(table.items()):
             pretty.add_column(key, sorted(val))
         print(pretty)
-
-
 
         #more properies such as "isFilled" and "totalHours" may need to be added.
 

@@ -10,13 +10,14 @@ def calculateScoreSimple(schedule_):
     # zero represents a perfect score
         hardScore = 0 # represents hard constraints such as ensuring the entire workday is filled with employees & no physical laws are broken.
         softScore = 0 # represents soft constraints such as ensuring employee availabilities are met
-        
+        conflictScore = 0 #Represents whether an employee has intersecting shifts with itself
+
         #hardScore calculator
         for day in schedule_.unfilled:
             hardScore -= (len(schedule_.unfilled[day])) #hardscore represents how many spots have been filled. 0 means all times have been filled.
 
         #softScore calculator
-        for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity
+        for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity            
             for shift in schedule_.schedule[day]: #this is likely to be a constant from 2-3, so doesn't add much to complexity
                 availPenalty = shift.shiftEnd - shift.shiftStart # the penalty represents how much of a shift is outside of the corresponding employee's availability 
                 for availability in schedule_.roster[shift.employeeID].avails[day]: # here we will check the corresponding employee's availability tuples for that day
