@@ -12,7 +12,8 @@ def calculateScoreSimple(schedule_):
         softScore = 0 # represents soft constraints such as ensuring employee availabilities are met
         
         #hardScore calculator
-        hardScore = -(len(schedule_.unfilled)) #hardscore represents how many spots have been filled. 0 means all times have been filled.
+        for day in schedule_.unfilled:
+            hardScore -= (len(schedule_.unfilled[day])) #hardscore represents how many spots have been filled. 0 means all times have been filled.
 
         #softScore calculator
         for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity
@@ -27,12 +28,12 @@ def calculateScoreSimple(schedule_):
         return hardScore, softScore 
 
 # helper method to compare a shift with an availability tuple. returns a number representing how much of that shift is covered by the tuple.
-def _shiftCompare(shift, availability):
-    if (shift.shiftEnd < availability[0] or shift.shiftStart > availability[1]):
+def _shiftCompare(shift, avail):
+    if (shift.shiftEnd < avail[0] or shift.shiftStart > avail[1]):
         return 0 # shift is completely outside of the availability tuple.
     if (shift.shiftEnd < avail[1]):
         if(shift.shiftStart < avail[0]):  #case 1, intersect at start of availability tuple. Return length of intersection
-            return shift.shiftEnd - availability[0]
+            return shift.shiftEnd - avail[0]
         else:                             #case 2, shift is completely encompassed by availability. Return full length of shift
             return shift.shiftEnd - shift.shiftStart
     else:

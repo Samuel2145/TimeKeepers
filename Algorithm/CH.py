@@ -13,19 +13,25 @@ import Stepper
 def buildSchedule(employees, constraints):
     schedule = Schedule(employees, constraints)   
     while (schedule.hours < constraints.maxWeeklyHours):
-        for employee in employees:
-            possibleStates = Stepper.tryToPlaceBasic(schedule, employee, constraints)
+        for employee in schedule.roster:
+            possibleStates = Stepper.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
             schedule = selectStep(possibleStates)
+    return schedule
 
 
 def selectStep(schedules):
-    scores = {}
+    hardScores = {}
+    softScores = {}
     for state in schedules:
-        hardScores[Scorer.calculateScoreSimple(state)[0]].append(state)
-        softScores[state]= Scorer.calculateScoreSimple(state)[1]
+        scores = Scorer.calculateScoreSimple(state)
+        hardScore = scores[0]
+        if hardScore not in hardScores.keys():
+            hardScores[hardScore] = [] #create an empty list of states
+        hardScores[hardScore].append(state)
+        softScores[state] = scores[1]
     bestHardScore = max(hardScores)
     candidates = hardScores[bestHardScore]
-    finalCandidates = { state: [softScores.get(state) for state in candidates]}
+    finalCandidates = { state: [softScores.get(state)] for state in candidates}
     best = max(finalCandidates, key = finalCandidates.get) 
     return best #returns the candidate with the highest hardscore, and of those with matching hardscores, the highest softscore
 

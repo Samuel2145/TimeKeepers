@@ -11,6 +11,7 @@ import Employee
 import Constraints
 import numpy as np
 
+
 constraints1 = Constraints.Constraints(np.array([5,16]), 10, 35, 1, 40, 16)
 
 e1 = Employee.Employee(89345)
@@ -67,4 +68,6 @@ e5.avails = {
 
 roster1 = {89345: e1, 48189: e2, 90135: e3, 98413: e4, 78876: e5}
 
-buildSchedule(roster1, constraints1)
+sched = buildSchedule(roster1, constraints1)
+
+sched.displaySchedule()
