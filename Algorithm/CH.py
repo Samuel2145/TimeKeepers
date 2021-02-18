@@ -15,24 +15,49 @@ def buildSchedule(employees, constraints):
     while (schedule.hours < constraints.maxWeeklyHours):
         for employee in schedule.roster:
             possibleStates = Stepper.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
-            schedule = selectStep(possibleStates)
+            schedule = selectStepSimple(possibleStates)
+    hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
+    print("HardScore: ", hs)
+    print("medScore: ", ms)
+    print("softScore: ", ss)
     return schedule
 
-
-def selectStep(schedules):
+#selects the most optimal step 
+# selects the states with the highest hardScore, then of those highest medScore, then highest softScore
+def selectStepSimple(schedules):
     hardScores = {}
+    medScores = {}
     softScores = {}
     for state in schedules:
-        scores = Scorer.calculateScoreSimple(state)
-        hardScore = scores[0]
-        if hardScore not in hardScores.keys():
-            hardScores[hardScore] = [] #create an empty list of states
-        hardScores[hardScore].append(state)
-        softScores[state] = scores[1]
-    bestHardScore = max(hardScores)
-    candidates = hardScores[bestHardScore]
-    finalCandidates = { state: [softScores.get(state)] for state in candidates}
-    best = max(finalCandidates, key = finalCandidates.get) 
-    return best #returns the candidate with the highest hardscore, and of those with matching hardscores, the highest softscore
+        # Every hardScore, medScore, and softScore is stored, even though a smaller number of the latter 2 will be utilized
+        # This avoids having to recalculate the scores with the scorer method
+        # May change this to only calculate the scores of the candidates when those scores are needed.
+        scores = Scorer.calculateScoreSimple(state) 
+        HS = scores[0]
+        MS = scores[1]
+        SS = scores[2]
+        if HS not in hardScores.keys():
+            hardScores[HS] = set() #create an empty set of states
+        hardScores[HS].add(state)
+        medScores[state] = MS 
+        softScores[state] = SS 
 
+    bestHS = max(hardScores)
+    #gets the set of states with the maximum hardScore
+    candidates_HS = hardScores[bestHS]
+
+    #shrinks the dict of medScore states to only include those with the above highest hardScore
+    candidates_MS = { state: [medScores.get(state)] for state in candidates_HS}   
+
+    #prunes all states that don't have the highest medScore
+    bestMS = max(candidates_MS.values())     
+    candidates_MS2 = {key:val for key, val in candidates_MS.items() if val == bestMS}            
+
+    #gets the states with the maximum medScore
+    candidates_SS = {state: [softScores.get(state)] for state in candidates_MS2}
+
+    #gets the state with the highest softscore
+    bestState = max(candidates_SS, key = candidates_SS.get)         
+
+    return bestState #returns the candidate that maximizes its hardscore, medscore, and softscore in that order.
     

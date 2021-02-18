@@ -14,7 +14,7 @@ from Employee import Employee
 # This attempts to place a given entity in a given schedule state without moving other entities.
 # returns a list of possible states to be run through the scorer
 def tryToPlaceBasic(currentState : Schedule, entity: Employee, constraints):
-    possibleStates = []
+    possibleStates = set()
     for day in currentState.schedule:
         for sLen in constraints.shiftSizes:
             for start in range(constraints.schedStart, constraints.schedEnd-sLen):
@@ -23,9 +23,8 @@ def tryToPlaceBasic(currentState : Schedule, entity: Employee, constraints):
                 # note: this probably will end up using a lot of memory. 
                 # Hopefully can find a way to only copy certain parts of the schedule
                 newState = copy.deepcopy(currentState)
-                newState.insertShift(newShift, day) 
-                
-                possibleStates.append(newState) # add another potential state to the list
+                newState.insertShift(newShift, day)                 
+                possibleStates.add(newState) # add another potential state to the list
     return possibleStates
 
 

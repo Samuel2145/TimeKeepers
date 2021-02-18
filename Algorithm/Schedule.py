@@ -1,6 +1,5 @@
 import itertools
 from prettytable import PrettyTable
-from Roster import Roster
 # Author: Will Pascuzzi
 
 #shifts are the blocks that make up a schedule
@@ -21,8 +20,10 @@ class Shift:
 # This represents a given schedule's state. 
 class Schedule:
     def __init__(self, employees, constraints):
-        self.roster = employees # this is a map of employee numbers to employees which are intended to be placed into the schedule
-        self.placed = {} #this is a set of employee numbers that have already been placed into the schedule
+        # A dict of employee numbers mapped to employees who may be placed into the schedule
+        self.roster = employees 
+        #A dict of employee numbers mapped to any shifts they currently have in the schedule.
+        self.employeeShifts = {ID : [] for ID in employees} 
         self.hours = 0
         self.schedule = {            
             'MONDAY': [],
@@ -33,6 +34,9 @@ class Schedule:
             'SATURDAY' : [], 
             'SUNDAY' : [],
         } # A dict containing lists of shifts
+
+        # a set of empty times. This ranges from the start of the schedule to the end
+        #TODO: make this multidimensional; Certain times may require multiple employees
         self.unfilled = {
             'MONDAY': set(range(constraints.schedStart, constraints.schedEnd)),
             'TUESDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
@@ -40,16 +44,24 @@ class Schedule:
             'THURSDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
             'FRIDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
             'SATURDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
-            'SUNDAY' : set(range(constraints.schedStart, constraints.schedEnd)),# a set of empty times. This ranges from the start of the schedule to the end
+            'SUNDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
         }
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
 
     def insertShift(self, shift, day):
+
         self.schedule[day].append(shift)
-        for i in range(shift.shiftStart, shift.shiftEnd):
-                self.unfilled[day].discard(i) #remove unfilled spots from set within the new state
+         # places tuples of shift start time and shift end time into the employee shift dict
+        self.employeeShifts[shift.employeeID].append((shift.shiftStart,shift.shiftEnd))
+        
         self.hours += shift.shiftEnd - shift.shiftStart
+
+        #remove unfilled spots from set within the new state
+        for i in range(shift.shiftStart, shift.shiftEnd):
+            self.unfilled[day].discard(i) 
+                    
+       
 
     def displaySchedule(self):       
         days = self.schedule.keys()

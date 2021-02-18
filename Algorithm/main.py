@@ -12,7 +12,7 @@ import Constraints
 import numpy as np
 
 
-constraints1 = Constraints.Constraints(np.array([5,16]), 10, 35, 1, 140, 16)
+constraints1 = Constraints.Constraints(np.array([5,16]), 10, 35, 1, 100, 16)
 
 e1 = Employee.Employee(89345)
 e2 = Employee.Employee(48189)
