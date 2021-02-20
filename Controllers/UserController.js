@@ -18,10 +18,13 @@ export const createUser = (req, res) => {
 
             const userName = req.body.user.userName;
             const email = req.body.user.email;
-            const phone = req.body.user.phone;
 
-            const insertQ = "INSERT INTO TestUsers (userName, password, email, phoneNo) VALUES (\'"
-                                + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + phone + "\')";
+            ///Need to talk to Alec about database design and how we want to put data in
+            //const insertQ = "INSERT INTO employee (username, password, name, email, phoneNo, address) VALUES (\'"
+            //                    + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + phone + "\')";
+
+            const insertQ = "INSERT INTO employee (username, password, email) VALUES (\'"
+                                + userName + "\', \'" + hash + "\', \'" + email + "\')";
 
             conn.query(insertQ, function(err, result) {
 
@@ -40,10 +43,10 @@ export const createUser = (req, res) => {
 
 export const userLogin = (req, res) => {
 
-    const userName = req.body.user.userName;
+    const email = req.body.user.email;
     const password = req.body.user.password;
 
-    const insertQ = "SELECT password FROM TestUsers WHERE userName=\'" + userName +"\'"
+    const insertQ = "SELECT password FROM employee WHERE email=\'" + email +"\'"
 
     conn.query(insertQ, function(err, result) {
 
