@@ -1,4 +1,5 @@
 import itertools
+from collections import OrderedDict
 from prettytable import PrettyTable
 # Author: Will Pascuzzi
 
@@ -21,11 +22,11 @@ class Shift:
 class Schedule:
     def __init__(self, employees, constraints):
         # A dict of employee numbers mapped to employees who may be placed into the schedule
-        self.roster = employees 
+        self.roster = OrderedDict(employees)
         #A dict of employee numbers mapped to any shifts they currently have in the schedule.
-        self.employeeShifts = {ID : [] for ID in employees} 
+        self.employeeShifts = OrderedDict({ID : [] for ID in employees})
         self.hours = 0
-        self.schedule = {            
+        self.schedule = OrderedDict({            
             'MONDAY': [],
             'TUESDAY' : [],
             'WEDNESDAY' : [], 
@@ -33,19 +34,19 @@ class Schedule:
             'FRIDAY' : [], 
             'SATURDAY' : [], 
             'SUNDAY' : [],
-        } # A dict containing lists of shifts
+        }) # A dict containing lists of shifts
 
         # a set of empty times. This ranges from the start of the schedule to the end
         #TODO: make this multidimensional; Certain times may require multiple employees
-        self.unfilled = {
+        self.unfilled = OrderedDict({
             'MONDAY': set(range(constraints.schedStart, constraints.schedEnd)),
             'TUESDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-            'WEDNESDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
-            'THURSDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
-            'FRIDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
-            'SATURDAY' : set(range(constraints.schedStart, constraints.schedEnd)), 
+            'WEDNESDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
+            'THURSDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
+            'FRIDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
+            'SATURDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
             'SUNDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-        }
+        })
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
 

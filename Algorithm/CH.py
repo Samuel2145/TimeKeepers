@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from Schedule import Schedule 
 import Constraints
 import Scorer
@@ -11,23 +12,40 @@ import Stepper
 
     #this will round robin select employees for work. In the future this will be changed to be based off of how many hours an employee can/is expected to work
 def buildSchedule(employees, constraints):
+    iterations = 0
     schedule = Schedule(employees, constraints)   
+  #  hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
     while (schedule.hours < constraints.maxWeeklyHours):
+    #while (ms < 0): <-- don't do this
+    #while (hs == 0):
         for employee in schedule.roster:
             possibleStates = Stepper.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
-            schedule = selectStepSimple(possibleStates)
-    hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
+            schedule = selectStepFull(possibleStates)
+           # hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
+           # print("HardScore: ", hs)
+           # print("medScore: ", ms)
+           # print("softScore: ", ss, "\n")
+            iterations += 1
+            #schedule.displaySchedule()
+
+    hs, ms, ss = Scorer.calculateScoreSimple(schedule)     
     print("HardScore: ", hs)
     print("medScore: ", ms)
     print("softScore: ", ss)
+    print("iterations ", iterations)
+    #FIXME: the schedule is NOT deterministic. Most likely because regular dicts are used instead of OrderedDict
     return schedule
+
+#selects the step with the highes score from an ordered dict of states mapped to their scores
+def selectStepSimple(schedules):
+    pass
 
 #selects the most optimal step 
 # selects the states with the highest hardScore, then of those highest medScore, then highest softScore
-def selectStepSimple(schedules):
-    hardScores = {}
-    medScores = {}
-    softScores = {}
+def selectStepFull(schedules):
+    hardScores = OrderedDict()
+    medScores = OrderedDict()
+    softScores = OrderedDict()
     for state in schedules:
         # Every hardScore, medScore, and softScore is stored, even though a smaller number of the latter 2 will be utilized
         # This avoids having to recalculate the scores with the scorer method
@@ -37,24 +55,31 @@ def selectStepSimple(schedules):
         MS = scores[1]
         SS = scores[2]
         if HS not in hardScores.keys():
-            hardScores[HS] = set() #create an empty set of states
-        hardScores[HS].add(state)
+            hardScores[HS] = [] #create an empty list of states
+        hardScores[HS].append(state)
         medScores[state] = MS 
         softScores[state] = SS 
 
     bestHS = max(hardScores)
-    #gets the set of states with the maximum hardScore
+    #gets the list of states with the maximum hardScore
     candidates_HS = hardScores[bestHS]
 
     #shrinks the dict of medScore states to only include those with the above highest hardScore
-    candidates_MS = { state: [medScores.get(state)] for state in candidates_HS}   
+    candidates_MS = OrderedDict()
+    for state in candidates_HS:
+        candidates_MS[state] = medScores.get(state)
 
     #prunes all states that don't have the highest medScore
     bestMS = max(candidates_MS.values())     
-    candidates_MS2 = {key:val for key, val in candidates_MS.items() if val == bestMS}            
+    candidates_MS2 = OrderedDict()
+    for key, val in candidates_MS.items():
+        if val == bestMS:
+            candidates_MS2[key] = val           
 
     #gets the states with the maximum medScore
-    candidates_SS = {state: [softScores.get(state)] for state in candidates_MS2}
+    candidates_SS = OrderedDict()
+    for state in candidates_MS2:
+        candidates_SS[state] = softScores.get(state)
 
     #gets the state with the highest softscore
     bestState = max(candidates_SS, key = candidates_SS.get)         
