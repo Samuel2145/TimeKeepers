@@ -36,7 +36,7 @@ def buildSchedule(employees, constraints):
     #FIXME: the schedule is NOT deterministic. Most likely because regular dicts are used instead of OrderedDict
     return schedule
 
-#selects the step with the highes score from an ordered dict of states mapped to their scores
+#selects the step with the highes score from an ordered dict of states mapped to their scores. Each state is mapped to one score only
 def selectStepSimple(schedules):
     pass
 
