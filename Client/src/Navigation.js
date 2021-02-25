@@ -13,6 +13,7 @@ import Employee from "./Employee";
 import Admin from "./Admin";
 import Calendar from "./Calendar";
 import Login from "./Login";
+import SignUp from "./SignUp";
 
 class Navigation extends Component {
   render() {
@@ -35,6 +36,9 @@ class Navigation extends Component {
                 <NavItem eventkey={4} href="/calendar">
                   <Nav.Link as={Link} to="/calendar" >Calendar</Nav.Link>
                 </NavItem>
+                <NavItem eventkey={5} href="/signup">
+                  <Nav.Link as={Link} to="/signup" >Create Account</Nav.Link>
+                </NavItem>
               </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -46,6 +50,7 @@ class Navigation extends Component {
             <Route exact path='/admin' component={Login} />
             <Route exact path='/calendar' component={Calendar} />
             <Route exact path='/login' component={Login} />
+            <Route exact path='/signup' component={SignUp} />
             <Route render={function () {
               return <p>Not found</p>
             }} />
