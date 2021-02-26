@@ -2,7 +2,7 @@ from collections import OrderedDict
 from Schedule import Schedule 
 import Constraints
 import Scorer
-import Stepper
+import MoveSelector
 # Author: Will Pascuzzi
 # The "construction heuristic" for the scheduling process is a greedy algorithm that
 # seeks to place each element in its most optimal position as it iterates through them
@@ -19,7 +19,7 @@ def buildSchedule(employees, constraints):
     #while (ms < 0): <-- don't do this
     #while (hs == 0):
         for employee in schedule.roster:
-            possibleStates = Stepper.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
+            possibleStates = MoveSelector.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
             schedule = selectStepFull(possibleStates)
            # hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
            # print("HardScore: ", hs)

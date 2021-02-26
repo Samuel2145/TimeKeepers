@@ -3,26 +3,13 @@ from collections import OrderedDict
 from prettytable import PrettyTable
 # Author: Will Pascuzzi
 
-#shifts are the blocks that make up a schedule
-class Shift:
-    def __init__(self, employeeID, shiftStart, shiftEnd):
-        self.employeeID = employeeID # this represents who the shift belongs to
-        self.shiftStart = shiftStart
-        self.shiftEnd = shiftEnd
-        # may need to create a "day" property. May not if each day is discrete.      
-         
-    # creates a shift given a start time, length, and employeeID. May move this to Schedule.py
-    def createShift(employeeID, length, start):
-        if((start + length) <= 48): # if this fits within a single day, return a single shift object
-            return Shift(employeeID, start, start + length)
-        else:
-            return (Shift(employeeID, start, 48), Shift(employeeID, 0, length - (48 - start)))  
+
 
 # This represents a given schedule's state. 
 class Schedule:
     def __init__(self, employees, constraints):
         # A dict of employee numbers mapped to employees who may be placed into the schedule
-        self.roster = OrderedDict(employees)
+        self.roster = OrderedDict(employees) #TODO: remove employees from the roster when their maximum hours are spent
         #A dict of employee numbers mapped to any shifts they currently have in the schedule.
         self.employeeShifts = OrderedDict({ID : [] for ID in employees})
         self.hours = 0
@@ -37,16 +24,17 @@ class Schedule:
         }) # A dict containing lists of shifts
 
         # a set of empty times. This ranges from the start of the schedule to the end
-        #TODO: make this multidimensional; Certain times may require multiple employees
-        self.unfilled = OrderedDict({
-            'MONDAY': set(range(constraints.schedStart, constraints.schedEnd)),
-            'TUESDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-            'WEDNESDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-            'THURSDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-            'FRIDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-            'SATURDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-            'SUNDAY' : set(range(constraints.schedStart, constraints.schedEnd)),
-        })
+        # each hour is mapped to how many employees must work at that time. Default is each hour requires 1 employee
+        # this may eventually be modified further to account for employees with different skillsets
+        self.unfilled = {
+            'MONDAY': OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'TUESDAY' : OrderedDict(rhour : 1 for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'WEDNESDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
+            'THURSDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
+            'FRIDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'SATURDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
+            'SUNDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
+        }
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
 
@@ -56,11 +44,12 @@ class Schedule:
          # places tuples of shift start time and shift end time into the employee shift dict
         self.employeeShifts[shift.employeeID].append((shift.shiftStart,shift.shiftEnd))
         
-        self.hours += shift.shiftEnd - shift.shiftStart
-
+        self.hours += shift.shiftLength
         #remove unfilled spots from set within the new state
         for i in range(shift.shiftStart, shift.shiftEnd):
-            self.unfilled[day].discard(i) 
+            self.unfilled[day][i] -= 1
+            if self.unfilled[day][i] == 0:
+                del self.unfilled[day][i]
                     
        
 

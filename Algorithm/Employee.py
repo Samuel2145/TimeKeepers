@@ -1,6 +1,7 @@
 import numpy as np
  # Author: Will Pascuzzi
- # This class serves as a template for employee objects which are the planning entity used for the scheduling algorithm.
+ # This class serves as a template for employee objects. Employees are the main planning variable involved in a shift. 
+ # Each employee has other data to ensure allow solutions that involve it to be scored.
  # Each employee object will be filled with data from the MariaDB database.
  
 class Employee:
