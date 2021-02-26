@@ -33,16 +33,42 @@ def tryToPlaceBasic(currentState : Schedule, constraints):
 #This method will change the start and end time of a shift within a particular day, sliding the shift up or down
 def slideShift(currentState : Schedule, day, shiftIndex):
     possibleStates = []
-    for start in range(currentState.schedStart, currentState.schedEnd):        
-        if start == currentState.schedule[day][shiftIndex].shiftStart: #don't create an identical state
+    for start in range(currentState.schedStart, currentState.schedEnd): 
+        
+        shift = currentState.schedule[day][shiftIndex]
+        end = start + shift.shiftLength
+        if start == shift.shiftStart: #don't create an identical state
             continue
-        if start + currentState.schedule[day][shiftIndex].shiftLength > currentState.schedEnd: #don't create a state past the end of the schedule
+        if end > currentState.schedEnd: #don't create a state past the end of the schedule
             break
-        #move the shift
+
+        #copy the state
         newState = copy.deepcopy(currentState)
-        shift = newState.schedule[day][shiftIndex]
-        shift.shiftStart = start
-        shift.shiftEnd = start + shift.shiftLength
+
+        #change unfilled dict
+        #if shift is being moved earlier in the day
+        if(shift.shiftStart > start):
+            for hour in range(start, shift.shiftStart):
+                newState.unfilled[day][hour] -= 1 
+            for hour in range(end, shift.shiftEnd):
+                newState.unfilled[day][hour] += 1 
+        #if shift is being moved later in the day
+        else:
+            for hour in range(shift.shiftStart, start):
+                newState.unfilled[day][hour] += 1 
+            for hour in range(shift.shiftEnd, end): 
+                newState.unfilled[day][hour] -= 1 
+
+        #change the employeeShifts tuple
+        for index, item in enumerate(newState.employeeShifts[shift.employeeID]):
+            if item[0] == shift.shiftStart and item[1] == shift.shiftEnd:
+                newState.employeeShifts[shift.employeeID][index] = (start,end)
+
+        #move the shift                 
+        newState.schedule[day][shiftIndex].shiftStart = start
+        newState.schedule[day][shiftIndex].shiftEnd = end       
+
+        #add this state to the list of possible states
         possibleStates.append(newState)
     return possibleStates
 

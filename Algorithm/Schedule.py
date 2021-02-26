@@ -10,7 +10,7 @@ class Schedule:
     def __init__(self, employees, constraints):
         # employeeID: employeeObject
         self.roster = OrderedDict(employees) #TODO: remove employees from the roster when their maximum hours are spent
-        #A dict of employee numbers mapped to any shifts they currently have in the schedule.
+        #A dict of employee numbers mapped to any shifts they currently have in the schedule. Currently needed to calc hardscore
         self.employeeShifts = OrderedDict({ID : [] for ID in employees})
         self.hours = 0
         self.schedStart = constraints.schedStart
@@ -28,6 +28,7 @@ class Schedule:
         # a set of empty times. This ranges from the start of the schedule to the end
         # each hour is mapped to how many employees must work at that time.
         # this may eventually be modified further to account for employees with different skillsets
+        #TODO: change this to a numpy array to allow elementwise operations
         self.unfilled = {
             'MONDAY': OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
             'TUESDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
@@ -41,7 +42,6 @@ class Schedule:
 
 
     def insertShift(self, shift, day):
-
         self.schedule[day].append(shift)
          # places tuples of shift start time and shift end time into the employee shift dict
         self.employeeShifts[shift.employeeID].append((shift.shiftStart,shift.shiftEnd))
@@ -49,16 +49,27 @@ class Schedule:
         self.hours += shift.shiftLength
         #remove unfilled spots from set within the new state
         for i in range(shift.shiftStart, shift.shiftEnd):
-            if i in self.unfilled[day]:
                 self.unfilled[day][i] -= 1
-                if self.unfilled[day][i] == 0:
-                    del self.unfilled[day][i]
+
+#FIXME: doesn't seem to work
+    def removeShift(self, shiftIndex, day):
+
+        shift = self.schedule[day][shiftIndex]
+        #find this shift in employeeShifts and remove it.        
+        for index, item in enumerate(self.employeeShifts[shift.employeeID]):
+            if item[0] == shift.shiftStart and item[1] == shift.shiftEnd:
+                del self.employeeShifts[shift.employeeID][index]
+                break
+        
+        self.hours -= shift.shiftLength
+        for i in range(shift.shiftStart, shift.shiftEnd):
+                self.unfilled[day][i] += 1
                     
        
 
     def displaySchedule(self):  
 
-        
+
         print("Schedule start: ", self.schedStart)     
         print("Schedule end: ", self.schedEnd)     
         days = self.schedule.keys()

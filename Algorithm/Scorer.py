@@ -100,7 +100,7 @@ def _medScoreCalcSimple(unfilled):
     medScore = 0
     for day in unfilled:
         for hour in unfilled[day]:
-            medScore -= unfilled[day][hour]
+            medScore -= abs(unfilled[day][hour])
     return medScore
 
 # soft score represents soft constraints such as ensuring employee availabilities and other requests are met

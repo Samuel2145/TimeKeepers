@@ -22,24 +22,20 @@ def localSearch(schedule):
     return schedule
 
 #second parameter is which scoreType this method should attempt maximize in the schedule
-def selectState(states, scoreType, oldScores):
-    bestState = states[0]
-    for state in states:
+def selectState(states, scoreType, bestState):
+    it = 0
+    oldScores = Scorer.calculateScoreSimple(bestState)
+    for state in states:    
         HS, MS, SS =  Scorer.calculateScoreSimple(state)
         #algorithm should never sacrifice a harder score tier's score to improve a higher score tier
-        if scoreType == 0:
-            if HS > oldScores[0]:
+        #FIXME: mediumscore maximization doesn't work currently because the unfilled dict is not updated
+        if ((scoreType == 0 and HS > oldScores[0])
+        or (scoreType == 1 and HS >= oldScores[0] and MS > oldScores[1])
+        or (scoreType == 2 and HS >= oldScores[0] and MS >= oldScores[1] and SS > oldScores[2])): 
                 bestState = state
                 oldScores = HS,MS,SS
-        elif scoreType == 1:
-            if HS >= oldScores[0] and MS > oldScores[1]:
-                bestState = state
-                oldScores = HS,MS,SS
-        elif scoreType == 2:
-            if HS >= oldScores[0] and MS >= oldScores[1] and SS > oldScores[2]:
-                bestState = state
-                oldScores = HS,MS,SS        
-    return bestState
+        it +=1
+    return bestState, it
 
 
 def slideShifts(currentState, scoreType):
@@ -50,8 +46,7 @@ def slideShifts(currentState, scoreType):
     for day in days:
         shifts = len(bestState.schedule[day])        
         for shift in range(shifts):
-            oldScores = Scorer.calculateScoreSimple(bestState)
-            states = MoveSelector.slideShift(bestState, day, shift)
-            bestState = selectState(states, scoreType, oldScores)
-            itr += 1
+            states = MoveSelector.slideShift(bestState, day, shift) #find the best spot to slide it to
+            bestState, it = selectState(states, scoreType, bestState)
+            itr += it
     return bestState, itr

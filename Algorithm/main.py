@@ -15,9 +15,9 @@ import numpy as np
 
 schedStart = 10
 schedEnd = 35
-shiftLengths = np.array([5, 10, 16])
+shiftLengths = np.array([5, 16])
 
-constraints1 = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7, 16)
+constraints1 = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
 
 e1 = Employee.Employee(89345)
 e2 = Employee.Employee(48189)
