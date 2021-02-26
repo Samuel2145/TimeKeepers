@@ -27,10 +27,10 @@ class Navigation extends Component {
                   <Nav.Link as={Link} to="/" >Home</Nav.Link>
                 </NavItem>
                 <NavItem eventkey={2} href="/employee">
-                  <Nav.Link as={Link} to="/employee" >Employee Portal</Nav.Link>
+                  <Nav.Link as={Link} to="/login" >Employee Portal</Nav.Link>
                 </NavItem>
                 <NavItem eventkey={3} href="/admin">
-                  <Nav.Link as={Link} to="/admin" >Admin Portal</Nav.Link>
+                  <Nav.Link as={Link} to="/login" >Admin Portal</Nav.Link>
                 </NavItem>
                 <NavItem eventkey={4} href="/calendar">
                   <Nav.Link as={Link} to="/calendar" >Calendar</Nav.Link>
@@ -43,7 +43,7 @@ class Navigation extends Component {
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/employee' component={Login} />
-            <Route exact path='/admin' component={Login} />
+            <Route exact path='/admin' component={Admin} />
             <Route exact path='/calendar' component={Calendar} />
             <Route exact path='/login' component={Login} />
             <Route render={function () {

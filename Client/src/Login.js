@@ -19,6 +19,9 @@ class Login extends Component {
         this.loginHandler = this.loginHandler.bind(this)
     }
 
+    //sample user and pass    
+    //mariaP@dummy.com
+    //dummy5
     loginHandler(e){
         e.preventDefault();
 
@@ -29,6 +32,7 @@ class Login extends Component {
 
         axios.post("/user/userLogin", {user}).then( (res) => {
             console.log(res.data)
+            window.location.href = '/admin';
         });
 
     }
