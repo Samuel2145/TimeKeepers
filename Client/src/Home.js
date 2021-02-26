@@ -6,7 +6,15 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import NavItem from 'react-bootstrap/NavItem';
+import Nav from 'react-bootstrap/Nav';
 import CardColumns from 'react-bootstrap/CardColumns';
+import Employee from "./Employee";
+import Admin from "./Admin";
+import Calendar from "./Calendar";
+import Login from "./Login";
+import { Switch, Route, Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap'
+
 
 import bigthink from './img/bigthink.png';
 
@@ -21,30 +29,31 @@ class Home extends Component {
       <Container fluid>
         <Row className="justify-content-md-end">
           <Col>
-       <Card style={{ width: '18rem' } }>
-       <Card.Img variant="top" src={bigthink} />
+            <Card style={{ width: '30rem' } }>
+        <Card.Img variant="top" src={bigthink} />
         <Card.Body>
         <Card.Title>Employee Login</Card.Title>
         <Card.Text>
           Change your preferences or check your schedule.
         </Card.Text>
-        <NavItem eventkey={1} href="/login">
-        <Button variant="primary">Login</Button>
-        </NavItem>
-        
+        <LinkContainer to="/employee">
+          <Button>Login</Button>
+        </LinkContainer>
       </Card.Body>
     </Card>
     </Col>
 
       <Col>
-    <Card style={{ width: '18rem' }}>
+    <Card style={{ width: '30rem' }}>
     <Card.Img variant="top" src={bigthink} />
         <Card.Body>
         <Card.Title>Admin Login</Card.Title>
         <Card.Text>
           Check preferences, and generate your schedule.
         </Card.Text>
-        <Button variant="primary">Login</Button>
+        <LinkContainer to="/admin">
+          <Button>Login</Button>
+        </LinkContainer>
       </Card.Body>
     </Card>
 

@@ -1,11 +1,12 @@
 import logo from './logo.svg';
+import gatoricon from './img/gatoricon';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={gatoricon} className="App-logo" alt="logo" />
         <p>
           Schedugator.
         </p>
