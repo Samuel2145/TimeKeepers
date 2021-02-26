@@ -7,6 +7,7 @@
 # 5. Fix bugs
 
 from CH import buildSchedule
+from LocalSearch import localSearch
 from collections import OrderedDict
 import Employee
 import Constraints
@@ -14,7 +15,7 @@ import numpy as np
 
 schedStart = 10
 schedEnd = 35
-shiftLengths = np.array([5])
+shiftLengths = np.array([5, 10, 16])
 
 constraints1 = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7, 16)
 
@@ -73,5 +74,8 @@ e5.avails = OrderedDict({
 roster1 = OrderedDict({89345: e1, 48189: e2, 90135: e3, 98413: e4, 78876: e5})
 
 sched = buildSchedule(roster1, constraints1)
+sched.displaySchedule()
+print("")
+sched = localSearch(sched)
 
 sched.displaySchedule()

@@ -13,6 +13,8 @@ class Schedule:
         #A dict of employee numbers mapped to any shifts they currently have in the schedule.
         self.employeeShifts = OrderedDict({ID : [] for ID in employees})
         self.hours = 0
+        self.schedStart = constraints.schedStart
+        self.schedEnd = constraints.schedEnd
         self.schedule = OrderedDict({            
             'MONDAY': [],
             'TUESDAY' : [],
@@ -24,16 +26,16 @@ class Schedule:
         }) # A dict containing lists of shifts
 
         # a set of empty times. This ranges from the start of the schedule to the end
-        # each hour is mapped to how many employees must work at that time. Default is each hour requires 1 employee
+        # each hour is mapped to how many employees must work at that time.
         # this may eventually be modified further to account for employees with different skillsets
         self.unfilled = {
-            'MONDAY': OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'TUESDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'WEDNESDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'THURSDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'FRIDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'SATURDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'SUNDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'MONDAY': OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
+            'TUESDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
+            'WEDNESDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
+            'THURSDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
+            'FRIDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
+            'SATURDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
+            'SUNDAY' : OrderedDict((hour, constraints.numSimultaneous) for hour in range(self.schedStart, self.schedEnd)),
         }
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
@@ -54,7 +56,11 @@ class Schedule:
                     
        
 
-    def displaySchedule(self):       
+    def displaySchedule(self):  
+
+        
+        print("Schedule start: ", self.schedStart)     
+        print("Schedule end: ", self.schedEnd)     
         days = self.schedule.keys()
         items = self.schedule.values()
         longest = max(len(shifts) for shifts in items)

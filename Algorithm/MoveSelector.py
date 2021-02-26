@@ -15,11 +15,13 @@ from Employee import Employee
 # returns a list of possible states to be run through the scorer
 def tryToPlaceBasic(currentState : Schedule, constraints):
     possibleStates = []
-    for entity in currentState.roster.values(): #TODO: remove employees from the roster when their maximum hours are spent
+    for employee in currentState.roster.values(): #TODO: remove employees from the roster when their maximum hours are spent
         for day in currentState.schedule:
             for sLen in constraints.shiftSizes:
                 for start in currentState.unfilled[day]: #start times will only involved those that are unfilled
-                    newShift = Shift.createShift(entity.ID, start, sLen, day)
+                    if start + sLen > constraints.schedEnd:
+                        break
+                    newShift = Shift.createShift(employee.ID, start, sLen, day)
                     # create a copy of the currentstate and add the newly generated shift.
                     # note: this probably will end up using a lot of memory. 
                     # Hopefully can find a way to only copy certain parts of the schedule
@@ -28,6 +30,22 @@ def tryToPlaceBasic(currentState : Schedule, constraints):
                     possibleStates.append(newState) # add another potential state to the list
     return possibleStates
 
+#This method will change the start and end time of a shift within a particular day, sliding the shift up or down
+def slideShift(currentState : Schedule, day, shiftIndex):
+    possibleStates = []
+    for start in range(currentState.schedStart, currentState.schedEnd):        
+        if start == currentState.schedule[day][shiftIndex].shiftStart: #don't create an identical state
+            continue
+        if start + currentState.schedule[day][shiftIndex].shiftLength > currentState.schedEnd: #don't create a state past the end of the schedule
+            break
+        #move the shift
+        newState = copy.deepcopy(currentState)
+        shift = newState.schedule[day][shiftIndex]
+        shift.shiftStart = start
+        shift.shiftEnd = start + shift.shiftLength
+        possibleStates.append(newState)
+    return possibleStates
 
-             
-
+#this method will change who
+def reassignShift(currentState : Schedule, constraints, shift):
+    pass

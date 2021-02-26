@@ -1,3 +1,4 @@
+# Author: Will Pascuzzi
 #shifts are the planning entities that make up a schedule
 class Shift:
     def __init__(self, employeeID, shiftStart, shiftLength, day):
