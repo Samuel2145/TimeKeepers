@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 # This represents a given schedule's state. 
 class Schedule:
     def __init__(self, employees, constraints):
-        # A dict of employee numbers mapped to employees who may be placed into the schedule
+        # employeeID: employeeObject
         self.roster = OrderedDict(employees) #TODO: remove employees from the roster when their maximum hours are spent
         #A dict of employee numbers mapped to any shifts they currently have in the schedule.
         self.employeeShifts = OrderedDict({ID : [] for ID in employees})
@@ -27,13 +27,13 @@ class Schedule:
         # each hour is mapped to how many employees must work at that time. Default is each hour requires 1 employee
         # this may eventually be modified further to account for employees with different skillsets
         self.unfilled = {
-            'MONDAY': OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'TUESDAY' : OrderedDict(rhour : 1 for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'WEDNESDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
-            'THURSDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
-            'FRIDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd)),
-            'SATURDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
-            'SUNDAY' : OrderedDict(hour : 1 for hour in range(constraints.schedStart, constraints.schedEnd),
+            'MONDAY': OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'TUESDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'WEDNESDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'THURSDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'FRIDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'SATURDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
+            'SUNDAY' : OrderedDict((hour, 1) for hour in range(constraints.schedStart, constraints.schedEnd)),
         }
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
@@ -47,9 +47,10 @@ class Schedule:
         self.hours += shift.shiftLength
         #remove unfilled spots from set within the new state
         for i in range(shift.shiftStart, shift.shiftEnd):
-            self.unfilled[day][i] -= 1
-            if self.unfilled[day][i] == 0:
-                del self.unfilled[day][i]
+            if i in self.unfilled[day]:
+                self.unfilled[day][i] -= 1
+                if self.unfilled[day][i] == 0:
+                    del self.unfilled[day][i]
                     
        
 

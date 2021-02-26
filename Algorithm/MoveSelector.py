@@ -15,10 +15,10 @@ from Employee import Employee
 # returns a list of possible states to be run through the scorer
 def tryToPlaceBasic(currentState : Schedule, constraints):
     possibleStates = []
-    for entity in currentState.roster: #TODO: remove employees from the roster when their maximum hours are spent
+    for entity in currentState.roster.values(): #TODO: remove employees from the roster when their maximum hours are spent
         for day in currentState.schedule:
             for sLen in constraints.shiftSizes:
-                for start in currentState.unfilled[day]:
+                for start in currentState.unfilled[day]: #start times will only involved those that are unfilled
                     newShift = Shift.createShift(entity.ID, start, sLen, day)
                     # create a copy of the currentstate and add the newly generated shift.
                     # note: this probably will end up using a lot of memory. 

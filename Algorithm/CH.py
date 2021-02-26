@@ -19,7 +19,7 @@ def buildSchedule(employees, constraints):
     #while (ms < 0): <-- don't do this
     #while (hs == 0):
         for employee in schedule.roster:
-            possibleStates = MoveSelector.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
+            possibleStates = MoveSelector.tryToPlaceBasic(schedule, constraints)
             schedule = selectStepFull(possibleStates)
            # hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
            # print("HardScore: ", hs)
