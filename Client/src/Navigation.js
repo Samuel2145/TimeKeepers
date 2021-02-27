@@ -1,66 +1,110 @@
-import React, { Component } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Container from 'react-bootstrap/Container';
+import React, {Component} from 'react';
+import {Link, Route, Switch} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavItem from 'react-bootstrap/NavItem';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 import Home from "./Home";
 import Employee from "./Employee";
 import Admin from "./Admin";
 import Calendar from "./Calendar";
 import Login from "./Login";
 import SignUp from "./SignUp";
-
-///Ignore for now, Calendar option should only display when one is logged in
-const loggedIn = (
-    <NavItem eventkey={3} href="/calendar">
-      <Nav.Link as={Link} to="/calendar" >Calendar</Nav.Link>
-    </NavItem>);
+import axios from 'axios'
 
 class Navigation extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedIn: null
+        };
+        this.logoutHandler = this.logoutHandler.bind(this);
+    }
 
-  render() {
-    return (
-      <div>
-        <div>
-          <Navbar bg = "primary" variant ="dark">
-            <Navbar.Brand as={Link} to="/" >Schedugator</Navbar.Brand>
-            <Navbar.Collapse>
-              <Nav className="ml-auto">
-                <NavItem eventkey={1} href="/">
-                  <Nav.Link as={Link} to="/" >Home</Nav.Link>
-                </NavItem>
-                <NavItem eventkey={2} href="/login">
-                  <Nav.Link as={Link} to="/login" >Login</Nav.Link>
-                </NavItem>
-                <NavItem eventkey={4} href="/signup">
-                  <Nav.Link as={Link} to="/signup" >Create Account</Nav.Link>
-                </NavItem>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-        </div>
-        <div>
-          <Switch>
-            <Route exact path='/' component={Home} />
-            <Route exact path='/employee' component={Employee} />
-            <Route exact path='/admin' component={Admin} />
-            <Route exact path='/calendar' component={Calendar} />
-            <Route exact path='/login' component={Login} />
-            <Route exact path='/signup' component={SignUp} />
-            <Route render={function () {
-              return <p>Not found</p>
-            }} />
-          </Switch>
-        </div>
-      </div>
-    );
-  }
+    logoutHandler(e) {
+        e.preventDefault();
+
+
+        axios.post("/user/logout").then((res) => {
+            console.log(res.data);
+            window.location.href = '/';
+        }).catch((error) => {
+            console.log(error);
+        });
+
+    }
+
+    componentDidMount() {
+
+        axios.get('user/isLoggedIn').then((res) => {
+
+            if (res.data.loggedIn === 0) {
+
+                const temp = (
+                    <div>
+                        <NavItem eventkey={2} href="/login">
+                            <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                        </NavItem>
+                        <NavItem eventkey={4} href="/signup">
+                            <Nav.Link as={Link} to="/signup">Create Account</Nav.Link>
+                        </NavItem>
+                    </div>
+                );
+
+                this.setState({loggedIn: temp});
+
+            } else {
+
+                const temp = (
+                    <div>
+                        <NavItem eventkey={4} href="/calendar">
+                            <Nav.Link as={Link} to="/calendar">Calendar</Nav.Link>
+                        </NavItem>
+                        <NavItem>
+                            <Nav.Link onClick={this.logoutHandler}>Logout</Nav.Link>
+                        </NavItem>
+                    </div>
+                )
+
+                this.setState({loggedIn: temp});
+            }
+        });
+
+    }
+
+
+    render() {
+        return (
+            <div>
+                <div>
+                    <Navbar bg="primary" variant="dark">
+                        <Navbar.Brand as={Link} to="/">Schedugator</Navbar.Brand>
+                        <Navbar.Collapse>
+                            <Nav className="ml-auto">
+                                <NavItem eventkey={1} href="/">
+                                    <Nav.Link as={Link} to="/">Home</Nav.Link>
+                                </NavItem>
+                                {this.state.loggedIn}
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
+                </div>
+                <div>
+                    <Switch>
+                        <Route exact path='/' component={Home}/>
+                        <Route exact path='/employee' component={Employee}/>
+                        <Route exact path='/admin' component={Admin}/>
+                        <Route exact path='/calendar' component={Calendar}/>
+                        <Route exact path='/login' component={Login}/>
+                        <Route exact path='/signup' component={SignUp}/>
+                        <Route render={function () {
+                            return <p>Not found</p>
+                        }}/>
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Navigation;

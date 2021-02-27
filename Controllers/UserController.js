@@ -44,7 +44,6 @@ export const createUser = (req, res) => {
 
 export const userLogin = (req, res) => {
 
-    console.log("User login req received");
 
     const username = req.body.user.username;
     const password = req.body.user.password;
@@ -98,6 +97,22 @@ export const getUserInfo = (req,res) => {
     res.status(200).send(JSON.stringify(toSend));
 }
 
+export const isLoggedIn = (req, res) => {
+
+    if(!req.cookies.UserInfo){
+        res.status(200).send({loggedIn: 0});
+        return;
+    }
+
+    res.status(200).send({loggedIn:1});
+}
+
+export const Logout = (req,res) => {
+
+    res.clearCookie('UserInfo', {path: '/'});
+    res.send('Successfully logged out');
+}
+
 export const getCalendar = (req,res) => {
 
     if(!req.cookies.UserInfo){
@@ -118,20 +133,25 @@ export const getCalendar = (req,res) => {
             res.status(400).send('Something didnt work');
         }else{
 
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
             let shiftData = [];
 
             result.forEach((elem) => {
 
+                const startData = new Date(elem.start);
+                const endData = new Date(elem.end);
+
                 const temporaryData = {
                     username: elem.username,
-                    start: elem.start,
-                    end: elem.end
+                    day: days[startData.getDay()],
+                    startTime: startData.toLocaleTimeString('en-US'),
+                    endTime: endData.toLocaleTimeString('en-US')
                 }
 
                 shiftData.push(temporaryData)
             })
 
-            //console.log(result);
             res.status(200).send(JSON.stringify(shiftData));
         }
     })

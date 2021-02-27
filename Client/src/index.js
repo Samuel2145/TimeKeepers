@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {
-  Route,
-  NavLink,
-  HashRouter
+    Route,
+    NavLink,
+    HashRouter
 } from "react-router-dom";
 import {BrowserRouter} from 'react-router-dom';
 import ReactDOM from 'react-dom';
@@ -25,20 +25,20 @@ import FormControl from 'react-bootstrap/FormControl';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
-  render(){
-    return(
-      <div id="App">
-        <Navigation />
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div id="App">
+                <Navigation/>
+            </div>
+        );
+    }
 }
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById('root')
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>,
+    document.getElementById('root')
 );
 
 serviceWorker.unregister();

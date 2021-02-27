@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
@@ -12,57 +12,57 @@ import Employee from "./Employee";
 import Admin from "./Admin";
 import Calendar from "./Calendar";
 import Login from "./Login";
-import { Switch, Route, Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap'
+import {Switch, Route, Link} from 'react-router-dom';
+import {LinkContainer} from 'react-router-bootstrap'
 
 
 import bigthink from './img/bigthink.png';
 
 const divStyle = {
-  paddingTop: '10px',
+    paddingTop: '10px',
 };
 
 class Home extends Component {
-  render() {
-    return (
+    render() {
+        return (
 
-      <Container fluid = "md">
-        <Row className="justify-content-md-end">
-          <Col>
-            <Card style={{  } }>
-        <Card.Img variant="top" src={bigthink} />
-        <Card.Body>
-        <Card.Title>Employee Login</Card.Title>
-        <Card.Text>
-          Change your preferences or check your schedule.
-        </Card.Text>
-        <LinkContainer to="/employee">
-          <Button>Login</Button>
-        </LinkContainer>
-      </Card.Body>
-    </Card>
-    </Col>
+            <Container fluid="md">
+                <Row className="justify-content-md-end">
+                    <Col>
+                        <Card style={{}}>
+                            <Card.Img variant="top" src={bigthink}/>
+                            <Card.Body>
+                                <Card.Title>Employee Login</Card.Title>
+                                <Card.Text>
+                                    Change your preferences or check your schedule.
+                                </Card.Text>
+                                <LinkContainer to="/employee">
+                                    <Button>Login</Button>
+                                </LinkContainer>
+                            </Card.Body>
+                        </Card>
+                    </Col>
 
-      <Col>
-    <Card style={{ }}>
-    <Card.Img variant="top" src={bigthink} />
-        <Card.Body>
-        <Card.Title>Admin Login</Card.Title>
-        <Card.Text>
-          Check preferences, and generate your schedule.
-        </Card.Text>
-        <LinkContainer to="/admin">
-          <Button>Login</Button>
-        </LinkContainer>
-      </Card.Body>
-    </Card>
+                    <Col>
+                        <Card style={{}}>
+                            <Card.Img variant="top" src={bigthink}/>
+                            <Card.Body>
+                                <Card.Title>Admin Login</Card.Title>
+                                <Card.Text>
+                                    Check preferences, and generate your schedule.
+                                </Card.Text>
+                                <LinkContainer to="/admin">
+                                    <Button>Login</Button>
+                                </LinkContainer>
+                            </Card.Body>
+                        </Card>
 
-    </Col>
-      </Row>
+                    </Col>
+                </Row>
 
-      </Container>
-    );
-  }
+            </Container>
+        );
+    }
 }
- 
+
 export default Home;

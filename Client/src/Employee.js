@@ -17,7 +17,7 @@ class Employee extends Component {
 
     componentDidMount() {
 
-        axios.get('/user/getUserInfo', {withCredentials:true}).then((res) => {
+        axios.get('/user/getUserInfo', {withCredentials: true}).then((res) => {
 
             this.setState({username: res.data.username});
         });

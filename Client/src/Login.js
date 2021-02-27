@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -22,7 +22,7 @@ class Login extends Component {
     //sample user and pass    
     //maria@dummy.com
     //dummy5
-    loginHandler(e){
+    loginHandler(e) {
         e.preventDefault();
 
         const user = {
@@ -30,12 +30,12 @@ class Login extends Component {
             password: this.state.password
         }
 
-        axios.post("/user/userLogin", {user}).then( (res) => {
+        axios.post("/user/userLogin", {user}).then((res) => {
             const type = res.data.isEmployer;
 
-            if(type === 0){
+            if (type === 0) {
                 window.location.href = '/employee';
-            }else if(type === 1){
+            } else if (type === 1) {
                 window.location.href = '/admin';
             }
 
@@ -52,7 +52,8 @@ class Login extends Component {
                     <Form>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="username" placeholder="Enter username" name="email" onChange={(e) => this.setState({username: e.target.value})}/>
+                            <Form.Control type="username" placeholder="Enter username" name="email"
+                                          onChange={(e) => this.setState({username: e.target.value})}/>
                             <Form.Text className="text-muted">
                                 Case sensitive.
                             </Form.Text>
@@ -60,22 +61,23 @@ class Login extends Component {
 
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" name="password" onChange={(e) => this.setState({password: e.target.value})}/>
+                            <Form.Control type="password" placeholder="Password" name="password"
+                                          onChange={(e) => this.setState({password: e.target.value})}/>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="I am not a robot." />
+                            <Form.Check type="checkbox" label="I am not a robot."/>
                         </Form.Group>
 
                         <Button variant="primary" onClick={this.loginHandler}>
                             Submit
                         </Button>
 
-                  </Form>
-              </Container>
-          </div>
+                    </Form>
+                </Container>
+            </div>
         );
     }
 }
- 
+
 export default Login;

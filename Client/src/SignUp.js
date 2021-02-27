@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -22,7 +22,7 @@ class SignUp extends Component {
         this.formHandler = this.formHandler.bind(this)
     }
 
-    formHandler(e){
+    formHandler(e) {
         e.preventDefault();
 
         const user = {
@@ -34,7 +34,7 @@ class SignUp extends Component {
 
         //console.log(user);
 
-        axios.post("/user/createUser", {user}).then( (res) => {
+        axios.post("/user/createUser", {user}).then((res) => {
             console.log(res);
             window.location.href = '/login';
         }).catch((error) => {
@@ -51,18 +51,21 @@ class SignUp extends Component {
 
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="username" placeholder="Enter Username" onChange={(e) => this.setState({userName: e.target.value})}/>
+                            <Form.Control type="username" placeholder="Enter Username"
+                                          onChange={(e) => this.setState({userName: e.target.value})}/>
                         </Form.Group>
 
 
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="username" placeholder="Enter email" onChange={(e) => this.setState({email: e.target.value})}/>
+                            <Form.Control type="username" placeholder="Enter email"
+                                          onChange={(e) => this.setState({email: e.target.value})}/>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" onChange={(e) => this.setState({password: e.target.value})}/>
+                            <Form.Control type="password" placeholder="Password"
+                                          onChange={(e) => this.setState({password: e.target.value})}/>
                             <Form.Text className="text-muted">
                                 Case sensitive.
                             </Form.Text>
@@ -70,17 +73,17 @@ class SignUp extends Component {
 
                         <Form.Group>
                             <ToggleButtonGroup type="radio" name="type">
-                                <ToggleButton value="0" onClick={(e) => this.setState({type:e.target.value})}>
+                                <ToggleButton value="0" onClick={(e) => this.setState({type: e.target.value})}>
                                     Employee
                                 </ToggleButton>
-                                <ToggleButton value="1" onClick={(e) => this.setState({type:e.target.value})}>
+                                <ToggleButton value="1" onClick={(e) => this.setState({type: e.target.value})}>
                                     Employer
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="I am not a robot." />
+                            <Form.Check type="checkbox" label="I am not a robot."/>
                         </Form.Group>
 
                         <Form.Group>
