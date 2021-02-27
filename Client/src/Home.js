@@ -26,10 +26,10 @@ class Home extends Component {
   render() {
     return (
 
-      <Container fluid>
+      <Container fluid = "md">
         <Row className="justify-content-md-end">
           <Col>
-            <Card style={{ width: '30rem' } }>
+            <Card style={{  } }>
         <Card.Img variant="top" src={bigthink} />
         <Card.Body>
         <Card.Title>Employee Login</Card.Title>
@@ -44,7 +44,7 @@ class Home extends Component {
     </Col>
 
       <Col>
-    <Card style={{ width: '30rem' }}>
+    <Card style={{ }}>
     <Card.Img variant="top" src={bigthink} />
         <Card.Body>
         <Card.Title>Admin Login</Card.Title>
