@@ -58,16 +58,18 @@ export const userLogin = (req, res) => {
         }else{
 
             const hashed = result[0].password;
+            const type = result[0].isEmployer;
 
             bcrypt.compare(password,  hashed, (err, same) => {
 
                 if(same){
 
-                    const toSend  = {
-                        username: username
-                    };
-
                     const type = result[0].isEmployer;
+
+                    const toSend  = {
+                        username: username,
+                        isEmployer: type
+                    };
 
                     let token = jwt.sign(toSend, 'shhhhh');
 
@@ -95,4 +97,27 @@ export const getUserInfo = (req,res) => {
     }
 
     res.status(200).send(toSend);
+}
+
+export const getCalendar = (req,res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const username = userData.username;
+    
+    const searchQ = "SELECT username, start, end FROM shift WHERE username=\'" + username +"\'" ;
+
+    conn.query(searchQ, (err,result) => {
+
+        if(err){
+
+            res.status(400).send('Soemthing didnt work');
+
+        }else{
+
+            console.log(result);
+            res.status(200).send('Nice!');
+        }
+    })
+
 }

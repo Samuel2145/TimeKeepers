@@ -6,6 +6,11 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 ////Employer parameters - shift size, work time needed
+
+const divStyle = {
+  paddingTop: '120px',
+};
+
 class Admin extends Component {
   render() {
     return (
@@ -25,10 +30,8 @@ class Admin extends Component {
   <Dropdown.Item href="#/action-2">1:30 Hour</Dropdown.Item>
   <Dropdown.Item href="#/action-3">2 Hour</Dropdown.Item>
 </DropdownButton></div>
-        <div>.</div>
-        <div>.</div>
-        <div>.</div>
-        <div>.</div>
+        <div style={divStyle}></div>
+        
         <div>And more!</div>
         </Card.Body>
     </Accordion.Collapse>

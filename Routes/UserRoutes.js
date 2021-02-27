@@ -6,5 +6,6 @@ const userRouter = express.Router();
 userRouter.post('/createUser', user.createUser);
 userRouter.post('/userLogin', user.userLogin);
 userRouter.get('/getUserInfo', user.getUserInfo);
+userRouter.get('/getCalendar', user.getCalendar);
 
 export default userRouter;
