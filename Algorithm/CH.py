@@ -2,7 +2,7 @@ from collections import OrderedDict
 from Schedule import Schedule 
 import Constraints
 import Scorer
-import Stepper
+import MoveSelector
 # Author: Will Pascuzzi
 # The "construction heuristic" for the scheduling process is a greedy algorithm that
 # seeks to place each element in its most optimal position as it iterates through them
@@ -16,24 +16,20 @@ def buildSchedule(employees, constraints):
     schedule = Schedule(employees, constraints)   
   #  hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
     while (schedule.hours < constraints.maxWeeklyHours):
-    #while (ms < 0): <-- don't do this
-    #while (hs == 0):
-        for employee in schedule.roster:
-            possibleStates = Stepper.tryToPlaceBasic(schedule, schedule.roster[employee], constraints)
-            schedule = selectStepFull(possibleStates)
-           # hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
-           # print("HardScore: ", hs)
-           # print("medScore: ", ms)
-           # print("softScore: ", ss, "\n")
-            iterations += 1
-            #schedule.displaySchedule()
+        possibleStates = MoveSelector.tryToPlaceBasic(schedule, constraints)
+        schedule = selectStepFull(possibleStates)
+        # hs, ms, ss = Scorer.calculateScoreSimple(schedule) 
+        # print("HardScore: ", hs)
+        # print("medScore: ", ms)
+        # print("softScore: ", ss, "\n")
+        iterations += 1
+        #schedule.displaySchedule()
 
     hs, ms, ss = Scorer.calculateScoreSimple(schedule)     
     print("HardScore: ", hs)
     print("medScore: ", ms)
     print("softScore: ", ss)
     print("iterations ", iterations)
-    #FIXME: the schedule is NOT deterministic. Most likely because regular dicts are used instead of OrderedDict
     return schedule
 
 #selects the step with the highes score from an ordered dict of states mapped to their scores. Each state is mapped to one score only
