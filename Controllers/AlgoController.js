@@ -1,12 +1,14 @@
 import {spawn} from 'child_process';
-import {PythonShell} from "python-shell";
+//import {PythonShell} from "python-shell";
+import pkg from "python-shell"
 
+const {PythonShell} = pkg;
 export const AlgoTest = (req,res) => {
 
+    
+    const algo = new PythonShell('/home/william/Projects/ScheduGator/TimeKeepers/Algorithm/main.py')
 
-    const algo = new PythonShell('test.py')
-
-    /*algo.on('message', function (message) {
+    algo.on('message', function (message) {
         // received a message sent from the Python script (a simple "print" statement)
         console.log(message);
     });
@@ -16,7 +18,7 @@ export const AlgoTest = (req,res) => {
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
-    });*/
+    });
 
     /*let dataToSend;
     const python = spawn('python3', ['test.py']);
