@@ -32,7 +32,7 @@ def tryToPlaceBasic(currentState : Schedule, constraints):
 
 #This method will change the start and end time of a shift within a particular day, sliding the shift up or down
 def slideShift(currentState : Schedule, day, shiftIndex):
-    possibleStates = []
+    possibleStates = [currentState]
     for start in range(currentState.schedStart, currentState.schedEnd): 
         
         shift = currentState.schedule[day][shiftIndex]
@@ -72,6 +72,6 @@ def slideShift(currentState : Schedule, day, shiftIndex):
         possibleStates.append(newState)
     return possibleStates
 
-#this method will change who
+#this method will change who is assigned to a shift
 def reassignShift(currentState : Schedule, constraints, shift):
     pass
