@@ -49,7 +49,7 @@ export const userLogin = (req, res) => {
     const username = req.body.user.username;
     const password = req.body.user.password;
 
-    const insertQ = "SELECT password, isEmployer FROM users WHERE username=\'" + username +"\'" ;
+    const insertQ = "SELECT password, isEmployer FROM user WHERE username=\'" + username +"\'" ;
 
     conn.query(insertQ, (err, result) => {
 
@@ -58,7 +58,6 @@ export const userLogin = (req, res) => {
         }else{
 
             const hashed = result[0].password;
-            const type = result[0].isEmployer;
 
             bcrypt.compare(password,  hashed, (err, same) => {
 
@@ -96,10 +95,15 @@ export const getUserInfo = (req,res) => {
         username : userData.username
     }
 
-    res.status(200).send(toSend);
+    res.status(200).send(JSON.stringify(toSend));
 }
 
 export const getCalendar = (req,res) => {
+
+    if(!req.cookies.UserInfo){
+        res.status(400).send('Not logged in!')
+        return;
+    }
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
@@ -111,12 +115,24 @@ export const getCalendar = (req,res) => {
 
         if(err){
 
-            res.status(400).send('Soemthing didnt work');
-
+            res.status(400).send('Something didnt work');
         }else{
 
-            console.log(result);
-            res.status(200).send('Nice!');
+            let shiftData = [];
+
+            result.forEach((elem) => {
+
+                const temporaryData = {
+                    username: elem.username,
+                    start: elem.start,
+                    end: elem.end
+                }
+
+                shiftData.push(temporaryData)
+            })
+
+            //console.log(result);
+            res.status(200).send(JSON.stringify(shiftData));
         }
     })
 
