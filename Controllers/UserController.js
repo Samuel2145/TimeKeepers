@@ -13,27 +13,27 @@ export const createUser = (req, res) => {
         bcrypt.hash(req.body.user.password, salt, function(err, hash) {
 
             if (err){
-                res.status(400).send('Could not hash password')
-                throw err;
+                res.status(400).send('Could not hash password');
+                return;
             }
 
             const userName = req.body.user.userName;
             const email = req.body.user.email;
+            const type = req.body.user.type;
 
             ///Need to talk to Alec about database design and how we want to put data in
             //const insertQ = "INSERT INTO employee (username, password, name, email, phoneNo, address) VALUES (\'"
             //                    + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + phone + "\')";
 
-            const insertQ = "INSERT INTO employee (username, password, email) VALUES (\'"
-                                + userName + "\', \'" + hash + "\', \'" + email + "\')";
+            const insertQ = "INSERT INTO users (username, password, email, isEmployer) VALUES (\'"
+                                + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + type +"\')";
 
-            conn.query(insertQ, function(err, result) {
+            conn.query(insertQ, (err, result) => {
 
                 if(err){
-                    res.status(400).send('Insertion failed');
-                    throw err;
+                    res.status(400).send('Insertion failed (Username or email already in use)');
                 }else{
-                    res.status(200).send('Stored');
+                    res.status(201).send('Stored');
                 }
 
             });
@@ -44,14 +44,16 @@ export const createUser = (req, res) => {
 
 export const userLogin = (req, res) => {
 
-    const email = req.body.user.email;
+    console.log("User login req received");
+
+    const username = req.body.user.username;
     const password = req.body.user.password;
 
-    const insertQ = "SELECT password FROM employee WHERE email=\'" + email +"\'"
+    const insertQ = "SELECT password, isEmployer FROM users WHERE username=\'" + username +"\'" ;
 
-    conn.query(insertQ, function(err, result) {
+    conn.query(insertQ, (err, result) => {
 
-        if(result.length === 0){
+        if(err){
             res.status(404).send('User does not exist');
         }else{
 
@@ -62,17 +64,35 @@ export const userLogin = (req, res) => {
                 if(same){
 
                     const toSend  = {
-                        username: result.username
-                    }
+                        username: username
+                    };
+
+                    const type = result[0].isEmployer;
 
                     let token = jwt.sign(toSend, 'shhhhh');
 
-                    res.cookie('Token', token, {expire: 604800 + Date.now(), httpOnly: true}).status(200);
-                    res.send("Successfully logged in");
+                    res.cookie('UserInfo', token, {expire: 604800 + Date.now(), httpOnly: true}).status(200);
+                    res.send({
+                        isEmployer: type,
+                        message: 'Successfully logged in'
+                    });
                 }else{
                     res.status(400).send('Password is incorrect!');
                 }
             });
         }
     });
+}
+
+export const getUserInfo = (req,res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    console.log(userData)
+
+    const toSend = {
+        username : userData.username
+    }
+
+    res.status(200).send(toSend);
 }

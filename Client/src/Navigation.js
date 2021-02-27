@@ -13,8 +13,17 @@ import Employee from "./Employee";
 import Admin from "./Admin";
 import Calendar from "./Calendar";
 import Login from "./Login";
+import SignUp from "./SignUp";
+
+///Ignore for now, Calendar option should only display when one is logged in
+const loggedIn = (
+    <NavItem eventkey={3} href="/calendar">
+      <Nav.Link as={Link} to="/calendar" >Calendar</Nav.Link>
+    </NavItem>);
 
 class Navigation extends Component {
+
+
   render() {
     return (
       <div>
@@ -22,18 +31,15 @@ class Navigation extends Component {
           <Navbar bg = "primary" variant ="dark">
             <Navbar.Brand as={Link} to="/" >Schedugator</Navbar.Brand>
             <Navbar.Collapse>
-              <Nav className="mr-auto">
+              <Nav className="ml-auto">
                 <NavItem eventkey={1} href="/">
                   <Nav.Link as={Link} to="/" >Home</Nav.Link>
                 </NavItem>
-                <NavItem eventkey={2} href="/employee">
-                  <Nav.Link as={Link} to="/login" >Employee Portal</Nav.Link>
+                <NavItem eventkey={2} href="/login">
+                  <Nav.Link as={Link} to="/login" >Login</Nav.Link>
                 </NavItem>
-                <NavItem eventkey={3} href="/admin">
-                  <Nav.Link as={Link} to="/login" >Admin Portal</Nav.Link>
-                </NavItem>
-                <NavItem eventkey={4} href="/calendar">
-                  <Nav.Link as={Link} to="/calendar" >Calendar</Nav.Link>
+                <NavItem eventkey={4} href="/signup">
+                  <Nav.Link as={Link} to="/signup" >Create Account</Nav.Link>
                 </NavItem>
               </Nav>
             </Navbar.Collapse>
@@ -42,10 +48,11 @@ class Navigation extends Component {
         <div>
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route exact path='/employee' component={Login} />
+            <Route exact path='/employee' component={Employee} />
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/calendar' component={Calendar} />
             <Route exact path='/login' component={Login} />
+            <Route exact path='/signup' component={SignUp} />
             <Route render={function () {
               return <p>Not found</p>
             }} />

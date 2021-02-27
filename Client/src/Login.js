@@ -13,26 +13,34 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
+            username: '',
             password: ''
         };
         this.loginHandler = this.loginHandler.bind(this)
     }
 
     //sample user and pass    
-    //mariaP@dummy.com
+    //maria@dummy.com
     //dummy5
     loginHandler(e){
         e.preventDefault();
 
         const user = {
-            email: this.state.email,
+            username: this.state.username,
             password: this.state.password
         }
 
         axios.post("/user/userLogin", {user}).then( (res) => {
-            console.log(res.data)
-            window.location.href = '/admin';
+            const type = res.data.isEmployer;
+
+            if(type === 0){
+                window.location.href = '/employee';
+            }else if(type === 1){
+                window.location.href = '/admin';
+            }
+
+        }).catch((error) => {
+            console.log(error);
         });
 
     }
@@ -44,7 +52,7 @@ class Login extends Component {
                     <Form>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="username" placeholder="Enter username" name="email" onChange={(e) => this.setState({email: e.target.value})}/>
+                            <Form.Control type="username" placeholder="Enter username" name="email" onChange={(e) => this.setState({username: e.target.value})}/>
                             <Form.Text className="text-muted">
                                 Case sensitive.
                             </Form.Text>
