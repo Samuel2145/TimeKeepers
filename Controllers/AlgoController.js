@@ -4,9 +4,8 @@ import pkg from "python-shell"
 
 const {PythonShell} = pkg;
 export const AlgoTest = (req,res) => {
-
     
-    const algo = new PythonShell('/home/william/Projects/ScheduGator/TimeKeepers/Algorithm/main.py')
+    const algo = new PythonShell('Algorithm/main.py')
 
     algo.on('message', function (message) {
         // received a message sent from the Python script (a simple "print" statement)
