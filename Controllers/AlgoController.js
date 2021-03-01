@@ -42,7 +42,7 @@ const conn = new Database(DB_URL);
 //5. send parameter data
 
 
-export const createRoster = async (req, res) => {     
+ async function createRoster(req, res){     
      
     try{
         var roster = {
@@ -83,7 +83,11 @@ export const createRoster = async (req, res) => {
                         //push each availability to the corresponding day array
                         //avails.forEach(function(item) {          
                         for (item of avails){
-                            availabilities[day].push([item.startHour, item.endHour])     
+                            let startHour = item.startHour
+                            let endHour = item.endHour
+                            let start = parseInt(startHour.substring(0,2))*2 + parseInt(startHour.substring(3,5))/30
+                            let end = parseInt(endHour.substring(0,2))*2 + parseInt(endHour.substring(3,5))/30
+                            availabilities[day].push([start, end])     
                             //console.log(availabilities[day])             
                         //});
                         }
@@ -101,15 +105,15 @@ export const createRoster = async (req, res) => {
             //});
             
         }
-        console.log(roster);
+        return roster
     }
     catch(error){
         console.log(error)
     }    
-   
-   for(var e in roster.employees){
-   console.log(roster.employees[e].avails)
-   }
+//    console.log(roster);
+//    for(var e in roster.employees){
+//    console.log(roster.employees[e].avails)
+//    }   
 };
 
 
@@ -176,9 +180,14 @@ export const createRoster = async (req, res) => {
 
 // }
 
-export const AlgoTest = (req,res) => {
+export const AlgoTest = async (req,res) => {
     
-    const algo = new PythonShell('Algorithm/main.py', {mode: 'json'})
+    const algo = new PythonShell('Algorithm/main.py')
+
+    var roster = await createRoster(req, res)
+
+    var message = JSON.stringify(roster)
+    algo.send(message, {mode: 'json'})
 
     algo.on('message', function (message) {
         // received a message sent from the Python script (a simple "print" statement)
