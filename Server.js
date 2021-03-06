@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser'
 import userRouter from './Routes/UserRoutes.js';
 import AlgoRouter from "./Routes/AlgoRoute.js";
 import path from "path";
@@ -15,6 +16,8 @@ dotenv.config();
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+app.use(cookieParser());
 
 const dir = path.resolve(path.dirname(''));
 
