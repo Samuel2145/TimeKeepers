@@ -199,5 +199,8 @@ export const AlgoTest = async (req,res) => {
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
+
+        res.status(200).send('Worked');
+
     });
 }
