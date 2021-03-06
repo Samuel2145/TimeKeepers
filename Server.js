@@ -18,6 +18,9 @@ app.use(bodyParser.urlencoded({
 
 const dir = path.resolve(path.dirname(''));
 
+app.use('/user', userRouter);
+app.use('/algo', AlgoRouter)
+
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static('Client/build'));
 
@@ -27,9 +30,6 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 app.use(bodyParser.json());
-
-app.use('/user', userRouter);
-app.use('/algo', AlgoRouter)
 
 app.listen(PORT, () => {
     console.log("Listening on port: " + PORT)
