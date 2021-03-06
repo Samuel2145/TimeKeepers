@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import userRouter from './Routes/UserRoutes.js';
+import AlgoRouter from "./Routes/AlgoRoute.js";
 import path from "path";
 
 const PORT = process.env.PORT || 5000;
@@ -16,24 +16,23 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use(cookieParser());
-
 const dir = path.resolve(path.dirname(''));
-
-app.use(bodyParser.json());
-
-app.use('/user', userRouter);
 
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static('Client/build'));
 
     app.get('*', (req,res) =>{
         res.sendFile(path.resolve(dir,'Client', 'build','index.html'));
-    });
+    })
 }
+
+app.use(bodyParser.json());
+
+app.use('/user', userRouter);
+app.use('/algo', AlgoRouter)
 
 app.listen(PORT, () => {
     console.log("Listening on port: " + PORT)
-});
+})
 
 //export default DB_URL;
