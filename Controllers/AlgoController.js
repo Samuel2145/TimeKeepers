@@ -41,7 +41,6 @@ const conn = new Database(DB_URL);
 //4. send employee data
 //5. send parameter data
 
-
  async function CreateRoster(req, res){     
      
     try{
@@ -57,7 +56,6 @@ const conn = new Database(DB_URL);
         }else{
             
             //iterate through each user
-            //Object.keys(users).forEach(function(item){
             for (var item in Object.keys(users)){
                 let username = users[item].username;
                 let availabilities = {
@@ -71,8 +69,7 @@ const conn = new Database(DB_URL);
                 };
             
                 
-                //iterate through each day
-                //Object.keys(availabilities).forEach(async function(day){   
+                //iterate through each day           
                 for (var day of Object.keys(availabilities)){
 
                     const availQ = "SELECT startHour, endHour FROM availability WHERE username=? AND day=?";                                      
@@ -80,20 +77,17 @@ const conn = new Database(DB_URL);
                         if(avails.length === 0) {
                         //    res.status(404).send('User \'' + username + "\' has no availabilities");
                         } else {                            
-                        //push each availability to the corresponding day array
-                        //avails.forEach(function(item) {          
+         
                         for (item of avails){
                             let startHour = item.startHour
                             let endHour = item.endHour
                             let start = parseInt(startHour.substring(0,2))*2 + parseInt(startHour.substring(3,5))/30
                             let end = parseInt(endHour.substring(0,2))*2 + parseInt(endHour.substring(3,5))/30
                             availabilities[day].push([start, end])     
-                            //console.log(availabilities[day])             
-                        //});
+
                         }
                         }
-                    }  
-                //});
+                    }    
                 
             //push a new employee to the roster
                 roster.employees.push({
@@ -102,18 +96,12 @@ const conn = new Database(DB_URL);
                 });
 
             }              
-            //});
-            
         }
         return roster
     }
     catch(error){
         console.log(error)
     }    
-//    console.log(roster);
-//    for(var e in roster.employees){
-//    console.log(roster.employees[e].avails)
-//    }   
 };
 
 
