@@ -17,9 +17,11 @@ import {LinkContainer} from 'react-router-bootstrap'
 
 
 import bigthink from './img/bigthink.png';
+import adminpic from './img/employer2.jpg';
+import employeepic  from './img/employeepic.jpg';
 
 const divStyle = {
-    paddingTop: '10px',
+    paddingTop: '3.5rem',
 };
 
 class Home extends Component {
@@ -27,15 +29,22 @@ class Home extends Component {
         return (
 
             <Container fluid="md">
+                <div style={divStyle}></div>
                 <Row className="justify-content-md-end">
                     <Col>
                         <Card style={{}}>
-                            <Card.Img variant="top" src={bigthink}/>
+                            <Card.Img variant="top" src={employeepic}/>
                             <Card.Body>
                                 <Card.Title>Employee Login</Card.Title>
                                 <Card.Text>
-                                    Change your preferences or check your schedule.
+                                    <ul>
+                                    <li>View your work schedule</li>
+                                    <li>Make changes to your availabilities</li>
+                                    <li>Request time off</li>
+                                    <li>Update your personal information</li>
+                                    </ul>
                                 </Card.Text>
+                                
                                 <LinkContainer to="/employee">
                                     <Button>Login</Button>
                                 </LinkContainer>
@@ -45,11 +54,16 @@ class Home extends Component {
 
                     <Col>
                         <Card style={{}}>
-                            <Card.Img variant="top" src={bigthink}/>
+                            <Card.Img variant="top" src={adminpic}/>
                             <Card.Body>
                                 <Card.Title>Admin Login</Card.Title>
                                 <Card.Text>
-                                    Check preferences, and generate your schedule.
+                                <ul>
+                                    <li>View employee calendars</li>
+                                    <li>Generate new work schedules</li>
+                                    <li>Manually edit and refine work schedules</li>
+                                    <li>Edit employee qualifications</li>
+                                    </ul>
                                 </Card.Text>
                                 <LinkContainer to="/admin">
                                     <Button>Login</Button>
