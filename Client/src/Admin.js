@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import {LinkContainer} from 'react-router-bootstrap'
 import { Button, Modal } from 'react-bootstrap';
 
 const divStyle = {
@@ -107,9 +108,11 @@ function Admin() {
     style={{ display: "flex", justifyContent: "center" }}
     >
         <Row>
+        <LinkContainer to="/calendar">
         <Button variant="primary">
           View Schedule
         </Button>
+        </LinkContainer>
         </Row>
         </div>
         <div style={divStyle}></div>
