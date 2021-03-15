@@ -52,26 +52,75 @@ function Admin() {
     </Form.Group>
 
     <Form.Group as={Col} controlId="formGridPassword">
-      <Form.Label>Total Hours Needed this Week</Form.Label>
-      <Form.Control type="password" placeholder="50" />
+      <Form.Label>Number of Simultaneous Shifts</Form.Label>
+      <Form.Control type="password" placeholder="5" />
+    </Form.Group>
+  </Form.Row>
+
+  <Form.Row>
+  <Form.Group as={Col} controlId="formGridState">
+      <Form.Label>Start Time</Form.Label>
+      <Form.Control as="select" defaultValue="Choose...">
+        <option>Choose...</option>
+        <option>7:00 AM</option>
+        <option>8:00 AM</option>
+        <option>9:00 AM</option>
+        <option>10:00 AM</option>
+        <option>11:00 AM</option>
+        <option>12:00 AM</option>
+        <option>1:00 PM</option>
+        <option>2:00 PM</option>
+      </Form.Control>
+    </Form.Group>
+
+    <Form.Group as={Col} controlId="formGridState">
+      <Form.Label>End Time</Form.Label>
+      <Form.Control as="select" defaultValue="Choose...">
+        <option>Choose...</option>
+        <option>2:00 PM</option>
+        <option>3:00 PM</option>
+        <option>4:00 PM</option>
+        <option>5:00 PM</option>
+        <option>6:00 PM</option>
+        <option>7:00 PM</option>
+        <option>8:00 PM</option>
+        <option>9:00 PM</option>
+      </Form.Control>
+    </Form.Group>
+  </Form.Row>
+
+  <Form.Row>
+  <Form.Group as={Col} controlId="formGridPassword">
+      <Form.Label>Maximum Weekly Hours</Form.Label>
+      <Form.Control type="password" placeholder="30" />
+    </Form.Group>
+
+    <Form.Group as={Col} controlId="formGridPassword">
+      <Form.Label>Maximum Daily Hours</Form.Label>
+      <Form.Control type="password" placeholder="6" />
     </Form.Group>
   </Form.Row>
   </Form>
     
+  <div
+    clasName="Form"
+    style={{ display: "flex", justifyContent: "center" }}
+    >
+        <Row>
+        <Button variant="primary">
+          View Schedule
+        </Button>
+        </Row>
+        </div>
+        <div style={divStyle}></div>
       
 
-       
+    
         <Row>
         <Button variant="success" block onClick={handleShow}>
           Generate Schedule
         </Button>
-        </Row>
-        
-        
-        
-
-        
-        
+        </Row> 
 
 
        </Container>
