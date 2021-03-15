@@ -41,11 +41,11 @@ class Navigation extends Component {
             if (res.data.loggedIn === 0) {
 
                 const temp = (
-                    <div>
-                        <NavItem eventkey={2} href="/login">
+                    <div align={"center"}>
+                        <NavItem eventkey={2} href="/login" style={{display: "inline-block"}}>
                             <Nav.Link as={Link} to="/login">Login</Nav.Link>
                         </NavItem>
-                        <NavItem eventkey={4} href="/signup">
+                        <NavItem eventkey={4} href="/signup" style={{display: "inline-block"}}>
                             <Nav.Link as={Link} to="/signup">Create Account</Nav.Link>
                         </NavItem>
                     </div>
@@ -56,11 +56,11 @@ class Navigation extends Component {
             } else {
 
                 const temp = (
-                    <div>
-                        <NavItem eventkey={4} href="/calendar">
+                    <div align={"center"}>
+                        <NavItem eventkey={4} href="/calendar" style={{display: "inline-block"}}>
                             <Nav.Link as={Link} to="/calendar">Calendar</Nav.Link>
                         </NavItem>
-                        <NavItem>
+                        <NavItem style={{display: "inline-block"}}>
                             <Nav.Link onClick={this.logoutHandler}>Logout</Nav.Link>
                         </NavItem>
                     </div>
