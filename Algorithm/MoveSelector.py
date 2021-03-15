@@ -11,6 +11,23 @@ from Employee import Employee
 # methods should return a list of schedule states found
 # this set of states can be run through a scorer, which can return the most optimal state to choose
 
+
+#this will fill a day with shifts according to the necessity of workers per hour
+#Will be part of the construction heuristic that places shifts before they have employees traded in and out of them.
+#this will find the first fit and return the day schedule corresponding to it.
+def buildScheduleShape(schedule, constraints, day, nextSpot):
+    daySchedule = []
+    # move down the time of the day and generate permutations using schedule sizes.
+    # The first shift must start at the beginning of the workday and the last shift must end at the end of the workday
+    # If there is a gap in the generated schedule it is rejected
+    # If no valid schedule exists, return this information. The user must be notified that their shift sizes and workdays are not compatible.
+    for size in constraints.shiftSizes:
+        newShift = (nextSpot, nextSpot+size)
+        for i in range(newShift):
+            pass
+    return    
+
+
 # This attempts to place a given entity in a given schedule state without moving other entities.
 # returns a list of possible states to be run through the scorer
 def tryToPlaceBasic(currentState : Schedule, constraints):

@@ -42,6 +42,9 @@ class Schedule:
 
 
     def insertShift(self, shift, day):
+        """places tuples of shift start time and shift end time into the employee shift dict
+           and decrement elements from unfilled set within the new state"""
+        
         self.schedule[day].append(shift)
          # places tuples of shift start time and shift end time into the employee shift dict
         self.employeeShifts[shift.employeeID].append((shift.shiftStart,shift.shiftEnd))
