@@ -16,7 +16,7 @@ dotenv.config();
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 const dir = path.resolve(path.dirname(''));
@@ -32,7 +32,7 @@ if(process.env.NODE_ENV === 'production'){
     })
 }
 
-app.use(bodyParser.json());
+
 
 app.listen(PORT, () => {
     console.log("Listening on port: " + PORT)
