@@ -46,7 +46,7 @@ class Employee extends Component {
             <Row>
             <Col>
             <div style={divStyle}> </div>
-            <h2>Welcome, {this.state.username} ! </h2>
+            <h2>Welcome, {this.state.username}! </h2>
             <h3>Click on a cell to show your availability!</h3>
 
             <Table bordered responsive="sm">
