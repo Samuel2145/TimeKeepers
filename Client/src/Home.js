@@ -45,7 +45,7 @@ class Home extends Component {
                                     </ul>
                                 </Card.Text>
                                 
-                                <LinkContainer to="/employee">
+                                <LinkContainer to="/login">
                                     <Button>Login</Button>
                                 </LinkContainer>
                             </Card.Body>
@@ -65,7 +65,7 @@ class Home extends Component {
                                     <li>Edit employee qualifications</li>
                                     </ul>
                                 </Card.Text>
-                                <LinkContainer to="/admin">
+                                <LinkContainer to="/login">
                                     <Button>Login</Button>
                                 </LinkContainer>
                             </Card.Body>
