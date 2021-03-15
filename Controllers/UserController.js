@@ -6,6 +6,26 @@ import jwt from 'jsonwebtoken'
 const DB_URL = process.env.JAWSDB_MARIA_URL || 'mysql://n9qa33fb24h5ojln:w5ie9n0wkv2mlpvs@ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/zry2wsgus6t4stzn';
 const conn = mysql.createConnection(DB_URL);
 
+export const createGrouping = (req, res) => {
+
+    const groupName = req.body.grouping.groupName;
+    const description = req.body.grouping.description;
+
+
+    const insertQ = `INSERT INTO grouping VALUES('${groupName}','${description}')`;
+
+    conn.query(insertQ, (err, result) => {
+
+        if(err){
+            res.status(400).send(`Insertion failed: ${err}`);
+        }else{
+            res.status(201).send('Stored');
+        }
+
+    });
+
+}
+
 export const createUser = (req, res) => {
 
     bcrypt.genSalt(10, function(err,salt) {
@@ -17,21 +37,22 @@ export const createUser = (req, res) => {
                 return;
             }
 
-            const userName = req.body.user.userName;
+            const username = req.body.user.username;
+            const personName = req.body.user.personName;
+            const groupName = req.body.user.groupName;
             const email = req.body.user.email;
-            const type = req.body.user.type;
+            const phoneNumber = req.body.user.phoneNumber;
+            const address = req.body.user.address;
+            const isEmployer = req.body.user.isEmployer;
+            const avgScore = req.body.user.avgScore;
 
-            ///Need to talk to Alec about database design and how we want to put data in
-            //const insertQ = "INSERT INTO employee (username, password, name, email, phoneNo, address) VALUES (\'"
-            //                    + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + phone + "\')";
 
-            const insertQ = "INSERT INTO users (username, password, email, isEmployer) VALUES (\'"
-                                + userName + "\', \'" + hash + "\', \'" + email + "\', \'" + type +"\')";
+            const insertQ = `INSERT INTO user VALUES('${username}','${hash}','${personName}','${groupName}','${email}','${phoneNumber}','${address}',${isEmployer},${avgScore})`;
 
             conn.query(insertQ, (err, result) => {
 
                 if(err){
-                    res.status(400).send('Insertion failed (Username or email already in use)');
+                    res.status(400).send(`Insertion failed: ${err}`);
                 }else{
                     res.status(201).send('Stored');
                 }
@@ -41,6 +62,74 @@ export const createUser = (req, res) => {
     });
 }
 
+export const createAvailability = (req, res) => {
+
+    const username = req.body.availability.username;
+    const day = req.body.availability.day;
+    const startHour = req.body.availability.startHour;
+    const endHour = req.body.availability.endHour;
+
+    const insertQ = `INSERT INTO availability(username,day,startHour,endHour) VALUES('${username}','${day}','${startHour}','${endHour}')`;
+
+    conn.query(insertQ, (err, result) => {
+
+        if(err){
+            res.status(400).send(`Insertion failed: ${err}`);
+        }else{
+            res.status(201).send('Stored');
+        }
+
+    });
+
+}
+
+export const createParameter = (req, res) => {
+
+    const groupName = req.body.parameter.groupName;
+    const shiftSize = req.body.parameter.shiftSize;
+    const scheduleStart = req.body.parameter.scheduleStart;
+    const scheduleEnd = req.body.parameter.scheduleEnd;
+    const numSimultaneous = req.body.parameter.numSimultaneous;
+    const maxWeeklyHours = req.body.parameter.maxWeeklyHours;
+    const maxDailyHours = req.body.parameter.maxDailyHours;
+
+    const insertQ = `INSERT INTO parameter(groupName, shiftSize, scheduleStart, scheduleEnd, numSimultaneous, maxWeeklyHours, maxDailyHours) VALUES('${groupName}',${shiftSize},${scheduleStart},${scheduleEnd},${numSimultaneous},${maxWeeklyHours},${maxDailyHours})`;
+
+    conn.query(insertQ, (err, result) => {
+
+        if(err){
+            res.status(400).send(`Insertion failed: ${err}`);
+        }else{
+            res.status(201).send('Stored');
+        }
+
+    });
+
+}
+
+export const createShift = (req, res) => {
+
+    const username = req.body.shift.username;
+    const parameterID = req.body.shift.parameterID;
+    const start = req.body.shift.start; 
+    const end = req.body.shift.end;
+    const type = req.body.shift.type;
+    const isHoliday = req.body.shift.isHoliday;
+    const score = req.body.shift.score;
+
+    const insertQ = `INSERT INTO shift(username, parameterID, start, end, type, isHoliday, score) VALUES('${username}',${parameterID},'${start}','${end}','${type}',${isHoliday},${score})`;
+
+    conn.query(insertQ, (err, result) => {
+
+        if(err){
+            res.status(400).send(`Insertion failed: ${err}`);
+        }else{
+            res.status(201).send('Stored');
+        }
+
+    });
+
+}
 
 export const userLogin = (req, res) => {
 
