@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Table from 'react-bootstrap/Table';
 import axios from 'axios'
 import Container from "react-bootstrap/Container";
@@ -6,67 +6,67 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import bigthink from "./img/bigthink.png";
-import {LinkContainer} from "react-router-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
 
 const divStyle = {
-    paddingTop: '10px',
-    marginLeft: '10px',
+  paddingTop: '10px',
+  marginLeft: '10px',
 };
 
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 class Calendar extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            shifts: []
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      shifts: []
+    };
+  }
 
-    componentDidMount() {
+  componentDidMount() {
 
-        axios.get("/user/getCalendar", {withCredentials: true}).then((res) => {
+    axios.get("/user/getCalendar", { withCredentials: true }).then((res) => {
 
-            console.log(res.data);
+      console.log(res.data);
 
-            const shiftData = res.data;
+      const shiftData = res.data;
 
-            const toDisplay = shiftData.map((elem) => {
-                return (
-                    <Col>
-                        <Card style={{}}>
-                            <Card.Body>
-                                <Card.Title>{elem.day}</Card.Title>
-                                <Card.Text>
-                                    {elem.username}
-                                    <br/>
-                                    {elem.startTime} - {elem.endTime}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                )
-            })
-
-            this.setState({shifts: toDisplay})
-        })
-
-    }
-
-
-    render() {
+      const toDisplay = shiftData.map((elem) => {
         return (
+          <Col>
+            <Card style={{}}>
+              <Card.Body>
+                <Card.Title>{elem.day}</Card.Title>
+                <Card.Text>
+                  {elem.username}
+                  <br />
+                  {elem.startTime} - {elem.endTime}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        )
+      })
 
-            <Container fluid="md">
-                <Row className="justify-content-md-end">
-                    {this.state.shifts}
-                </Row>
+      this.setState({ shifts: toDisplay })
+    })
 
-            </Container>
-        );
-    }
+  }
+
+
+  render() {
+    return (
+
+      <Container fluid="md">
+        <Row className="justify-content-md-end">
+          {this.state.shifts}
+        </Row>
+
+      </Container>
+    );
+  }
 }
 
 export default Calendar;

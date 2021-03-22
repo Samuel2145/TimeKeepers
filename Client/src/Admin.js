@@ -52,9 +52,9 @@ function Admin() {
       </Form.Control>
     </Form.Group>
 
-    <Form.Group as={Col} controlId="formGridPassword">
+    <Form.Group as={Col} controlId="formGridEmail">
       <Form.Label>Number of Simultaneous Shifts</Form.Label>
-      <Form.Control type="password" placeholder="5" />
+      <Form.Control type="email" placeholder="5" />
     </Form.Group>
   </Form.Row>
 
@@ -93,12 +93,12 @@ function Admin() {
   <Form.Row>
   <Form.Group as={Col} controlId="formGridPassword">
       <Form.Label>Maximum Weekly Hours</Form.Label>
-      <Form.Control type="password" placeholder="30" />
+      <Form.Control type="email" placeholder="30" />
     </Form.Group>
 
     <Form.Group as={Col} controlId="formGridPassword">
       <Form.Label>Maximum Daily Hours</Form.Label>
-      <Form.Control type="password" placeholder="6" />
+      <Form.Control type="email" placeholder="6" />
     </Form.Group>
   </Form.Row>
   </Form>
