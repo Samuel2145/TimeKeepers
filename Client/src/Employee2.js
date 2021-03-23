@@ -9,17 +9,11 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Button, Modal } from 'react-bootstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import Table from 'react-bootstrap/Table';
+import axios from 'axios'
 
 const divStyle = {
   paddingTop: '20px',
 };
-
-const sampleData = [{ sTime: '8:00 am', eTime: '10:00 am' },
-{ sTime: '10:00 am', eTime: '12:00 pm' },
-{ sTime: '12:00 pm', eTime: '2:00 pm' },
-{ sTime: '2:00 pm', eTime: '4:00 pm' },
-{ sTime: '5:00 pm', eTime: '5:00 pm' }
-]
 
 
 //tr, td
@@ -28,7 +22,8 @@ class Employee2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: []
+      index: [],
+      data: []
     };
     this.clickHandler = this.clickHandler.bind(this)
   }
@@ -42,7 +37,12 @@ class Employee2 extends Component {
 
   componentDidMount() {
 
+    axios.get('/user/getGroupParameterData', {withCredentials: true}).then( (res) => {
+      this.setState({data:res.data})
+    });
+
     const temp = [1, 2, 3, 4, 5, 6, 7]
+
 
 
     /* 
@@ -86,7 +86,7 @@ class Employee2 extends Component {
           </thead>
 
           <tbody>
-            {sampleData.map((data) => {
+            {this.state.data.map((data) => {
               return (
                 <tr>
                   <td>

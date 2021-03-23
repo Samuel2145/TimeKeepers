@@ -14,4 +14,6 @@ userRouter.get('/getCalendar', user.getCalendar);
 userRouter.get('/isLoggedIn', user.isLoggedIn);
 userRouter.post('/logout', user.Logout);
 
+userRouter.get('/getGroupParameterData', user.getGroupParameterData);
+
 export default userRouter;
