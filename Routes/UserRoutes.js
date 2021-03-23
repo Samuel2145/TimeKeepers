@@ -14,6 +14,10 @@ userRouter.get('/getCalendar', user.getCalendar);
 userRouter.get('/isLoggedIn', user.isLoggedIn);
 userRouter.post('/logout', user.Logout);
 
+<<<<<<< Updated upstream
 userRouter.get('/getGroupParameterData', user.getGroupParameterData);
+=======
+userRouter.get('/getSettings', user.getSettings);
+>>>>>>> Stashed changes
 
 export default userRouter;

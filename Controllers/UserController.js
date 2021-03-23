@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt'
 import mysql from 'mysql'
 import jwt from 'jsonwebtoken'
+import Joi from 'joi'
+import * as joi from '../Validation.js'
 
 const DB_URL = process.env.JAWSDB_MARIA_URL || 'mysql://n9qa33fb24h5ojln:w5ie9n0wkv2mlpvs@ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/zry2wsgus6t4stzn';
 const conn = mysql.createConnection(DB_URL);
@@ -27,6 +29,22 @@ export const createGrouping = (req, res) => {
 
 export const createUser = (req, res) => {
 
+
+    const toValidate = {
+        Username: req.body.user.userName,
+        Password: req.body.user.password,
+        Email: req.body.user.email
+    }
+
+    const isValid = joi.schema.validate(toValidate);
+
+    //console.log(isValid);
+
+    if(isValid.error){
+        res.status(400).send('Some field is incorrect')
+        return;
+    }
+
     bcrypt.genSalt(10, function(err,salt) {
 
         bcrypt.hash(req.body.user.password, salt, function(err, hash) {
@@ -36,17 +54,19 @@ export const createUser = (req, res) => {
                 return;
             }
 
-            const username = req.body.user.username;
-            const personName = req.body.user.personName;
-            const groupName = req.body.user.groupName;
+            const username = req.body.user.userName;
+            const personName = req.body.user.personName || null;
+            const groupName = req.body.user.groupName || "group1";
             const email = req.body.user.email;
-            const phoneNumber = req.body.user.phoneNumber;
-            const address = req.body.user.address;
+            const phoneNumber = req.body.user.phoneNumber || null;
+            const address = req.body.user.address || null;
             const isEmployer = req.body.user.isEmployer;
-            const avgScore = req.body.user.avgScore;
+            const avgScore = req.body.user.avgScore || null;
 
 
             const insertQ = `INSERT INTO user VALUES('${username}','${hash}','${personName}','${groupName}','${email}','${phoneNumber}','${address}',${isEmployer},${avgScore})`;
+
+            //console.log(insertQ);
 
             conn.query(insertQ, (err, result) => {
 
@@ -132,7 +152,6 @@ export const createShift = (req, res) => {
 
 export const userLogin = (req, res) => {
 
-
     const username = req.body.user.username;
     const password = req.body.user.password;
 
@@ -180,7 +199,7 @@ export const getUserInfo = (req,res) => {
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
-    console.log(userData)
+    //console.log(userData)
 
     const toSend = {
         username : userData.username
@@ -318,5 +337,13 @@ export const getCalendar = (req,res) => {
             res.status(200).send(JSON.stringify(shiftData));
         }
     })
+
+}
+
+const getSettings = (req,res) => {
+
+
+
+
 
 }
