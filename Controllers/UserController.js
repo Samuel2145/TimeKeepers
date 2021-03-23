@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt'
 import mysql from 'mysql'
 import jwt from 'jsonwebtoken'
-import Joi from 'joi'
 import * as joi from '../Validation.js'
 
 const DB_URL = process.env.JAWSDB_MARIA_URL || 'mysql://n9qa33fb24h5ojln:w5ie9n0wkv2mlpvs@ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/zry2wsgus6t4stzn';
@@ -27,59 +26,7 @@ export const createGrouping = (req, res) => {
 
 }
 
-export const createUser = (req, res) => {
 
-
-    const toValidate = {
-        Username: req.body.user.userName,
-        Password: req.body.user.password,
-        Email: req.body.user.email
-    }
-
-    const isValid = joi.schema.validate(toValidate);
-
-    //console.log(isValid);
-
-    if(isValid.error){
-        res.status(400).send('Some field is incorrect')
-        return;
-    }
-
-    bcrypt.genSalt(10, function(err,salt) {
-
-        bcrypt.hash(req.body.user.password, salt, function(err, hash) {
-
-            if (err){
-                res.status(400).send('Could not hash password');
-                return;
-            }
-
-            const username = req.body.user.userName;
-            const personName = req.body.user.personName || null;
-            const groupName = req.body.user.groupName || "group1";
-            const email = req.body.user.email;
-            const phoneNumber = req.body.user.phoneNumber || null;
-            const address = req.body.user.address || null;
-            const isEmployer = req.body.user.isEmployer;
-            const avgScore = req.body.user.avgScore || null;
-
-
-            const insertQ = `INSERT INTO user VALUES('${username}','${hash}','${personName}','${groupName}','${email}','${phoneNumber}','${address}',${isEmployer},${avgScore})`;
-
-            //console.log(insertQ);
-
-            conn.query(insertQ, (err, result) => {
-
-                if(err){
-                    res.status(400).send(`Insertion failed: ${err}`);
-                }else{
-                    res.status(201).send('Stored');
-                }
-
-            });
-        });
-    });
-}
 
 export const createAvailability = (req, res) => {
 
@@ -150,20 +97,82 @@ export const createShift = (req, res) => {
 
 }
 
+export const createUser = (req, res) => {
+
+    const toValidate = {
+        Username: req.body.user.userName,
+        Password: req.body.user.password,
+        Email: req.body.user.email,
+        isEmployer: req.body.user.isEmployer
+    }
+
+    //console.log(toValidate)
+
+    const isValid = joi.userCreation.validate(toValidate);
+
+    //console.log(isValid);
+
+    if(isValid.error){
+        res.status(400).send('Some field is incorrect')
+        return;
+    }
+
+    bcrypt.genSalt(10, function(err,salt) {
+
+        bcrypt.hash(req.body.user.password, salt, function(err, hash) {
+
+            if (err){
+                res.status(400).send('Could not hash password');
+                return;
+            }
+
+            const username = req.body.user.userName;
+            const personName = req.body.user.personName || null;
+            const groupName = req.body.user.groupName || "group1";
+            const email = req.body.user.email;
+            const phoneNumber = req.body.user.phoneNumber || null;
+            const address = req.body.user.address || null;
+            const isEmployer = req.body.user.isEmployer;
+            const avgScore = req.body.user.avgScore || null;
+
+
+            //We have to change queries to meet the specs of character escaping, the below is an example of how mysql does this efficiently
+            //const insertQ = `INSERT INTO user VALUES('${username}','${hash}','${personName}','${groupName}','${email}','${phoneNumber}','${address}',${isEmployer},${avgScore})`;
+            const insertQ = 'INSERT INTO user VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+
+            //console.log(insertQ);
+
+            conn.query(insertQ, [username, hash, personName, groupName, email, phoneNumber, address, isEmployer, avgScore],(err, result) => {
+
+                if(err){
+                    res.status(400).send(`Insertion failed: ${err}`);
+                }else{
+                    res.status(201).send('Stored');
+                }
+
+            });
+        });
+    });
+}
+
 export const userLogin = (req, res) => {
 
     const username = req.body.user.username;
     const password = req.body.user.password;
 
-    const insertQ = "SELECT password, isEmployer, groupName FROM user WHERE username=\'" + username +"\'" ;
+    const isValid = joi.userLogin.validate({Username: username, Password: password});
 
-    conn.query(insertQ, (err, result) => {
+    if(isValid.error){
+        res.status(400).send('Some field is incorrect')
+        return;
+    }
 
-        if(err){
-            res.status(404).send('User does not exist');
-        }else{
+    //const insertQ = "SELECT password, isEmployer, groupName FROM user WHERE username=\'" + username +"\'" ;
+    const insertQ = "SELECT password, isEmployer, groupName FROM user WHERE username=?" ;
 
-            console.log(result);
+    conn.query(insertQ, [username], (err, result) => {
+
+        if(result.length !== 0){
 
             const hashed = result[0].password;
 
@@ -191,6 +200,10 @@ export const userLogin = (req, res) => {
                     res.status(400).send('Password is incorrect!');
                 }
             });
+
+        }else{
+            res.status(404).send('User does not exist');
+
         }
     });
 }
@@ -340,7 +353,7 @@ export const getCalendar = (req,res) => {
 
 }
 
-const getSettings = (req,res) => {
+export const getSettings = (req,res) => {
 
 
 

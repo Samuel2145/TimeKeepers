@@ -17,7 +17,7 @@ class SignUp extends Component {
             userName: '',
             password: '',
             email: '',
-            isEmployer: 0
+            isEmployer: 2
         };
         this.formHandler = this.formHandler.bind(this)
     }
