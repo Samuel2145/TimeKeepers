@@ -109,7 +109,7 @@ function Admin() {
     >
         <Row>
         <LinkContainer to="/calendar">
-        <Button variant="primary">
+        <Button variant="primary" width={80}>
           View Schedule
         </Button>
         </LinkContainer>
