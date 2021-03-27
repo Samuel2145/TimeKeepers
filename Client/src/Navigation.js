@@ -6,6 +6,7 @@ import NavItem from 'react-bootstrap/NavItem';
 import Home from "./Home";
 import Employee from "./Employee";
 import Admin from "./Admin";
+import Employee2 from "./Employee2";
 import Calendar from "./Calendar";
 import Login from "./Login";
 import SignUp from "./SignUp";
@@ -94,6 +95,7 @@ class Navigation extends Component {
                         <Route exact path='/' component={Home}/>
                         <Route exact path='/employee' component={Employee}/>
                         <Route exact path='/admin' component={Admin}/>
+                        <Route exact path='/employee2' component={Employee2}/>
                         <Route exact path='/calendar' component={Calendar}/>
                         <Route exact path='/login' component={Login}/>
                         <Route exact path='/signup' component={SignUp}/>

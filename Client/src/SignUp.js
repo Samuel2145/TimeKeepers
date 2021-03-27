@@ -17,7 +17,7 @@ class SignUp extends Component {
             userName: '',
             password: '',
             email: '',
-            type: 0
+            isEmployer: 2
         };
         this.formHandler = this.formHandler.bind(this)
     }
@@ -29,7 +29,7 @@ class SignUp extends Component {
             userName: this.state.userName,
             password: this.state.password,
             email: this.state.email,
-            type: this.state.type
+            isEmployer: this.state.isEmployer
         }
 
         //console.log(user);
@@ -73,10 +73,10 @@ class SignUp extends Component {
 
                         <Form.Group>
                             <ToggleButtonGroup type="radio" name="type">
-                                <ToggleButton value="0" onClick={(e) => this.setState({type: e.target.value})}>
+                                <ToggleButton value="0" onClick={(e) => this.setState({isEmployer: e.target.value})}>
                                     Employee
                                 </ToggleButton>
-                                <ToggleButton value="1" onClick={(e) => this.setState({type: e.target.value})}>
+                                <ToggleButton value="1" onClick={(e) => this.setState({isEmployer: e.target.value})}>
                                     Employer
                                 </ToggleButton>
                             </ToggleButtonGroup>
