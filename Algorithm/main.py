@@ -31,9 +31,10 @@ data = json.load(sys.stdin)
 
 #print(data)
 
-schedStart = 10
-schedEnd = 35
-shiftLengths = np.array([5, 16])
+shiftSize = data['shiftSize']
+schedStart = data['scheduleStart']
+schedEnd = data['scheduleEnd']
+shiftLengths = np.array([shiftSize])
 
 constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
 
@@ -41,10 +42,26 @@ roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['ava
 
 sched = buildSchedule(roster, constraints)
 #sched.displaySchedule()
-print("")
+#print("")
 sched = localSearch(sched)
 
-sched.displaySchedule()
+#sched.displaySchedule()
+
+toJSON = ""
+
+d = 15
+
+for day in sched.schedule:
+        for shift in sched.schedule[day]:
+            start = "2021-03-%02d %02d:%02d:00" %( d, math.floor(shift.shiftStart/2), (shift.shiftStart%2)*30)
+            end = "2021-03-%02d %02d:%02d:00" %(d, math.floor(shift.shiftEnd/2), (shift.shiftEnd%2)*30)
+            #temp = '{ "username":"' + shift.employeeID + '", "start":"' + start + '", "end":"' + end + '"}?'
+            temp = '("'+ shift.employeeID + '", "' + start + '", "' + end +'"), '
+            toJSON += temp
+
+        d += 1
+
+print(toJSON)
 
 #connection = getConnection()
 #try:

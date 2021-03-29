@@ -26,10 +26,10 @@ def buildSchedule(employees, constraints):
         #schedule.displaySchedule()
 
     hs, ms, ss = Scorer.calculateScoreSimple(schedule)     
-    print("HardScore: ", hs)
-    print("medScore: ", ms)
-    print("softScore: ", ss)
-    print("iterations ", iterations)
+    #print("HardScore: ", hs)
+    #print("medScore: ", ms)
+    #print("softScore: ", ss)
+    #print("iterations ", iterations)
     return schedule
 
 #selects the step with the highes score from an ordered dict of states mapped to their scores. Each state is mapped to one score only
