@@ -1,3 +1,2 @@
 numpy==1.20.1
 prettytable==2.0.0
-mariadb==1.0.6
