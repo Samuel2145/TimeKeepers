@@ -255,14 +255,6 @@ export const GenerateSchedule = (req,res) => {
                 //console.log('finished');
                 res.status(200).send('Something')
             });
-
         })
-
-
-
-
     })
-
-
-
 }
