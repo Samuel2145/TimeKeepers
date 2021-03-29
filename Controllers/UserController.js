@@ -51,7 +51,9 @@ export const createAvailability = (req, res) => {
 
 export const createParameter = (req, res) => {
 
-    const groupName = req.body.parameter.groupName;
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const groupName = userData.Group;
     const shiftSize = req.body.parameter.shiftSize;
     const scheduleStart = req.body.parameter.scheduleStart;
     const scheduleEnd = req.body.parameter.scheduleEnd;
@@ -59,18 +61,16 @@ export const createParameter = (req, res) => {
     const maxWeeklyHours = req.body.parameter.maxWeeklyHours;
     const maxDailyHours = req.body.parameter.maxDailyHours;
 
-    const insertQ = `INSERT INTO parameter(groupName, shiftSize, scheduleStart, scheduleEnd, numSimultaneous, maxWeeklyHours, maxDailyHours) VALUES('${groupName}',${shiftSize},${scheduleStart},${scheduleEnd},${numSimultaneous},${maxWeeklyHours},${maxDailyHours})`;
+    const insertQ = `INSERT INTO parameter(groupName, shiftSize, scheduleStart, scheduleEnd, numSimultaneous, maxWeeklyHours, maxDailyHours) VALUES( ?, ?, ?, ?, ?, ?, ?)`;
 
-    conn.query(insertQ, (err, result) => {
+    conn.query(insertQ, [groupName, shiftSize, scheduleStart, scheduleEnd, numSimultaneous, maxWeeklyHours, maxDailyHours],(err, result) => {
 
         if(err){
             res.status(400).send(`Insertion failed: ${err}`);
         }else{
             res.status(201).send('Stored');
         }
-
     });
-
 }
 
 export const createShift = (req, res) => {
@@ -317,11 +317,20 @@ export const getCalendar = (req,res) => {
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
-    const username = userData.username;
-    
-    const searchQ = "SELECT username, start, end FROM shift WHERE username=\'" + username +"\'" ;
+    //console.log(userData);
 
-    conn.query(searchQ, (err,result) => {
+    let searchQ;
+    let params = [];
+
+    if(userData.isEmployer === 1){
+        //params.push(userData.Group)
+        searchQ = "SELECT username, start, end FROM shift WHERE parameterID=3";
+    }else{
+        params.push(userData.username);
+        searchQ = "SELECT username, start, end FROM shift WHERE username=?" ;
+    }
+
+    conn.query(searchQ, params,(err,result) => {
 
         if(err){
 
@@ -350,13 +359,5 @@ export const getCalendar = (req,res) => {
             res.status(200).send(JSON.stringify(shiftData));
         }
     })
-
-}
-
-export const getSettings = (req,res) => {
-
-
-
-
 
 }
