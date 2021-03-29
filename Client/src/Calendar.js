@@ -120,8 +120,8 @@ class Calendar extends Component {
           {/* {this.state.shifts} */}
         </Row>
 
-        <table responsive="sm">
-          <thread>
+        <Table bordered responsive="sm">
+          <thead>
             <tr>
               <th>Time</th>
               <th>Sunday</th>
@@ -132,9 +132,9 @@ class Calendar extends Component {
               <th>Friday</th>
               <th>Saturday</th>
             </tr>
-          </thread>
+          </thead>
           <tbody>
-            <tr>
+            
               {
                 this.state.shifts.map((i) =>
                   <tr>
@@ -149,9 +149,9 @@ class Calendar extends Component {
                   </tr>
                 )
               }
-            </tr>
+            
           </tbody>
-        </table>
+        </Table>
 
       </Container>
       
