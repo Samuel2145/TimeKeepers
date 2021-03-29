@@ -120,10 +120,10 @@ class Database {
 * 4) The query described as userQ finds this for us, substituting the groupName with the one that is passed through the jwt belonging to that employer
 * 5) We iterate over the results to build the roster array
 * 6) We send this array to the algorithm in the form of a string
+* 7) We can now print to console
 *
 * TO-DO
-* 1) We need to be able to print to console first
-* 2) We need to get the data in a raw format to the backend which will then do two things,
+* 1) We need to get the data in a raw format to the backend which will then do two things,
 *       a) send it as a response to the employer for the sake of speed, no need to requery database
 *       b) store it in the database so that we can rerender it later when employer needs to see it again
 *
@@ -166,7 +166,7 @@ export const GenerateSchedule = (req,res) => {
                     "SATURDAY": [],
                 };
 
-                employees.set(username, {avails: availabilities});
+                employees.set(username,  availabilities);
             }
 
             //get value from map and add on whatever availability there needs to be put in
@@ -181,7 +181,7 @@ export const GenerateSchedule = (req,res) => {
             const end = parseInt(endHour.substring(0,2))*2 + parseInt(endHour.substring(3,5))/30;
 
 
-            valueToUpdate.avails[day].push([start,end]);
+            valueToUpdate[day].push([start,end]);
             employees.set(username, valueToUpdate);
         }
 
@@ -207,6 +207,7 @@ export const GenerateSchedule = (req,res) => {
         const message = JSON.stringify(roster)
 
         console.log(message);
+        
 
         algo.send(message, {mode: 'json'})
 
