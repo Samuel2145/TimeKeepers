@@ -13,6 +13,8 @@ import DatabaseConnections from "./DatabaseConnections";
 import SignUp from "./SignUp";
 import axios from 'axios'
 
+import './Navigation.css';
+
 class Navigation extends Component {
 
     constructor(props) {
@@ -79,7 +81,8 @@ class Navigation extends Component {
         return (
             <div>
                 <div>
-                    <Navbar bg="primary" variant="dark">
+                    <Navbar variant="dark" style={{backgroundColor: "#0D6AF1"}}>
+                        
                         <Navbar.Brand as={Link} to="/">Schedugator</Navbar.Brand>
                         <Navbar.Collapse>
                             <Nav className="ml-auto">

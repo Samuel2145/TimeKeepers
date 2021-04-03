@@ -20,7 +20,8 @@ import { LinkContainer } from 'react-router-bootstrap'
 import bigthink from './img/bigthink.png';
 import adminpic from './img/employer2.jpg';
 import employeepic from './img/employeepic.jpg';
-import black from './img/black.jpg';
+import black from './img/cyan.png';
+
 
 import './Home.css';
 
@@ -32,10 +33,12 @@ class Home extends Component {
     render() {
         return (
 
+            <div style={{backgroundColor: "#f2fcff"}}>
             <Container fluid="md">
+                
                 <div style={divStyle}></div>
 
-                <Carousel>
+                <Carousel style={{borderRadius: "20px"}}>
                     <Carousel.Item interval={3000} style={{ 'height': "250px" }}>
                         <img
                             className="d-block w-100"
@@ -70,8 +73,11 @@ class Home extends Component {
                         </Carousel.Caption>
                     </Carousel.Item>
                 </Carousel>
+                </Container>
+                
 
                 <div style={divStyle}></div>
+                <Container fluid="md">
 
                 <Row className="justify-content-md-end">
                     <Col>
@@ -118,6 +124,8 @@ class Home extends Component {
                 </Row>
 
             </Container>
+            </div>
+            
         );
     }
 }

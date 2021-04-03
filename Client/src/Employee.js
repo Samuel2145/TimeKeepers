@@ -853,9 +853,11 @@ class Employee extends Component {
           </Col>
         </Row>
 
-        <Button variant="primary">
+        <Button variant="primary" block>
           Submit
         </Button>
+
+        <div style={divStyle}></div>
 
       </Container>
 
