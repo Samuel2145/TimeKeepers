@@ -16,16 +16,60 @@ from Employee import Employee
 #Will be part of the construction heuristic that places shifts before they have employees traded in and out of them.
 #this will find the first fit and return the day schedule corresponding to it.
 def buildScheduleShape(schedule, constraints, day, nextSpot):
-    daySchedule = []
     # move down the time of the day and generate permutations using schedule sizes.
     # The first shift must start at the beginning of the workday and the last shift must end at the end of the workday
     # If there is a gap in the generated schedule it is rejected
     # If no valid schedule exists, return this information. The user must be notified that their shift sizes and workdays are not compatible.
+
     for size in constraints.shiftSizes:
+        #if an invalid schedule would be created (shift goes past end)
+        if nextSpot+size > constraints.schedEnd:
+        #do not add a shift of this size
+            continue 
+        #NOTE: can probably just break, assuming the shift sizes are ordered
+
         newShift = (nextSpot, nextSpot+size)
         for i in range(newShift):
-            pass
-    return    
+            #decrement unfilled slots in schedule
+            schedule.unfilled[day][i] -= 1
+            #if a spot goes negative, reject this schedule
+            if schedule.unfilled[day][i] < 0:
+                return schedule, False
+
+        building = False
+        #got to the end of the day and remained valid, start over at beginning of day to look for empty spots    
+        if nextSpot+size == constraints.schedEnd: 
+            #iterate through list of unfilled spots in the schedule
+            for key, value in schedule.unfilled[day]:
+                #first nonzero spot will be assigned as "nextSpot"
+                if value > 0:
+                    nextSpot = key
+                    building = True
+                    break  
+        else:
+            #should move nextSpot to the next nonzero unfilled spot
+            for i in range(newShift[1],constraints.schedEnd):
+                if schedule.unfilled[day][i] > 0:
+                    nextSpot = schedule.unfilled[day][i]
+                    building = True
+                    break
+            #start over at the beginning if no spot was found
+            if building == False:
+                for key, value in schedule.unfilled[day]:
+                    #first nonzero spot will be assigned as "nextSpot"
+                    if value > 0:
+                        nextSpot = key
+                        building = True
+                        break  
+
+        #BASE CASE: if there are no more nonzero spots, the day is finished. return the schedule
+            if building == False:
+                return schedule, True
+
+        #add additional shift. upon return upward, if we receive true stop trying different paths
+        if buildScheduleShape(copy.deepcopy(schedule), constraints, day, nextSpot)[1] == True:
+            break
+    return schedule
 
 
 # This attempts to place a given entity in a given schedule state without moving other entities.
