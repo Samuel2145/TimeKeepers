@@ -308,6 +308,11 @@ export const Logout = (req,res) => {
     res.send('Successfully logged out');
 }
 
+const RandomColor = () => {
+
+    return Math.floor(Math.random()*16777215).toString(16);
+}
+
 export const getCalendar = (req,res) => {
 
     if(!req.cookies.UserInfo){
@@ -317,14 +322,14 @@ export const getCalendar = (req,res) => {
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
-    console.log(userData);
+    //console.log(userData);
 
     let searchQ;
     let params = [];
 
     if(userData.isEmployer === 1){
         params.push(userData.Group)
-        searchQ = "SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?)";
+        searchQ = "SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) ORDER BY username ASC";
     }else{
         params.push(userData.username);
         searchQ = "SELECT username, start, end FROM shift WHERE username=?" ;
@@ -337,8 +342,10 @@ export const getCalendar = (req,res) => {
             res.status(400).send('Something didnt work');
         }else{
 
-            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const colors = ["#f9d5e5", "#eeac99", "#e06377", "#c83349", "#5b9aa0", "#d6d4e0", "#b8a9c9", "#622569"];
+            let currIndex = 0;
             let shiftData = [];
 
             result.forEach((elem) => {
@@ -346,11 +353,22 @@ export const getCalendar = (req,res) => {
                 const startData = new Date(elem.start);
                 const endData = new Date(elem.end);
 
+                const dataLength = shiftData.length;
+                let pickedColor;
+
+                if(dataLength === 0 || shiftData[dataLength-1].username !== elem.username){
+                    pickedColor = colors[currIndex];
+                    currIndex++;
+                }else{
+                    pickedColor = shiftData[dataLength-1].color;
+                }
+
                 const temporaryData = {
                     username: elem.username,
                     day: days[startData.getDay()],
                     startTime: startData.toLocaleTimeString('en-US'),
-                    endTime: endData.toLocaleTimeString('en-US')
+                    endTime: endData.toLocaleTimeString('en-US'),
+                    color: pickedColor
                 }
 
                 shiftData.push(temporaryData)
