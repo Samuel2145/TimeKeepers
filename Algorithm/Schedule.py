@@ -51,7 +51,6 @@ class Schedule:
 
     #this method will change who is assigned to a shift
     def reassignShift(self, shift, employee):
-
         if shift.employeeID != "EMPTY":
             # removes the shift tuple from the old employee's list
             for shiftTuple in self.employeeShifts[shift.day][shift.employee.ID]:

@@ -34,36 +34,37 @@ def buildScheduleShape(schedule, constraints, day, nextSpot):
         newShift = (nextSpot, nextSpot+size)
         schedule.insertShift(Shift.createShift("EMPTY", newShift[0], size, day), day)   
         #add shift to actual schedule
-        for i in range(newShift):
+        for i in range(newShift[0],newShift[1]):
             #decrement unfilled slots in schedule
-            schedule.unfilled[day][i] -= 1
+            spots = schedule.unfilled[day]
+            spots[i] -= 1
             #if a spot goes negative, reject this schedule
-            if schedule.unfilled[day][i] < 0:
+            if spots[i] < 0:
                 return schedule, False
 
         building = False
         #got to the end of the day and remained valid, start over at beginning of day to look for empty spots    
         if nextSpot+size == constraints.schedEnd: 
             #iterate through list of unfilled spots in the schedule
-            for key, value in schedule.unfilled[day]:
+            for i in range(constraints.schedStart,constraints.schedEnd):
                 #first nonzero spot will be assigned as "nextSpot"
-                if value > 0:
-                    nextSpot = key
+                if schedule.unfilled[day][i] > 0:
+                    nextSpot = i
                     building = True
                     break  
         else:
             #should move nextSpot to the next nonzero unfilled spot
             for i in range(newShift[1],constraints.schedEnd):
                 if schedule.unfilled[day][i] > 0:
-                    nextSpot = schedule.unfilled[day][i]
+                    nextSpot = i
                     building = True
                     break
             #start over at the beginning if no spot was found
             if building == False:
-                for key, value in schedule.unfilled[day]:
+                for i in range(constraints.schedStart,constraints.schedEnd):
                     #first nonzero spot will be assigned as "nextSpot"
-                    if value > 0:
-                        nextSpot = key
+                    if schedule.unfilled[day][i] > 0:
+                        nextSpot = i
                         building = True
                         break  
 

@@ -1,5 +1,5 @@
-from Algorithm.CH import initializeSchedule
-from Algorithm.LocalSearch import localSearchNew
+from CH import initializeSchedule
+from LocalSearch import localSearchNew
 import datetime
 import math
 import time
