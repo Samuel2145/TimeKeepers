@@ -28,10 +28,10 @@ def localSearch(schedule):
     iterations += itr
 
     hs, ms, ss = Scorer.calculateScoreSimple(schedule)     
-    print("HardScore: ", hs)
-    print("medScore: ", ms)
-    print("softScore: ", ss)
-    print("iterations: ", iterations)
+    #print("HardScore: ", hs)
+    #print("medScore: ", ms)
+    #print("softScore: ", ss)
+    #print("iterations: ", iterations)
 
     return schedule
 

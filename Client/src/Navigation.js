@@ -9,8 +9,11 @@ import Admin from "./Admin";
 import Employee2 from "./Employee2";
 import Calendar from "./Calendar";
 import Login from "./Login";
+import DatabaseConnections from "./DatabaseConnections";
 import SignUp from "./SignUp";
 import axios from 'axios'
+
+import './Navigation.css';
 
 class Navigation extends Component {
 
@@ -78,7 +81,8 @@ class Navigation extends Component {
         return (
             <div>
                 <div>
-                    <Navbar bg="primary" variant="dark">
+                    <Navbar variant="dark" style={{backgroundColor: "#0D6AF1"}}>
+                        
                         <Navbar.Brand as={Link} to="/">Schedugator</Navbar.Brand>
                         <Navbar.Collapse>
                             <Nav className="ml-auto">
@@ -99,6 +103,7 @@ class Navigation extends Component {
                         <Route exact path='/calendar' component={Calendar}/>
                         <Route exact path='/login' component={Login}/>
                         <Route exact path='/signup' component={SignUp}/>
+                        <Route exact path='/database' component={DatabaseConnections}/>
                         <Route render={function () {
                             return <p>Not found</p>
                         }}/>

@@ -1,118 +1,156 @@
-import React, { useState, Component } from 'react';
-import logo from './logo.svg';
+import React, {useState, Component} from 'react';
 import './App.css';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { LinkContainer } from 'react-router-bootstrap'
-import { Button, Modal } from 'react-bootstrap';
-import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import Table from 'react-bootstrap/Table';
 import axios from 'axios'
+import {Button} from "react-bootstrap";
 
 const divStyle = {
-  paddingTop: '20px',
+    paddingTop: '20px',
 };
 
 
 //tr, td
 class Employee2 extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      index: [],
-      data: []
-    };
-    this.clickHandler = this.clickHandler.bind(this)
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            values: [],
+            buttonData: []
+        };
+        this.clickHandler = this.clickHandler.bind(this)
+        this.submitHandler = this.submitHandler.bind(this);
+    }
 
-  clickHandler(e) {
+    clickHandler(e) {
 
-    e.preventDefault();
-    console.log("has been clicked")
+        e.preventDefault();
 
-  }
+        const vals = this.state.values;
 
-  componentDidMount() {
+        if(vals.includes(e.target.value)){
 
-    axios.get('/user/getGroupParameterData', {withCredentials: true}).then( (res) => {
-      this.setState({data:res.data})
-    });
+            vals.splice(vals.indexOf(e.target.value), 1);
 
-    const temp = [1, 2, 3, 4, 5, 6, 7]
+        }else{
+            vals.push(e.target.value);
+        }
 
+        this.setState({values:vals}, () => {
+            console.log(this.state.values);
+        });
 
+    }
 
-    /* 
-      const bData =
-        <td>
-          <BootstrapSwitchButton
-            checked={false}
-            width={80}
-            onlabel='Yes'
-            offlabel='No'
-            onClick={this.clickHandler}
-          />
-        </td>
-  
-  
-      const buttonData = [bData, bData, bData, bData, bData, bData, bData]
-      */
+    submitHandler(e) {
 
-    this.setState({
-      index: temp
-    })
-  }
+        e.preventDefault();
 
-  render() {
-    return (
-      <Container>
-        <div>Test Employee</div>
+        const avails = this.state.values;
 
-        <Table bordered responsive="sm">
-          <thead>
-            <tr>
-              <th>Weekdays</th>
-              <th>Sunday</th>
-              <th>Monday</th>
-              <th>Tuesday</th>
-              <th>Wednesday</th>
-              <th>Thursday</th>
-              <th>Friday</th>
-              <th>Saturday</th>
-            </tr>
-          </thead>
+        //avails.sort();
 
-          <tbody>
-            {this.state.data.map((data) => {
-              return (
-                <tr>
-                  <td>
-                    {data.sTime}-{data.eTime}
-                  </td>
+        axios.post("/user/createAvailability", {avails}, {withCredentials: true}).then((res) => {
+            console.log(res.data)
+        }).catch( (err) => {
+            console.log(err);
+        })
 
-                  {this.state.index.map((i) => {
-                    return (<td>
-                      <BootstrapSwitchButton
-                        checked={false}
-                        width={80}
-                        onlabel='Yes'
-                        offlabel='No'
-                        onClick={this.clickHandler}
-                      />
-                    </td>)
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
-      </Container>
+    }
 
-    );
-  }
+    componentDidMount() {
+
+        axios.get('/user/getGroupParameterData', {withCredentials: true}).then((res) => {
+            console.log(res.data);
+            this.setState({buttonData: res.data})
+        });
+
+    }
+
+    render() {
+        return (
+            <Container>
+                <div>Test Employee</div>
+
+                <Table bordered responsive="sm">
+                    <thead>
+                    <tr>
+                        <th>Weekdays</th>
+                        <th>Sunday</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {
+                        this.state.buttonData.map((i) => {
+
+                            return (
+                                <tr>
+                                    <td>{i[0].sTime} - {i[0].eTime}</td>
+
+                                    <td>
+                                        <button value={i[1].col + "," + i[1].row} onClick={this.clickHandler}>
+                                          Available
+                                        </button>
+                                    </td>
+
+                                    <td>
+                                      <button value={i[2].col + "," + i[2].row} onClick={this.clickHandler}>
+                                        Available
+                                      </button>
+                                    </td>
+
+                                    <td>
+                                      <button value={i[3].col + "," + i[3].row} onClick={this.clickHandler}>
+                                        Available
+                                      </button>
+                                    </td>
+
+                                    <td>
+                                      <button value={i[4].col + "," + i[4].row} onClick={this.clickHandler}>
+                                        Available
+                                      </button>
+                                    </td>
+
+                                    <td>
+                                      <button value={i[5].col + "," + i[5].row} onClick={this.clickHandler}>
+                                        Available
+                                      </button>
+                                    </td>
+
+                                    <td>
+                                      <button value={i[6].col + "," + i[6].row} onClick={this.clickHandler}>
+                                        Available
+                                      </button>
+                                    </td>
+
+                                    <td>
+                                      <button value={i[7].col + "," + i[7].row} onClick={this.clickHandler}>
+                                        Available
+                                      </button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
+                    </tbody>
+                </Table>
+
+                <Button variant="primary" onClick={this.submitHandler}>
+                    Save Changes
+                </Button>
+            </Container>
+
+        );
+    }
 }
 
 
