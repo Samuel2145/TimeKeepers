@@ -6,7 +6,7 @@ class Shift:
         self.shiftStart = shiftStart
         self.shiftEnd = shiftStart + shiftLength
         self.shiftLength = shiftLength   
-        self.day = day #redundant?
+        self.day = day 
          
     # creates a shift given a start time, length, and employeeID.
     # TODO: implement a way to handle if a shift is created to where it ends pasts the end of a day.

@@ -1,3 +1,5 @@
+from Algorithm.CH import initializeSchedule
+from Algorithm.LocalSearch import localSearchNew
 import math
 import time
 import mariadb
@@ -40,13 +42,15 @@ constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((s
 
 roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['avails'] ) for entry in data['employees']})
 
-sched = buildSchedule(roster, constraints)
-#sched.displaySchedule()
+#sched = buildSchedule(roster, constraints)
+sched = initializeSchedule(roster, constraints)
+sched.displaySchedule()
 print("")
-sched = localSearch(sched)
+sched = localSearchNew(sched)
 
-#sched.displaySchedule()
+sched.displaySchedule()
 
+"""
 connection = getConnection()
 
 #this is temporary for the purposes of testing. 
@@ -62,3 +66,4 @@ for day in sched.schedule:
         #cursor.execute("INSERT INTO shift (username, start, end) VALUES (?, ?, ?)",         
         #(shift.employeeID, start, end))
     d += 1
+    """

@@ -5,6 +5,127 @@ from Shift import Shift
 # as the schedule is built, the scorer will be run to check whether it is becoming more or less optimal
 # and therefore decide whether to take a step or not.
 
+def calculateScoreNew(schedule_):
+    hardScore = _hardScoreCalcNew(schedule_.employeeShifts)
+    medScore = _medScoreCalcNew(schedule_.schedule)                                                   
+    softScore = _softScoreCalcNew(schedule_)         
+            
+    return hardScore, medScore, softScore 
+
+def _hardScoreCalcNew(employeeShifts):
+    """
+    Looks through each list of shifts in the employeeShifts dict. 
+    Checks for any intersections within a list, decreasing the score if found.
+    """
+    hardScore = 0
+    for day in employeeShifts.keys:
+        for shifts in employeeShifts[day].values:
+            hardScore += _checkForInterSections(shifts)
+    return hardScore
+
+def _medScoreCalcNew(schedule):
+    medScore = 0
+    """ 
+    receives a schedule OrderedDict with each entry holding a list of shifts
+    For each shift without an employee, subtract from the medium score the 
+    length of the empty shift
+    """
+    for item in schedule:
+        for shift in item.values():
+            if shift.employeeID == "EMPTY":
+                medScore -= shift.shiftLength
+    return medScore
+
+
+def _softScoreCalcNew(schedule_):
+    softScore = 0
+    for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity            
+            for shift in schedule_.schedule[day]: #this is likely to be a constant from 2-3, so doesn't add much to complexity                
+                if(shift.employeeID == "EMPTY"):
+                    continue
+                availPenalty = shift.shiftEnd - shift.shiftStart # the penalty represents how much of a shift is outside of the corresponding employee's availability 
+                for availability in schedule_.roster[shift.employeeID].avails[day]: # here we will check the corresponding employee's availability tuples for that day
+                    availPenalty -= _shiftCompare(shift, availability)
+                    if (availPenalty == 0):
+                        break
+                softScore -= availPenalty
+    return softScore
+
+def _checkForInterSections(shifts):
+    hardScore = 0
+    #this will contain 2 pairs for each pair in employeeShifts, with the second element corresponding to the pair index
+    positions = [] 
+
+    # a dict of lists containing any intersections
+    intersections = {i : [] for i in range(len(shifts))}
+
+    # Store each pair with their positions 
+    for i in range (len(shifts)):
+        positions.append((shifts[i][0], i)) 
+        positions.append((shifts[i][1], i))
+    
+
+    # Sort the vector with respect to 
+    # first element in the pair 
+    positions.sort()
+    
+    #number of intersections
+    num = 0
+
+    # set data structure for keeping 
+    # the second element of each pair 
+    s = set() 
+
+    for p in positions: 
+
+        # check if all pairs are taken 
+        if (num >= len(shifts)):
+            break
+
+        # check if current value is a second element 
+        # if so, remove p from the set 
+        if (p in s):
+            s.remove(p) 
+
+        else:
+
+            # index of the current pair 
+            i = p[1]
+
+            # Computing the second element of current pair 
+            j = shifts[i][1]
+
+            # iterating in the set of second elements
+            for k in s: 
+
+                # Check if the set element 
+                # has higher value than the current 
+                # element's second element 
+                if (k[0] > j):
+                    break
+
+                #if an intersection exists
+                index = k[1]  
+                intersections[i].append(index)   
+                intersections[index].append(i)  
+                num += 1 
+
+                # Check if curr is equal to 
+                # all available pairs or not 
+                if (num >= len(shifts)):
+                    break
+            
+
+            # Insert second element 
+            # of current pair in the set 
+            s.add((j, i)) 
+            hardScore -= num
+    return hardScore
+        
+
+
+
+
 # returns a score. This will check the entire schedule state each time.
 # TODO: break into parts that allow it to only check elements related to a newly added or changed entity, increasing runspeed
 def calculateScoreSimple(schedule_):
@@ -92,6 +213,7 @@ def _hardScoreCalcSimple(employeeShifts):
         
     return hardScore
      
+
 
 
 # medscore represents how many spots have been filled. 0 means all times have been filled. 

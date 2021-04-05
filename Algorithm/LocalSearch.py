@@ -1,8 +1,22 @@
+import math
 from collections import OrderedDict
 from Schedule import Schedule 
 import Constraints
 import Scorer
 import MoveSelector
+
+def localSearchNew(schedule):
+    """
+    local search using simple hill climbing: finds the first better neighbor and chooses that as the new state
+    """
+
+    searching = True
+    scores = Scorer.calculateScoreNew(schedule)
+
+    while searching:
+        schedule, scores, searching = MoveSelector.simpleHillClimb(schedule, scores)
+
+    return schedule
 
 def localSearch(schedule):
     iterations = 0

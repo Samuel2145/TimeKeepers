@@ -3,6 +3,7 @@ from Shift import Shift
 from Schedule import Schedule
 import Constraints
 from Employee import Employee
+import Scorer
 
 # Author: Will Pascuzzi
 # This will contain methods responsible for generating moves. 
@@ -12,6 +13,8 @@ from Employee import Employee
 # this set of states can be run through a scorer, which can return the most optimal state to choose
 
 
+    
+
 #this will fill a day with shifts according to the necessity of workers per hour
 #Will be part of the construction heuristic that places shifts before they have employees traded in and out of them.
 #this will find the first fit and return the day schedule corresponding to it.
@@ -20,7 +23,7 @@ def buildScheduleShape(schedule, constraints, day, nextSpot):
     # The first shift must start at the beginning of the workday and the last shift must end at the end of the workday
     # If there is a gap in the generated schedule it is rejected
     # If no valid schedule exists, return this information. The user must be notified that their shift sizes and workdays are not compatible.
-
+    success = False
     for size in constraints.shiftSizes:
         #if an invalid schedule would be created (shift goes past end)
         if nextSpot+size > constraints.schedEnd:
@@ -29,6 +32,8 @@ def buildScheduleShape(schedule, constraints, day, nextSpot):
         #NOTE: can probably just break, assuming the shift sizes are ordered
 
         newShift = (nextSpot, nextSpot+size)
+        schedule.insertShift(Shift.createShift("EMPTY", newShift[0], size, day), day)   
+        #add shift to actual schedule
         for i in range(newShift):
             #decrement unfilled slots in schedule
             schedule.unfilled[day][i] -= 1
@@ -63,13 +68,34 @@ def buildScheduleShape(schedule, constraints, day, nextSpot):
                         break  
 
         #BASE CASE: if there are no more nonzero spots, the day is finished. return the schedule
-            if building == False:
-                return schedule, True
+        if building == False:
+            return schedule, True
 
         #add additional shift. upon return upward, if we receive true stop trying different paths
         if buildScheduleShape(copy.deepcopy(schedule), constraints, day, nextSpot)[1] == True:
+            success = True
             break
-    return schedule
+    return schedule, success
+
+"""
+a neighbor is defined as a schedule where a single shift has a different employee
+than a neighboring schedule. Therefore, to generate neighbors, we will iterate through
+each shift and swap in a different employee
+"""
+def simpleHillClimb(currentState : Schedule, oldScores):
+    for day in currentState.schedule.keys():
+        for shift in currentState.schedule[day]:
+            for employee in currentState.roster.values():
+                newState = copy.deepcopy(currentState)
+                if employee.ID == shift.employeeID:
+                    continue
+                newState.reassignShift(shift, employee)
+                newScores = Scorer.calculateScoreNew(newState)
+                if(newScores[0] >= oldScores[0] and 
+                newScores[1] >= oldScores[1] and
+                newScores[2] > oldScores[2]):
+                    return newState, newScores, True
+    return currentState, oldScores, False
 
 
 # This attempts to place a given entity in a given schedule state without moving other entities.
@@ -133,6 +159,3 @@ def slideShift(currentState : Schedule, day, shiftIndex):
         possibleStates.append(newState)
     return possibleStates
 
-#this method will change who is assigned to a shift
-def reassignShift(currentState : Schedule, constraints, shift):
-    pass

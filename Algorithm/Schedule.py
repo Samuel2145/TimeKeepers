@@ -11,7 +11,16 @@ class Schedule:
         # employeeID: employeeObject
         self.roster = OrderedDict(employees) #TODO: remove employees from the roster when their maximum hours are spent
         #A dict of employee numbers mapped to any shifts they currently have in the schedule. Currently needed to calc hardscore
-        self.employeeShifts = OrderedDict({ID : [] for ID in employees})
+        self.employeeShifts = {
+            'MONDAY': {ID: [] for ID in employees},
+            'TUESDAY': {ID: [] for ID in employees},
+            'WEDNESDAY': {ID: [] for ID in employees},
+            'THURSDAY': {ID: [] for ID in employees},
+            'FRIDAY': {ID: [] for ID in employees},
+            'SATURDAY': {ID: [] for ID in employees},
+            'SUNDAY': {ID: [] for ID in employees},
+            }
+
         self.hours = 0
         self.schedStart = constraints.schedStart
         self.schedEnd = constraints.schedEnd
@@ -40,19 +49,38 @@ class Schedule:
         }
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
+    #this method will change who is assigned to a shift
+    def reassignShift(self, shift, employee):
+
+        if shift.employeeID != "EMPTY":
+            # removes the shift tuple from the old employee's list
+            for shiftTuple in self.employeeShifts[shift.day][shift.employee.ID]:
+                if shiftTuple == (shift.shiftStart, shift.shiftEnd):
+                    self.employeeShifts[shift.day][shift.employee.ID].remove(shiftTuple)
+
+        #adds the shift tuple to the new employee's list
+        self.employeeShifts[shift.day][employee.ID].append((shift.shiftStart,shift.shiftEnd))
+        self.hours += shift.shiftLength
+        shift.employeeID = employee
+
+
+        
+        
 
     def insertShift(self, shift, day):
         """places tuples of shift start time and shift end time into the employee shift dict
            and decrement elements from unfilled set within the new state"""
         
         self.schedule[day].append(shift)
-         # places tuples of shift start time and shift end time into the employee shift dict
-        self.employeeShifts[shift.employeeID].append((shift.shiftStart,shift.shiftEnd))
-        
-        self.hours += shift.shiftLength
-        #remove unfilled spots from set within the new state
-        for i in range(shift.shiftStart, shift.shiftEnd):
-                self.unfilled[day][i] -= 1
+
+        if shift.employeeID != "EMPTY":
+            # places tuples of shift start time and shift end time into the employee shift dict
+            self.employeeShifts[shift.employeeID].append((shift.shiftStart,shift.shiftEnd))
+            
+            self.hours += shift.shiftLength
+            #remove unfilled spots from set within the new state
+            for i in range(shift.shiftStart, shift.shiftEnd):
+                    self.unfilled[day][i] -= 1
 
 #FIXME: doesn't seem to work
     def removeShift(self, shiftIndex, day):
