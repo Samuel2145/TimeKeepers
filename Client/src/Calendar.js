@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {useState} from "react";
 import Table from 'react-bootstrap/Table';
 import axios from 'axios'
 import Container from "react-bootstrap/Container";
@@ -17,19 +18,22 @@ const divStyle = {
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 
+
 class Calendar extends Component {
     //const [data, setData] = useState([]);
+    
     constructor(props) {
         super(props);
         this.state = {
-            shifts: []
+            shifts: [],
+            curr: new Date()
         };
 
     }
-
+    
     componentDidMount() {
-
-        axios.get("/user/getCalendar", {withCredentials: true}).then((res) => {
+      //this.setState({curr: new Date()})
+        axios.post("/user/getCalendar", {curr: this.state.curr}, {withCredentials: true}).then((res) => {
 
             const shiftData = res.data;
 
@@ -102,13 +106,21 @@ class Calendar extends Component {
 
 
     render() {
+      // let curr = new Date();
+      var weekStartDate = new Date(this.state.curr.setDate(this.state.curr.getDate() - this.state.curr.getDay()));
+      var weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
         return (
 
             <Container fluid="md">
                 <Row className="justify-content-md-end">
                     {/* {this.state.shifts} */}
                 </Row>
-
+                <Row>
+                <button type="button" id ="PreviousWeek" block onClick={()=> {this.state.curr.setDate(this.state.curr.getDate() - 7)}}>Previous Week</button> 
+                <h2> Week of {weekStart} </h2>
+                <button type="button" id ="NextWeek" block onClick={()=> {this.state.curr.setDate(this.state.curr.getDate() + 7)}}>Next Week</button>
+                </Row>
+                 
                 <Table bordered responsive="sm">
                     <thead>
                     <tr>
