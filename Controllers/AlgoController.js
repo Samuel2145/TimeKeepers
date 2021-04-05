@@ -148,6 +148,7 @@ export const GenerateSchedule = (req,res) => {
         const shiftSize = resp[0].shiftSize;
         const scheduleStart = resp[0].scheduleStart;
         const scheduleEnd = resp[0].scheduleEnd;
+        const paramID = ""+ resp[0].parameterID;
 
         conn.query(userQ, [Group],(err, result) => {
 
@@ -199,7 +200,8 @@ export const GenerateSchedule = (req,res) => {
                 "employees": [],
                 "shiftSize": shiftSize,
                 "scheduleStart" : scheduleStart,
-                "scheduleEnd" : scheduleEnd
+                "scheduleEnd" : scheduleEnd,
+                "paramID" : paramID
             };
 
             employees.forEach( (value, key) => {
@@ -231,7 +233,7 @@ export const GenerateSchedule = (req,res) => {
                 //console.log(shifts[12]);
                 const values = message.substring(0, message.length-2) + ";";
 
-                const insertQ = "INSERT INTO shift (username, start, end) VALUES " + values;
+                const insertQ = "INSERT INTO shift (username, parameterID, start, end) VALUES " + values;
 
                 console.log(insertQ);
 

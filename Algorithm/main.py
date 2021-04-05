@@ -19,6 +19,7 @@ data = json.load(sys.stdin)
 shiftSize = data['shiftSize']
 schedStart = data['scheduleStart']
 schedEnd = data['scheduleEnd']
+paramID = data['paramID']
 shiftLengths = np.array([shiftSize])
 
 constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
@@ -41,7 +42,7 @@ for day in sched.schedule:
             start = "2021-03-%02d %02d:%02d:00" %( d, math.floor(shift.shiftStart/2), (shift.shiftStart%2)*30)
             end = "2021-03-%02d %02d:%02d:00" %(d, math.floor(shift.shiftEnd/2), (shift.shiftEnd%2)*30)
             #temp = '{ "username":"' + shift.employeeID + '", "start":"' + start + '", "end":"' + end + '"}?'
-            temp = '("'+ shift.employeeID + '", "' + start + '", "' + end +'"), '
+            temp = '("'+ shift.employeeID + '", "' + paramID + '", "' + start + '", "' + end +'"), '
             toJSON += temp
 
         d += 1

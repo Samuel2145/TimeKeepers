@@ -49,7 +49,7 @@ function Admin() {
 
         //console.log(parameters)
 
-        axios.post('/user/createParameter', {parameter}).then( (res) => {
+        axios.post('/user/createParameter', {parameter}, {withCredentials: true}).then( (res) => {
 
             console.log(res.data);
             setShow(false);
