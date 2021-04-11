@@ -30,7 +30,6 @@ roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['ava
 
 #sched = buildSchedule(roster, constraints)
 sched = initializeSchedule(roster, constraints)
-print("")
 sched = localSearchNew(sched)
 
 
