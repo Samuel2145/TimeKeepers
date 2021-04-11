@@ -99,6 +99,8 @@ def simpleHillClimb(currentState : Schedule, oldScores):
                 if(reResults[0] == False):
                     raise Exception("Did not delete item from employeeshifts list")
                 newScores = Scorer.calculateScoreNew(currentState)
+                #if newScores[0] < 0:
+               #     raise Exception("This shouldn't happen")
                 if(newScores[0] >= oldScores[0] and 
                 newScores[1] >= oldScores[1] and
                 newScores[2] > oldScores[2]):

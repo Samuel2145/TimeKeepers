@@ -68,7 +68,7 @@ e5 = Employee.Employee("Paul", OrderedDict({
             }))
 """
 
-e1 = Employee.Employee("John", OrderedDict({ 
+e1 = Employee.Employee("Jon", OrderedDict({ 
             'MONDAY': np.array([(10, 35)]),
             'TUESDAY' : np.array([]),
             'WEDNESDAY' : np.array([]), 
@@ -77,7 +77,7 @@ e1 = Employee.Employee("John", OrderedDict({
             'SATURDAY' : np.array([]), 
             'SUNDAY' : np.array([]),
             }) )
-e2 = Employee.Employee("Mary", OrderedDict({ 
+e2 = Employee.Employee("Yucko", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([(10, 35)]),
             'WEDNESDAY' : np.array([]), 
@@ -86,7 +86,7 @@ e2 = Employee.Employee("Mary", OrderedDict({
             'SATURDAY' : np.array([]), 
             'SUNDAY' : np.array([]),
             }))
-e3 = Employee.Employee("Steve", OrderedDict({ 
+e3 = Employee.Employee("Jorge", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([]),
             'WEDNESDAY' : np.array([(10,35)]), 
@@ -104,7 +104,7 @@ e4 = Employee.Employee("Bingo", OrderedDict({
             'SATURDAY' : np.array([(10,35)]), 
             'SUNDAY' : np.array([]),
             }))
-e5 = Employee.Employee("Paul", OrderedDict({ 
+e5 = Employee.Employee("Pall", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([]),
             'WEDNESDAY' : np.array([]), 

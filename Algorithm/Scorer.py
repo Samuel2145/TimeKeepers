@@ -63,7 +63,7 @@ def _checkForInterSections(shifts):
 
     # Store each pair with their positions 
     for i in range (len(shifts)):
-        positions.append((shifts[i][0], i)) 
+        positions.append((shifts[i][0] + 0.1 , i)) 
         positions.append((shifts[i][1], i))
     
 
@@ -121,8 +121,9 @@ def _checkForInterSections(shifts):
             # Insert second element 
             # of current pair in the set 
             s.add((j, i)) 
-            hardScore -= num
-    return hardScore
+            if (num > 0):
+                raise Exception("wtf")
+    return -num
         
 
 
