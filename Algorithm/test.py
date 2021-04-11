@@ -16,9 +16,9 @@ import Scorer
 
 schedStart = 10
 schedEnd = 35
-shiftLengths = np.array([5, 16])
+shiftLengths = np.array([16,9])
 
-constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, 38, 16)
+constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, 42, 16)
 
 """
 e1 = Employee.Employee("John", OrderedDict({ 
@@ -119,6 +119,8 @@ e5 = Employee.Employee("Pall", OrderedDict({
 roster = OrderedDict({e1.ID: e1, e2.ID: e2, e3.ID: e3, e4.ID: e4, e5.ID: e5})
 
 sched = initializeSchedule(roster, constraints)
+if(sched == False):
+    raise Exception("could not fill schedule with given employees")
 sched.displaySchedule()
 print(Scorer.calculateScoreNew(sched))
 print("")

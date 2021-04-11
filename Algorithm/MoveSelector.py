@@ -92,8 +92,8 @@ def simpleHillClimb(currentState : Schedule, oldScores):
         for shift in currentState.schedule[day]:
             for employee in currentState.roster.values():
                 #newState = copy.deepcopy(currentState)
-                if (employee.currentHours >= employee.maxWeeklyHours 
-                or employee.currentHoursDaily[day] > employee.maxDailyHours
+                if (employee.currentHours + shift.shiftLength > employee.maxWeeklyHours 
+                or employee.currentHoursDaily[day] + shift.shiftLength > employee.maxDailyHours
                 or employee.ID == shift.employeeID):
                     continue
                 #reResults = newState.reassignShift(shift, employee)

@@ -18,8 +18,10 @@ def initializeSchedule(employees, constraints):
     Creates a shedule shape, filled with empty shifts. Then fills with random employees. Will switch to heuristic method soon
     """
     schedule = buildScheduleNew(employees, constraints)
-    fillScheduleNew(employees,schedule)
-    return schedule
+    if (fillScheduleNew(employees,schedule)):
+        return schedule
+    else:
+        return False
 
 #build a schedule filled with empty shifts
 def buildScheduleNew(employees, constraints):
@@ -34,8 +36,19 @@ def buildScheduleNew(employees, constraints):
 def fillScheduleNew(employees, schedule):
     for day in schedule.schedule.keys():
         for shift in schedule.schedule[day]:
+            choices = list(schedule.roster.values())
+            employee = random.choice(choices)
             #currently fills each with random employee. Will switch to heuristic based approach
-            schedule.reassignShift(shift, random.choice(list(schedule.roster.values())))
+            #finds employee with remaining hours to place into schedule.
+            while (employee.currentHours + shift.shiftLength > employee.maxWeeklyHours 
+            or employee.currentHoursDaily[day] + shift.shiftLength > employee.maxDailyHours):
+                choices.remove(employee)
+                if (len(choices) == 0): #if no more available employees can be placed into schedule
+                    return False
+                employee = random.choice(choices)
+
+            schedule.reassignShift(shift, employee)
+    return True #successfully filled schedule
 
     #this will round robin select employees for work. In the future this will be changed to be based off of how many hours an employee can/is expected to work
 def buildSchedule(employees, constraints):
