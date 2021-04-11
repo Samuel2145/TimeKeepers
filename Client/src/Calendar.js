@@ -38,11 +38,29 @@ class Calendar extends Component {
     
             let shiftBreakdown = [];
     
-            for (let i = 0; i < 24; i++) {
-                shiftBreakdown.push([i + ":00 - " + (i + 1) + ":00"]);
+            for (let i = 0; i <= 23; i++) {
+                let startHour;
+                let startHalfhour;
+                let endHour;
+                let endHalfHour;
+                
+                startHour = i;
+                startHalfhour = ":00";
+                endHour = i;
+                endHalfHour = ":30";
+                shiftBreakdown.push([startHour + startHalfhour + " - " + endHour + endHalfHour])
+                
+                
+                startHour = i;
+                startHalfhour = ":30";
+                endHour = i+1;
+                endHalfHour = ":00";
+                
+                
+                shiftBreakdown.push([startHour + startHalfhour + " - " + endHour + endHalfHour])
             }
     
-            for (let i = 0; i <= 23; i++) {
+            for (let i = 0; i <= 47; i++) {
                 for (let j = 1; j <= 7; j++) {
                     shiftBreakdown[i][j] = {
                         username: "",
@@ -83,12 +101,23 @@ class Calendar extends Component {
                 if (shiftData[i].startTime.slice(-2) === "PM" && startBlock != "12") {
                     startBlock += 12;
                 }
-    
+                startBlock *= 2;
+                if(parseInt(shiftData[i].startTime.split(":")[1] == "30"))
+                {
+                    startBlock++;
+                }
+
+
                 let endBlock = parseInt(shiftData[i].endTime.split(":")[0]);
                 if (shiftData[i].endTime.slice(-2) === "PM"  && endBlock != "12") {
                     endBlock += 12;
                 }
-    
+                endBlock *= 2;
+                if(parseInt(shiftData[i].endTime.split(":")[1] == "30"))
+                {
+                    endBlock++;
+                }
+
                 for (let block = startBlock; block < endBlock; block++) {
                     console.log(block)
                     shiftBreakdown[block][day + 1] = {
@@ -151,6 +180,7 @@ class Calendar extends Component {
                     {
                         this.state.shifts.map((i) =>
                             <tr>
+                                {console.log(i)}
                                 <td>{i[0]}</td>
                                 <td style={{"background-color": i[1].color}}>{i[1].username}</td>
                                 <td style={{"background-color": i[2].color}}>{i[2].username}</td>
