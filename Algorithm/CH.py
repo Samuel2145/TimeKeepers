@@ -18,10 +18,13 @@ def initializeSchedule(employees, constraints):
     Creates a shedule shape, filled with empty shifts. Then fills with random employees. Will switch to heuristic method soon
     """
     schedule = buildScheduleNew(employees, constraints)
+    return schedule
+    """
     if (fillScheduleNew(employees,schedule)):
         return schedule
     else:
         raise Exception("could not fill schedule with given employees")
+        """
 
 #build a schedule filled with empty shifts
 def buildScheduleNew(employees, constraints):

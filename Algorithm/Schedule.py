@@ -53,7 +53,8 @@ class Schedule:
     def reassignShift(self, shift, employee):
         success = False   
         oldEmployee = None   
-          
+        
+        
         if shift.employeeID != "EMPTY":
             oldEmployee = self.roster[shift.employeeID]
             # removes the shift tuple from the old employee's list
@@ -69,10 +70,13 @@ class Schedule:
             self.hours += shift.shiftLength
 
         #adds the shift tuple to the new employee's list
-        self.employeeShifts[shift.day][employee.ID].append((shift.shiftStart,shift.shiftEnd))
-        shift.employeeID = employee.ID
-        employee.currentHours += shift.shiftLength
-        employee.currentHoursDaily[shift.day] += shift.shiftLength
+        if employee == None:
+            shift.employeeID = "EMPTY"
+        else:
+            self.employeeShifts[shift.day][employee.ID].append((shift.shiftStart,shift.shiftEnd))
+            shift.employeeID = employee.ID
+            employee.currentHours += shift.shiftLength
+            employee.currentHoursDaily[shift.day] += shift.shiftLength
         return success, oldEmployee
 
     def insertShift(self, shift, day):

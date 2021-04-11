@@ -18,7 +18,7 @@ schedStart = 10
 schedEnd = 35
 shiftLengths = np.array([16,9])
 
-constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, 42, 16)
+constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, 44, 25)
 
 """
 e1 = Employee.Employee("John", OrderedDict({ 

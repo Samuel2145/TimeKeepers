@@ -103,6 +103,15 @@ def simpleHillClimb(currentState : Schedule, oldScores):
                 newScores = Scorer.calculateScoreNew(currentState)
                 #if newScores[0] < 0:
                #     raise Exception("This shouldn't happen")
+
+               #maximize hardscore, then mediumscore, then softscore. Never sacrifice harder score to boost softer score.
+                if(newScores[0] > oldScores[0]):
+                    return currentState, newScores, True
+
+                if(newScores[0] >= oldScores[0] and 
+                newScores[1] > oldScores[1]):
+                    return currentState, newScores, True
+
                 if(newScores[0] >= oldScores[0] and 
                 newScores[1] >= oldScores[1] and
                 newScores[2] > oldScores[2]):
