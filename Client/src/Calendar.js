@@ -18,7 +18,6 @@ const divStyle = {
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 
-
 class Calendar extends Component {
     //const [data, setData] = useState([]);
     
@@ -31,18 +30,18 @@ class Calendar extends Component {
 
     }
     
-    componentDidMount() {
-      //this.setState({curr: new Date()})
+    updateSchedule()
+    {
         axios.post("/user/getCalendar", {curr: this.state.curr}, {withCredentials: true}).then((res) => {
 
             const shiftData = res.data;
-
+    
             let shiftBreakdown = [];
-
+    
             for (let i = 0; i < 24; i++) {
                 shiftBreakdown.push([i + ":00 - " + (i + 1) + ":00"]);
             }
-
+    
             for (let i = 0; i <= 23; i++) {
                 for (let j = 1; j <= 7; j++) {
                     shiftBreakdown[i][j] = {
@@ -51,11 +50,11 @@ class Calendar extends Component {
                     }
                 }
             }
-
+    
             for (let i = 0; i < shiftData.length; i++) {
-
+    
                 let day;
-
+    
                 switch (shiftData[i].day) {
                     case "Sunday":
                         day = 0;
@@ -79,35 +78,46 @@ class Calendar extends Component {
                         day = 6;
                         break;
                 }
-
+                console.log(shiftData[i].endTime.split(":")[0])
                 let startBlock = parseInt(shiftData[i].startTime.split(":")[0]);
-                if (shiftData[i].startTime.slice(-2) === "PM") {
+                if (shiftData[i].startTime.slice(-2) === "PM" && startBlock != "12") {
                     startBlock += 12;
                 }
-
+    
                 let endBlock = parseInt(shiftData[i].endTime.split(":")[0]);
-                if (shiftData[i].endTime.slice(-2) === "PM") {
+                if (shiftData[i].endTime.slice(-2) === "PM"  && endBlock != "12") {
                     endBlock += 12;
                 }
-                for (let block = startBlock; block <= endBlock; block++) {
+    
+                for (let block = startBlock; block < endBlock; block++) {
+                    console.log(block)
                     shiftBreakdown[block][day + 1] = {
                         username: shiftData[i].username,
                         color: shiftData[i].color
                     }
                 }
-
+    
             }
-
+    
             //console.log(shiftBreakdown);
             this.setState({shifts: shiftBreakdown});
         })
-
     }
 
 
+    componentDidMount() {
+      //this.setState({curr: new Date()})
+        
+      this.updateSchedule();
+    }
+
+    
+
+
+
     render() {
-      // let curr = new Date();
-      var weekStartDate = new Date(this.state.curr.setDate(this.state.curr.getDate() - this.state.curr.getDay()));
+      let curr = new Date(this.state.curr);
+      var weekStartDate = new Date(curr.setDate(curr.getDate() - curr.getDay()));
       var weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
         return (
 
@@ -116,9 +126,11 @@ class Calendar extends Component {
                     {/* {this.state.shifts} */}
                 </Row>
                 <Row>
-                <button type="button" id ="PreviousWeek" block onClick={()=> {this.state.curr.setDate(this.state.curr.getDate() - 7)}}>Previous Week</button> 
+
+                <button type="button" id ="PreviousWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() - 7)}, () => {this.updateSchedule()}); }}>Previous Week</button> 
                 <h2> Week of {weekStart} </h2>
-                <button type="button" id ="NextWeek" block onClick={()=> {this.state.curr.setDate(this.state.curr.getDate() + 7)}}>Next Week</button>
+                <button type="button" id ="NextWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() + 7)}, () => {this.updateSchedule()}); }}>Next Week</button> 
+
                 </Row>
                  
                 <Table bordered responsive="sm">

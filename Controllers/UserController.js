@@ -504,19 +504,21 @@ export const getCalendar = (req,res) => {
 
     let searchQ;
     let params = [];
-
-    let curr = req.body.curr;
+    console.log("Backend called")
+    //let curr = req.body.curr;
+    let curr = new Date(req.body.curr);
     var weekStartDate = new Date(curr.setDate(curr.getDate() - curr.getDay()));
     var weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
     var weekEndDate = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
     var weekEnd = weekEndDate.getFullYear() + "-" + (parseInt(weekEndDate.getMonth())+1) + "-" +parseInt(weekEndDate.getDate());
-    // console.log(weekStart)
-    // console.log(weekEnd)
+
     if(userData.isEmployer === 1){
         params.push(userData.Group)
         searchQ = `SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN '${weekStart}' AND '${weekEnd}' ORDER BY username ASC`;
     }else{
         params.push(userData.username);
+        console.log(weekStart)
+        console.log(weekEnd)
         searchQ = `SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN '${weekStart}' AND '${weekEnd}'` ;
     }
 
