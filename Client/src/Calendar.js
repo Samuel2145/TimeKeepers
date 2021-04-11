@@ -96,7 +96,6 @@ class Calendar extends Component {
                         day = 6;
                         break;
                 }
-                console.log(shiftData[i].endTime.split(":")[0])
                 let startBlock = parseInt(shiftData[i].startTime.split(":")[0]);
                 if (shiftData[i].startTime.slice(-2) === "PM" && startBlock != "12") {
                     startBlock += 12;
@@ -119,7 +118,6 @@ class Calendar extends Component {
                 }
 
                 for (let block = startBlock; block < endBlock; block++) {
-                    console.log(block)
                     shiftBreakdown[block][day + 1] = {
                         username: shiftData[i].username,
                         color: shiftData[i].color
@@ -128,14 +126,12 @@ class Calendar extends Component {
     
             }
     
-            //console.log(shiftBreakdown);
             this.setState({shifts: shiftBreakdown});
         })
     }
 
 
     componentDidMount() {
-      //this.setState({curr: new Date()})
         
       this.updateSchedule();
     }
@@ -180,7 +176,6 @@ class Calendar extends Component {
                     {
                         this.state.shifts.map((i) =>
                             <tr>
-                                {console.log(i)}
                                 <td>{i[0]}</td>
                                 <td style={{"background-color": i[1].color}}>{i[1].username}</td>
                                 <td style={{"background-color": i[2].color}}>{i[2].username}</td>
