@@ -500,12 +500,8 @@ export const getCalendar = (req,res) => {
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
-    // console.log(req.withCredentials);
-
     let searchQ;
     let params = [];
-    console.log("Backend called")
-    //let curr = req.body.curr;
     let curr = new Date(req.body.curr);
     var weekStartDate = new Date(curr.setDate(curr.getDate() - curr.getDay()));
     var weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
@@ -517,8 +513,6 @@ export const getCalendar = (req,res) => {
         searchQ = `SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN '${weekStart}' AND '${weekEnd}' ORDER BY username ASC`;
     }else{
         params.push(userData.username);
-        console.log(weekStart)
-        console.log(weekEnd)
         searchQ = `SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN '${weekStart}' AND '${weekEnd}'` ;
     }
 

@@ -118,6 +118,11 @@ class Calendar extends Component {
                 }
 
                 for (let block = startBlock; block < endBlock; block++) {
+                    console.log(shiftBreakdown[block][day+1])
+                    if(shiftBreakdown[block][day+1].username != "" && !shiftData[i].username.includes(shiftBreakdown[block][day+1].username))
+                    {
+                        shiftData[i].username = shiftData[i].username + "\n" + shiftBreakdown[block][day+1].username
+                    }
                     shiftBreakdown[block][day + 1] = {
                         username: shiftData[i].username,
                         color: shiftData[i].color
@@ -177,13 +182,13 @@ class Calendar extends Component {
                         this.state.shifts.map((i) =>
                             <tr>
                                 <td>{i[0]}</td>
-                                <td style={{"background-color": i[1].color}}>{i[1].username}</td>
-                                <td style={{"background-color": i[2].color}}>{i[2].username}</td>
-                                <td style={{"background-color": i[3].color}}>{i[3].username}</td>
-                                <td style={{"background-color": i[4].color}}>{i[4].username}</td>
-                                <td style={{"background-color": i[5].color}}>{i[5].username}</td>
-                                <td style={{"background-color": i[6].color}}>{i[6].username}</td>
-                                <td style={{"background-color": i[7].color}}>{i[7].username}</td>
+                                <td style={{"background-color": i[1].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[1].username}</td>
+                                <td style={{"background-color": i[2].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[2].username}</td>
+                                <td style={{"background-color": i[3].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[3].username}</td>
+                                <td style={{"background-color": i[4].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[4].username}</td>
+                                <td style={{"background-color": i[5].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[5].username}</td>
+                                <td style={{"background-color": i[6].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[6].username}</td>
+                                <td style={{"background-color": i[7].color, "white-space": "pre-wrap", "word-wrap": "break-word"}}>{i[7].username}</td>
                             </tr>
                         )
                     }
