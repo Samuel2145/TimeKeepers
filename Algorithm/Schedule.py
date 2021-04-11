@@ -9,7 +9,7 @@ from prettytable import PrettyTable
 class Schedule:
     def __init__(self, employees, constraints):
         # employeeID: employeeObject
-        self.roster = OrderedDict(employees) #TODO: remove employees from the roster when their maximum hours are spent
+        self.roster = employees #TODO: remove employees from the roster when their maximum hours are spent
         #A dict of employee numbers mapped to any shifts they currently have in the schedule. Currently needed to calc hardscore
         self.employeeShifts = {
             'MONDAY': {ID: [] for ID in employees},
@@ -51,20 +51,24 @@ class Schedule:
 
     #this method will change who is assigned to a shift
     def reassignShift(self, shift, employee):
+        success = False   
+        oldEmployee = None     
         if shift.employeeID != "EMPTY":
+            oldEmployee = self.roster[shift.employeeID]
             # removes the shift tuple from the old employee's list
-            for shiftTuple in self.employeeShifts[shift.day][shift.employee.ID]:
+            for shiftTuple in self.employeeShifts[shift.day][shift.employeeID]:
                 if shiftTuple == (shift.shiftStart, shift.shiftEnd):
-                    self.employeeShifts[shift.day][shift.employee.ID].remove(shiftTuple)
+                    success = True
+                    self.employeeShifts[shift.day][shift.employeeID].remove(shiftTuple)
+                    break
+        else:
+            success = True
+            self.hours += shift.shiftLength
 
         #adds the shift tuple to the new employee's list
         self.employeeShifts[shift.day][employee.ID].append((shift.shiftStart,shift.shiftEnd))
-        self.hours += shift.shiftLength
-        shift.employeeID = employee
-
-
-        
-        
+        shift.employeeID = employee.ID
+        return success, oldEmployee
 
     def insertShift(self, shift, day):
         """places tuples of shift start time and shift end time into the employee shift dict
@@ -78,8 +82,6 @@ class Schedule:
             
             self.hours += shift.shiftLength
             #remove unfilled spots from set within the new state
-            for i in range(shift.shiftStart, shift.shiftEnd):
-                    self.unfilled[day][i] -= 1
 
 #FIXME: doesn't seem to work
     def removeShift(self, shiftIndex, day):

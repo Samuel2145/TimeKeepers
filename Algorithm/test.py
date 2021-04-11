@@ -6,26 +6,22 @@
 # 4. Display the results of the test
 # 5. Fix bugs
 
-from CH import buildSchedule
-from LocalSearch import localSearch
+from CH import initializeSchedule
+from LocalSearch import localSearchNew
 from collections import OrderedDict
 import Employee
 import Constraints
 import numpy as np
+import Scorer
 
 schedStart = 10
 schedEnd = 35
 shiftLengths = np.array([5, 16])
 
-constraints1 = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
+constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
 
-e1 = Employee.Employee(89345)
-e2 = Employee.Employee(48189)
-e3 = Employee.Employee(90135)
-e4 = Employee.Employee(98413)
-e5 = Employee.Employee(78876)
-
-e1.avails = OrderedDict({ 
+"""
+e1 = Employee.Employee("John", OrderedDict({ 
             'MONDAY': np.array([(10, 15),( 30,35)]),
             'TUESDAY' : np.array([]),
             'WEDNESDAY' : np.array([(12,20),(25,34)]), 
@@ -33,8 +29,8 @@ e1.avails = OrderedDict({
             'FRIDAY' : np.array([(16,30)]), 
             'SATURDAY' : np.array([(10,20)]), 
             'SUNDAY' : np.array([(25,35)]),
-            }) 
-e2.avails = OrderedDict({ 
+            }) )
+e2 = Employee.Employee("Mary", OrderedDict({ 
             'MONDAY': np.array([(19, 35)]),
             'TUESDAY' : np.array([]),
             'WEDNESDAY' : np.array([(18,24),(30,34)]), 
@@ -42,8 +38,8 @@ e2.avails = OrderedDict({
             'FRIDAY' : np.array([(10,30)]), 
             'SATURDAY' : np.array([(10,15)]), 
             'SUNDAY' : np.array([(25,35)]),
-            })
-e3.avails = OrderedDict({ 
+            }))
+e3 = Employee.Employee("Steve", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([(15, 25),( 30,34)]),
             'WEDNESDAY' : np.array([(12,20),(25,34)]), 
@@ -51,8 +47,8 @@ e3.avails = OrderedDict({
             'FRIDAY' : np.array([(16,30)]), 
             'SATURDAY' : np.array([(19,22)]), 
             'SUNDAY' : np.array([(10,15)]),
-            })
-e4.avails = OrderedDict({ 
+            }))
+e4 = Employee.Employee("Bingo", OrderedDict({ 
             'MONDAY': np.array([(10, 15),( 30,35)]),
             'TUESDAY' : np.array([]),
             'WEDNESDAY' : np.array([(12,20),(25,34)]), 
@@ -60,8 +56,8 @@ e4.avails = OrderedDict({
             'FRIDAY' : np.array([(16,30)]), 
             'SATURDAY' : np.array([(10,20)]), 
             'SUNDAY' : np.array([(15,20),(28,35)]),
-            })
-e5.avails = OrderedDict({ 
+            }))
+e5 = Employee.Employee("Paul", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([(20,35)]),
             'WEDNESDAY' : np.array([(18,24)]), 
@@ -69,13 +65,61 @@ e5.avails = OrderedDict({
             'FRIDAY' : np.array([]), 
             'SATURDAY' : np.array([(10,35)]), 
             'SUNDAY' : np.array([(15,20),(28,35)]),
-            })
+            }))
+"""
 
-roster1 = OrderedDict({89345: e1, 48189: e2, 90135: e3, 98413: e4, 78876: e5})
+e1 = Employee.Employee("John", OrderedDict({ 
+            'MONDAY': np.array([(10, 35)]),
+            'TUESDAY' : np.array([]),
+            'WEDNESDAY' : np.array([]), 
+            'THURSDAY' : np.array([]), 
+            'FRIDAY' : np.array([]), 
+            'SATURDAY' : np.array([]), 
+            'SUNDAY' : np.array([]),
+            }) )
+e2 = Employee.Employee("Mary", OrderedDict({ 
+            'MONDAY': np.array([]),
+            'TUESDAY' : np.array([(10, 35)]),
+            'WEDNESDAY' : np.array([]), 
+            'THURSDAY' : np.array([]), 
+            'FRIDAY' : np.array([]), 
+            'SATURDAY' : np.array([]), 
+            'SUNDAY' : np.array([]),
+            }))
+e3 = Employee.Employee("Steve", OrderedDict({ 
+            'MONDAY': np.array([]),
+            'TUESDAY' : np.array([]),
+            'WEDNESDAY' : np.array([(10,35)]), 
+            'THURSDAY' : np.array([(10,35)]), 
+            'FRIDAY' : np.array([]), 
+            'SATURDAY' : np.array([]), 
+            'SUNDAY' : np.array([]),
+            }))
+e4 = Employee.Employee("Bingo", OrderedDict({ 
+            'MONDAY': np.array([]),
+            'TUESDAY' : np.array([]),
+            'WEDNESDAY' : np.array([]), 
+            'THURSDAY' : np.array([]), 
+            'FRIDAY' : np.array([(10,35)]), 
+            'SATURDAY' : np.array([(10,35)]), 
+            'SUNDAY' : np.array([]),
+            }))
+e5 = Employee.Employee("Paul", OrderedDict({ 
+            'MONDAY': np.array([]),
+            'TUESDAY' : np.array([]),
+            'WEDNESDAY' : np.array([]), 
+            'THURSDAY' : np.array([]), 
+            'FRIDAY' : np.array([]), 
+            'SATURDAY' : np.array([]), 
+            'SUNDAY' : np.array([(10, 35)]),
+            }))
 
-sched = buildSchedule(roster1, constraints1)
+roster = OrderedDict({e1.ID: e1, e2.ID: e2, e3.ID: e3, e4.ID: e4, e5.ID: e5})
+
+sched = initializeSchedule(roster, constraints)
 sched.displaySchedule()
+print(Scorer.calculateScoreNew(sched))
 print("")
-sched = localSearch(sched)
-
+sched = localSearchNew(sched)
 sched.displaySchedule()
+print(Scorer.calculateScoreNew(sched))

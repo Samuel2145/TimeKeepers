@@ -30,13 +30,10 @@ roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['ava
 
 #sched = buildSchedule(roster, constraints)
 sched = initializeSchedule(roster, constraints)
-sched.displaySchedule()
 print("")
 sched = localSearchNew(sched)
 
-sched.displaySchedule()
 
-"""
 toJSON = ""
 
 d = 15
@@ -52,4 +49,3 @@ for day in sched.schedule:
         d += 1
 
 print(toJSON)
-"""

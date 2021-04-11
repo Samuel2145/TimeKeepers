@@ -18,8 +18,8 @@ def _hardScoreCalcNew(employeeShifts):
     Checks for any intersections within a list, decreasing the score if found.
     """
     hardScore = 0
-    for day in employeeShifts.keys:
-        for shifts in employeeShifts[day].values:
+    for day in employeeShifts.keys():
+        for shifts in employeeShifts[day].values():
             hardScore += _checkForInterSections(shifts)
     return hardScore
 
@@ -30,8 +30,8 @@ def _medScoreCalcNew(schedule):
     For each shift without an employee, subtract from the medium score the 
     length of the empty shift
     """
-    for item in schedule:
-        for shift in item.values():
+    for item in schedule.values():
+        for shift in item:
             if shift.employeeID == "EMPTY":
                 medScore -= shift.shiftLength
     return medScore
@@ -39,16 +39,18 @@ def _medScoreCalcNew(schedule):
 
 def _softScoreCalcNew(schedule_):
     softScore = 0
-    for day in schedule_.schedule: #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity            
+    for day in schedule_.schedule.keys(): #this is a constant of 7 iterations, and therefore doesn't add to the big O complexity            
             for shift in schedule_.schedule[day]: #this is likely to be a constant from 2-3, so doesn't add much to complexity                
                 if(shift.employeeID == "EMPTY"):
                     continue
-                availPenalty = shift.shiftEnd - shift.shiftStart # the penalty represents how much of a shift is outside of the corresponding employee's availability 
-                for availability in schedule_.roster[shift.employeeID].avails[day]: # here we will check the corresponding employee's availability tuples for that day
-                    availPenalty -= _shiftCompare(shift, availability)
-                    if (availPenalty == 0):
-                        break
-                softScore -= availPenalty
+                else:
+                    availPenalty = shift.shiftEnd - shift.shiftStart # the penalty represents how much of a shift is outside of the corresponding employee's availability 
+                    employee = schedule_.roster[shift.employeeID]
+                    for availability in employee.avails[day]: # here we will check the corresponding employee's availability tuples for that day
+                        availPenalty -= _shiftCompare(shift, availability)
+                        if (availPenalty == 0):
+                            break
+                    softScore -= availPenalty
     return softScore
 
 def _checkForInterSections(shifts):

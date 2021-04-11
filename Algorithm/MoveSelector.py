@@ -18,7 +18,7 @@ import Scorer
 #this will fill a day with shifts according to the necessity of workers per hour
 #Will be part of the construction heuristic that places shifts before they have employees traded in and out of them.
 #this will find the first fit and return the day schedule corresponding to it.
-def buildScheduleShape(schedule, constraints, day, nextSpot):
+def buildScheduleShape(schedule : Schedule, constraints, day, nextSpot):
     # move down the time of the day and generate permutations using schedule sizes.
     # The first shift must start at the beginning of the workday and the last shift must end at the end of the workday
     # If there is a gap in the generated schedule it is rejected
@@ -32,8 +32,10 @@ def buildScheduleShape(schedule, constraints, day, nextSpot):
         #NOTE: can probably just break, assuming the shift sizes are ordered
 
         newShift = (nextSpot, nextSpot+size)
-        schedule.insertShift(Shift.createShift("EMPTY", newShift[0], size, day), day)   
+
         #add shift to actual schedule
+        schedule.insertShift(Shift.createShift("EMPTY", newShift[0], size, day), day)   
+        
         for i in range(newShift[0],newShift[1]):
             #decrement unfilled slots in schedule
             spots = schedule.unfilled[day]
@@ -73,8 +75,10 @@ def buildScheduleShape(schedule, constraints, day, nextSpot):
             return schedule, True
 
         #add additional shift. upon return upward, if we receive true stop trying different paths
-        if buildScheduleShape(copy.deepcopy(schedule), constraints, day, nextSpot)[1] == True:
+        results = buildScheduleShape(copy.deepcopy(schedule), constraints, day, nextSpot)
+        if results[1] == True:
             success = True
+            schedule = results[0]
             break
     return schedule, success
 
@@ -87,15 +91,21 @@ def simpleHillClimb(currentState : Schedule, oldScores):
     for day in currentState.schedule.keys():
         for shift in currentState.schedule[day]:
             for employee in currentState.roster.values():
-                newState = copy.deepcopy(currentState)
+                #newState = copy.deepcopy(currentState)
                 if employee.ID == shift.employeeID:
                     continue
-                newState.reassignShift(shift, employee)
-                newScores = Scorer.calculateScoreNew(newState)
+                #reResults = newState.reassignShift(shift, employee)
+                reResults = currentState.reassignShift(shift, employee)
+                if(reResults[0] == False):
+                    raise Exception("Did not delete item from employeeshifts list")
+                newScores = Scorer.calculateScoreNew(currentState)
                 if(newScores[0] >= oldScores[0] and 
                 newScores[1] >= oldScores[1] and
                 newScores[2] > oldScores[2]):
-                    return newState, newScores, True
+                    return currentState, newScores, True
+                #assigns shift back to the old employee if it didn't create a better neighbor
+                currentState.reassignShift(shift, reResults[1])
+    #none of the neighbors had a better score than the current. Found local maxima
     return currentState, oldScores, False
 
 

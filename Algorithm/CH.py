@@ -4,6 +4,7 @@ import Constraints
 import Scorer
 import MoveSelector
 import random
+import copy
 
 # Author: Will Pascuzzi
 # The "construction heuristic" for the scheduling process is a greedy algorithm that
@@ -23,8 +24,11 @@ def initializeSchedule(employees, constraints):
 #build a schedule filled with empty shifts
 def buildScheduleNew(employees, constraints):
     schedule = Schedule(employees, constraints)
+    success = True
     for day in schedule.schedule.keys():
-        schedule.schedule[day] = MoveSelector.buildScheduleShape(schedule, constraints, day, constraints.schedStart)
+        schedule, success = MoveSelector.buildScheduleShape(copy.deepcopy(schedule), constraints, day, constraints.schedStart)
+        if success == False:
+            raise Exception("Cannot build schedule with these constraints")
     return schedule
 
 def fillScheduleNew(employees, schedule):
