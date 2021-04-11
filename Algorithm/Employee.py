@@ -6,9 +6,20 @@ import numpy as np
  
 class Employee:
 
-    def __init__(self, ID, avails):
+    def __init__(self, ID, avails, constraints):
+        self.maxWeeklyHours = constraints.maxWeeklyHours
+        self.maxDailyHours = constraints.maxDailyHours
         self.ID = ID
         self.currentHours = 0
+        self.currentHoursDaily = {
+            "MONDAY": 0,
+            "TUESDAY": 0,
+            "WEDNESDAY": 0,
+            "THURSDAY": 0,
+            "FRIDAY": 0,
+            "SATURDAY": 0,
+            "SUNDAY": 0,
+            }
         self.avails = avails # a 3d array representing when the user is available
         #each of these will contain an array of pairs
        #each pair represents a block of time the employee is available for. time starts from 0 (12:00AM ) and ends at 48 (11:59PM), incrementing in 30 minute blocks

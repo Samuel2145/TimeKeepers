@@ -18,7 +18,7 @@ schedStart = 10
 schedEnd = 35
 shiftLengths = np.array([5, 16])
 
-constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
+constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, 38, 16)
 
 """
 e1 = Employee.Employee("John", OrderedDict({ 
@@ -66,8 +66,8 @@ e5 = Employee.Employee("Paul", OrderedDict({
             'SATURDAY' : np.array([(10,35)]), 
             'SUNDAY' : np.array([(15,20),(28,35)]),
             }))
-"""
 
+"""
 e1 = Employee.Employee("Jon", OrderedDict({ 
             'MONDAY': np.array([(10, 35)]),
             'TUESDAY' : np.array([]),
@@ -76,7 +76,7 @@ e1 = Employee.Employee("Jon", OrderedDict({
             'FRIDAY' : np.array([]), 
             'SATURDAY' : np.array([]), 
             'SUNDAY' : np.array([]),
-            }) )
+            }), constraints )
 e2 = Employee.Employee("Yucko", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([(10, 35)]),
@@ -85,7 +85,7 @@ e2 = Employee.Employee("Yucko", OrderedDict({
             'FRIDAY' : np.array([]), 
             'SATURDAY' : np.array([]), 
             'SUNDAY' : np.array([]),
-            }))
+            }), constraints)
 e3 = Employee.Employee("Jorge", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([]),
@@ -94,7 +94,7 @@ e3 = Employee.Employee("Jorge", OrderedDict({
             'FRIDAY' : np.array([]), 
             'SATURDAY' : np.array([]), 
             'SUNDAY' : np.array([]),
-            }))
+            }),constraints)
 e4 = Employee.Employee("Bingo", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([]),
@@ -103,7 +103,7 @@ e4 = Employee.Employee("Bingo", OrderedDict({
             'FRIDAY' : np.array([(10,35)]), 
             'SATURDAY' : np.array([(10,35)]), 
             'SUNDAY' : np.array([]),
-            }))
+            }), constraints)
 e5 = Employee.Employee("Pall", OrderedDict({ 
             'MONDAY': np.array([]),
             'TUESDAY' : np.array([]),
@@ -112,7 +112,9 @@ e5 = Employee.Employee("Pall", OrderedDict({
             'FRIDAY' : np.array([]), 
             'SATURDAY' : np.array([]), 
             'SUNDAY' : np.array([(10, 35)]),
-            }))
+            }), constraints)
+
+
 
 roster = OrderedDict({e1.ID: e1, e2.ID: e2, e3.ID: e3, e4.ID: e4, e5.ID: e5})
 

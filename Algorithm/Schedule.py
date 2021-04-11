@@ -52,13 +52,16 @@ class Schedule:
     #this method will change who is assigned to a shift
     def reassignShift(self, shift, employee):
         success = False   
-        oldEmployee = None     
+        oldEmployee = None   
+          
         if shift.employeeID != "EMPTY":
             oldEmployee = self.roster[shift.employeeID]
             # removes the shift tuple from the old employee's list
             for shiftTuple in self.employeeShifts[shift.day][shift.employeeID]:
                 if shiftTuple == (shift.shiftStart, shift.shiftEnd):
                     success = True
+                    oldEmployee.currentHours -= shift.shiftLength
+                    oldEmployee.currentHoursDaily[shift.day] -= shift.shiftLength
                     self.employeeShifts[shift.day][shift.employeeID].remove(shiftTuple)
                     break
         else:
@@ -68,6 +71,8 @@ class Schedule:
         #adds the shift tuple to the new employee's list
         self.employeeShifts[shift.day][employee.ID].append((shift.shiftStart,shift.shiftEnd))
         shift.employeeID = employee.ID
+        employee.currentHours += shift.shiftLength
+        employee.currentHoursDaily[shift.day] += shift.shiftLength
         return success, oldEmployee
 
     def insertShift(self, shift, day):
