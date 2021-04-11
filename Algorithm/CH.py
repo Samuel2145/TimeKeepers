@@ -21,7 +21,7 @@ def initializeSchedule(employees, constraints):
     if (fillScheduleNew(employees,schedule)):
         return schedule
     else:
-        return False
+        raise Exception("could not fill schedule with given employees")
 
 #build a schedule filled with empty shifts
 def buildScheduleNew(employees, constraints):

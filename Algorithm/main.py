@@ -26,7 +26,7 @@ shiftLengths = np.array([shiftSize])
 
 constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
 
-roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['avails'] ) for entry in data['employees']})
+roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['avails'], constraints) for entry in data['employees']})
 
 #sched = buildSchedule(roster, constraints)
 sched = initializeSchedule(roster, constraints)
