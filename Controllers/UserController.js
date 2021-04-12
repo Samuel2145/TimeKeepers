@@ -464,11 +464,11 @@ export const getGroupParameterData = (req,res) => {
             toReturn[i][0] = times[i];
 
             for(let j = 1; j <= 7; j++){
-                toReturn[i][j] = {row:i, col: j};
+                toReturn[i][j] = {row:i, col: j, bg: 'white'};
             }
         }
 
-        //console.log(toReturn)
+        //console.table(toReturn)
 
         res.status(200).send(toReturn);
     })
