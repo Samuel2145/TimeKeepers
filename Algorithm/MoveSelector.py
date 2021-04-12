@@ -121,6 +121,49 @@ def simpleHillClimb(currentState : Schedule, oldScores):
     #none of the neighbors had a better score than the current. Found local maxima
     return currentState, oldScores, False
 
+"""Steepest ascent hill cimbing: This gathers a list of neighbors and selects the one which improves the score the most"""
+def SteepestHillClimb(currentState : Schedule):
+    currBest = currentState
+    oldScores = Scorer.calculateScoreNew(currentState)
+    searching = False
+
+    for day in currentState.schedule.keys():
+        for shift in currentState.schedule[day]:
+            for employee in currentState.roster.values():                
+                if (employee.currentHours + shift.shiftLength > employee.maxWeeklyHours 
+                or employee.currentHoursDaily[day] + shift.shiftLength > employee.maxDailyHours
+                or employee.ID == shift.employeeID):
+                    continue
+                newState = copy.deepcopy(currentState)
+                reResults = newState.reassignShiftCopy(shift, employee)
+                #reResults = currentState.reassignShift(shift, employee)
+                if(reResults[0] == False):
+                    raise Exception("Did not delete item from employeeshifts list")
+                newScores = Scorer.calculateScoreNew(newState)
+                #if newScores[0] < 0:
+               #     raise Exception("This shouldn't happen")
+
+               #maximize hardscore, then mediumscore, then softscore. Never sacrifice harder score to boost softer score.
+                if(newScores[0] > oldScores[0]):
+                    currBest = newState
+                    oldScores = newScores
+                    searching = True
+
+                if(newScores[0] >= oldScores[0] and 
+                newScores[1] > oldScores[1]):
+                    currBest = newState
+                    oldScores = newScores
+                    searching = True
+
+                if(newScores[0] >= oldScores[0] and 
+                newScores[1] >= oldScores[1] and
+                newScores[2] > oldScores[2]):
+                    currBest = newState
+                    oldScores = newScores
+                    searching = True
+    #none of the neighbors had a better score than the current. Found local maxima
+    return currBest, searching
+
 
 # This attempts to place a given entity in a given schedule state without moving other entities.
 # returns a list of possible states to be run through the scorer

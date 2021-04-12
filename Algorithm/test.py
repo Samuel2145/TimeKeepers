@@ -8,6 +8,7 @@
 
 from CH import initializeSchedule
 from LocalSearch import localSearchNew
+from LocalSearch import localSearchSteepest
 from collections import OrderedDict
 import Employee
 import Constraints
