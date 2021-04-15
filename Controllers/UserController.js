@@ -165,6 +165,7 @@ export const createAvailability = (req, res) => {
     //console.log(temp);
 
     const getGroupParametersQ = "SELECT * FROM parameter WHERE groupName=?"
+    const deleteOldQ = "DELETE FROM availability WHERE username=?"
 
     conn.query(getGroupParametersQ, [group], (err,result) => {
 
@@ -190,19 +191,25 @@ export const createAvailability = (req, res) => {
 
 
             const values = bulk.substring(0, bulk.length-2) + ";";
+            
+            conn.query(deleteOldQ, [username], (err, result) => {
+
+                const insertQ = "INSERT INTO availability (username,day,startHour,endHour) VALUES " + values;
+
+                conn.query(insertQ, (err, result) => {
+
+                    if(err){
+                        res.status(400).send(`Insertion failed: ${err}`);
+                    }else{
+                        res.status(201).send('Stored');
+                    }
+
+                });
+
+            })
 
             //console.log(values);
-            const insertQ = "INSERT INTO availability (username,day,startHour,endHour) VALUES " + values;
 
-            conn.query(insertQ, (err, result) => {
-
-                if(err){
-                    res.status(400).send(`Insertion failed: ${err}`);
-                }else{
-                    res.status(201).send('Stored');
-                }
-
-            });
 
             //res.status(200).send('all good')
 

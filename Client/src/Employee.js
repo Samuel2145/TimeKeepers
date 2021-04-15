@@ -85,9 +85,10 @@ class Employee2 extends Component {
         }
 
         axios.post("/user/createAvailability", {avails}, {withCredentials: true}).then((res) => {
-          console.log(res.data)
-        }).catch( (err) => {
-          console.log(err);
+            console.log(res.data)
+            window.location.href = '/calendar';
+        }).catch((err) => {
+            console.log(err);
         })
 
     }
