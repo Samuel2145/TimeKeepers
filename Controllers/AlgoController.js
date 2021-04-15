@@ -1,5 +1,6 @@
 import pkg from "python-shell";
 import mysql from "mysql";
+import jwt from 'jsonwebtoken';
 
 const {PythonShell} = pkg;
 
@@ -29,10 +30,10 @@ const conn = mysql.createConnection(DB_URL);
 export const GenerateSchedule = (req,res) => {
 
     //JWT verification, commented out just to make testing easier
-    //const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
     //Once again, for ease of testing, normally we would use userData.Group but you can set a test value here
-    const Group ='group1'
+    //const Group ='group1'
     
     const algo = new PythonShell('Algorithm/main.py')
 
@@ -40,14 +41,14 @@ export const GenerateSchedule = (req,res) => {
     const paramQ = "SELECT * FROM parameter WHERE groupName=?"
 
 
-    conn.query(paramQ, [Group], (err,resp) => {
+    conn.query(paramQ, [userData.Group], (err,resp) => {
 
         const shiftSize = resp[0].shiftSize;
         const scheduleStart = resp[0].scheduleStart;
         const scheduleEnd = resp[0].scheduleEnd;
         const paramID = ""+ resp[0].parameterID;
 
-        conn.query(userQ, [Group],(err, result) => {
+        conn.query(userQ, [userData.Group],(err, result) => {
 
             //Create new map instance to store our {user, avails} object. User is key, avails is value
             let employees = new Map();

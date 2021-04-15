@@ -517,7 +517,7 @@ export const getCalendar = (req,res) => {
 
     if(userData.isEmployer === 1){
         params.push(userData.Group)
-        searchQ = "SELECT username, start, end, FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN ? AND ? ORDER BY username ASC";
+        searchQ = "SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN ? AND ? ORDER BY username ASC";
     }else{
         params.push(userData.username);
         searchQ = "SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN ? AND ?"
@@ -526,10 +526,12 @@ export const getCalendar = (req,res) => {
     params.push(weekStart);
     params.push(weekEnd);
 
+    console.log(weekStart, weekEnd);
+    console.log(searchQ);
+
     conn.query(searchQ, params,(err,result) => {
 
         if(err){
-
             res.status(400).send('Something didnt work');
         }else{
 
