@@ -1,8 +1,5 @@
-import {spawn} from 'child_process';
-//import {PythonShell} from "python-shell";
-import pkg from "python-shell"
-import mysql from 'mysql'
-import jwt from "jsonwebtoken";
+import pkg from "python-shell";
+import mysql from "mysql";
 
 const {PythonShell} = pkg;
 
@@ -10,106 +7,6 @@ const DB_URL = process.env.JAWSDB_MARIA_URL || 'mysql://n9qa33fb24h5ojln:w5ie9n0
 
 const conn = mysql.createConnection(DB_URL);
 
-/*
-class Database {
-    constructor( config ) {
-        this.connection = mysql.createConnection( config );
-    }
-    query( sql, args ) {
-        return new Promise( ( resolve, reject ) => {
-            this.connection.query( sql, args, ( err, rows ) => {
-                if ( err )
-                    return reject( err );
-                resolve( rows );
-            } );
-        } );
-    }
-    close() {
-        return new Promise( ( resolve, reject ) => {
-            this.connection.end( err => {
-                if ( err )
-                    return reject( err );
-                resolve();
-            } );
-        } );
-    }
-}
-
- */
-
-
-//const conn = new Database(DB_URL);
-
-//1. query all employees and convert to json objects
-//2. query each employee's availabilities and convert to json objects
-//3. query parameter and convert to json object
-//4. send employee data
-//5. send parameter data
-
-/*
- async function CreateRoster(req, res){     
-     
-    try{
-        var roster = {
-                    "employees": []
-                };           
-        const userQ = "SELECT username FROM user";
-        //get all users
-        
-        const users = await conn.query(userQ);
-        if(users.length === 0){
-            //res.status(404).send('no users exist');
-        }else{
-            
-            //iterate through each user
-            for (var item in Object.keys(users)){
-                let username = users[item].username;
-                let availabilities = {
-                    "SUNDAY": [],
-                    "MONDAY": [],
-                    "TUESDAY": [],
-                    "WEDNESDAY": [],
-                    "THURSDAY": [],
-                    "FRIDAY": [],
-                    "SATURDAY": [],
-                };
-            
-                
-                //iterate through each day           
-                for (var day of Object.keys(availabilities)){
-
-                    const availQ = "SELECT startHour, endHour FROM availability WHERE username=? AND day=?";                                      
-                    const avails = await conn.query(availQ, [username,day]);
-                        if(avails.length === 0) {
-                        //    res.status(404).send('User \'' + username + "\' has no availabilities");
-                        } else {                            
-         
-                        for (item of avails){
-                            let startHour = item.startHour
-                            let endHour = item.endHour
-                            let start = parseInt(startHour.substring(0,2))*2 + parseInt(startHour.substring(3,5))/30
-                            let end = parseInt(endHour.substring(0,2))*2 + parseInt(endHour.substring(3,5))/30
-                            availabilities[day].push([start, end])     
-
-                        }
-                        }
-                    }    
-                
-            //push a new employee to the roster
-                roster.employees.push({
-                    "username" : username,
-                    "avails" : availabilities
-                });
-
-            }              
-        }
-        return roster
-    }
-    catch(error){
-        console.log(error)
-    }    
-};
- */
 
 /*
 * Basic Idea
