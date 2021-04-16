@@ -350,8 +350,6 @@ export const getGroupParameterData = (req,res) => {
             }
         }
 
-        //console.table(toReturn)
-
         res.status(200).send(toReturn);
     })
 }
@@ -388,7 +386,7 @@ export const createUser = (req, res) => {
 
             const username = req.body.user.userName;
             const personName = req.body.user.personName || null;
-            const groupName = req.body.user.groupName || "group1";
+            const groupName = req.body.user.groupName || null;
             const email = req.body.user.email;
             const phoneNumber = req.body.user.phoneNumber || null;
             const address = req.body.user.address || null;
@@ -482,6 +480,85 @@ export const getUserInfo = (req,res) => {
     res.status(200).send(JSON.stringify(toSend));
 }
 
+export const getGroups = (req,res) => {
+
+    const searchQ = "SELECT * FROM grouping";
+
+    conn.query(searchQ, (err,result) => {
+
+        //console.log(result);
+
+        const toSend =[];
+
+        result.forEach( (elem) => {
+            toSend.push(elem.groupName);
+        })
+        res.status(200).send(toSend);
+
+    })
+
+}
+
+export const setNewGroup = (req, res) => {
+
+    //console.log(req.body);
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const updateQ = "UPDATE user SET groupName=? WHERE username=?";
+
+    conn.query(updateQ, [req.body.group, userData.username], (err, result) => {
+
+        if(err){
+            res.status(400).send("Something went wrong")
+        }else{
+            res.status(200).send("New group set!")
+        }
+
+    })
+
+}
+
+export const setNewEmail = (req, res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const updateQ = "UPDATE user SET email=? WHERE username=?";
+
+    conn.query(updateQ, [req.body.email, userData.username], (err, result) => {
+
+        if(err){
+            res.status(400).send("Something went wrong")
+        }else{
+            res.status(200).send("New group set!")
+        }
+
+    })
+}
+
+export const setNewPassword = (req, res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const updateQ = "UPDATE user SET password=? WHERE username=?";
+
+    bcrypt.genSalt(10, function(err,salt) {
+
+        bcrypt.hash(req.body.pass, salt, function(err, hash) {
+
+            conn.query(updateQ, [hash, userData.username], (err,result) => {
+
+                if(err){
+                    res.status(400).send("Couldn't update");
+                }else{
+                    res.status(200).send("Password updated");
+                }
+
+            });
+        });
+    });
+
+}
+
 export const isLoggedIn = (req, res) => {
 
     if(!req.cookies.UserInfo){
@@ -525,9 +602,6 @@ export const getCalendar = (req,res) => {
 
     params.push(weekStart);
     params.push(weekEnd);
-
-    console.log(weekStart, weekEnd);
-    console.log(searchQ);
 
     conn.query(searchQ, params,(err,result) => {
 
