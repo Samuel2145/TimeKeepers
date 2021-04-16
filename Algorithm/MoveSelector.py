@@ -138,7 +138,7 @@ def SteepestHillClimb(currentState : Schedule):
                 reResults = newState.reassignShiftCopy(shift, employee)
                 #reResults = currentState.reassignShift(shift, employee)
                 if(reResults[0] == False):
-                    raise Exception("Did not delete item from employeeshifts list")
+                    raise Exception("DeletionException: Did not delete item from employees list")
                 newScores = Scorer.calculateScoreNew(newState)
                 #if newScores[0] < 0:
                #     raise Exception("This shouldn't happen")

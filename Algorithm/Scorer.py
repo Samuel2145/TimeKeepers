@@ -121,8 +121,6 @@ def _checkForInterSections(shifts):
             # Insert second element 
             # of current pair in the set 
             s.add((j, i)) 
-            if (num > 0):
-                raise Exception("wtf")
     return -num
         
 

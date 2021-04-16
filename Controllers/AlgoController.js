@@ -134,129 +134,135 @@ export const GenerateSchedule = (req,res) => {
     //JWT verification, commented out just to make testing easier
     //const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
 
-    //Once again, for ease of testing, normally we would use userData.Group but you can set a test value here
-    const Group ='group1'
-    
-    const algo = new PythonShell('Algorithm/main.py')
+        //Once again, for ease of testing, normally we would use userData.Group but you can set a test value here
+        const Group ='group1'
+        
+        const algo = new PythonShell('Algorithm/main.py')
 
-    const userQ = "SELECT * FROM availability WHERE username IN (SELECT username FROM user WHERE groupName=? AND isEmployer=0)"
-    const paramQ = "SELECT * FROM parameter WHERE groupName=?"
-
-
-    conn.query(paramQ, [Group], (err,resp) => {
-
-        const shiftSize = resp[0].shiftSize;
-        const scheduleStart = resp[0].scheduleStart;
-        const scheduleEnd = resp[0].scheduleEnd;
-        const paramID = ""+ resp[0].parameterID;
-
-        conn.query(userQ, [Group],(err, result) => {
-
-            //Create new map instance to store our {user, avails} object. User is key, avails is value
-            let employees = new Map();
-
-            //Iterate over query results, we will get an unordered list with repeating users but with different availabilities for certain days
-            //If the user already exists on the map, we add on to their availability.
-            // Else we create them and initialize them with a blank availabilities object, then add the availability
-            for(let i = 0; i < result.length; i++){
-
-                const username = result[i].username;
-
-                //create entry on the map
-                if(!employees.has(username)){
-
-                    let availabilities = {
-                        "SUNDAY": [],
-                        "MONDAY": [],
-                        "TUESDAY": [],
-                        "WEDNESDAY": [],
-                        "THURSDAY": [],
-                        "FRIDAY": [],
-                        "SATURDAY": [],
-                    };
-
-                    employees.set(username,  availabilities);
-                }
-
-                //get value from map and add on whatever availability there needs to be put in
-
-                let valueToUpdate = employees.get(username);
-
-                const day = result[i].day;
-
-                const startHour = result[i].startHour;
-                const endHour = result[i].endHour;
-                const start = parseInt(startHour.substring(0,2))*2 + parseInt(startHour.substring(3,5))/30;
-                const end = parseInt(endHour.substring(0,2))*2 + parseInt(endHour.substring(3,5))/30;
+        const userQ = "SELECT * FROM availability WHERE username IN (SELECT username FROM user WHERE groupName=? AND isEmployer=0)"
+        const paramQ = "SELECT * FROM parameter WHERE groupName=?"
 
 
-                valueToUpdate[day].push([start,end]);
-                employees.set(username, valueToUpdate);
-            }
+        conn.query(paramQ, [Group], (err,resp) => {
 
+            const shiftSize = resp[0].shiftSize;
+            const scheduleStart = resp[0].scheduleStart;
+            const scheduleEnd = resp[0].scheduleEnd;
+            const paramID = ""+ resp[0].parameterID;
 
-            //Create the roster object
-            let roster = {
-                "employees": [],
-                "shiftSize": shiftSize,
-                "scheduleStart" : scheduleStart,
-                "scheduleEnd" : scheduleEnd,
-                "paramID" : paramID
-            };
+            conn.query(userQ, [Group],(err, result) => {
 
-            employees.forEach( (value, key) => {
+                //Create new map instance to store our {user, avails} object. User is key, avails is value
+                let employees = new Map();
 
-                roster.employees.push({
-                    "username" : key,
-                    "avails" : value
-                });
+                //Iterate over query results, we will get an unordered list with repeating users but with different availabilities for certain days
+                //If the user already exists on the map, we add on to their availability.
+                // Else we create them and initialize them with a blank availabilities object, then add the availability
+                for(let i = 0; i < result.length; i++){
 
-            });
+                    const username = result[i].username;
 
-            //Uncomment this to verify the structure of the roster object
-            //console.log(roster);
+                    //create entry on the map
+                    if(!employees.has(username)){
 
-            //Code that was already here
-            const message = JSON.stringify(roster)
+                        let availabilities = {
+                            "SUNDAY": [],
+                            "MONDAY": [],
+                            "TUESDAY": [],
+                            "WEDNESDAY": [],
+                            "THURSDAY": [],
+                            "FRIDAY": [],
+                            "SATURDAY": [],
+                        };
 
-            //console.log(message);
-
-
-            algo.send(message, {mode: 'json'})
-
-            algo.on('message', function (message) {
-                // received a message sent from the Python script (a simple "print" statement)
-
-                //const shifts = message.split('?');
-
-                //console.log(shifts[0]);
-                //console.log(shifts[12]);
-                const values = message.substring(0, message.length-2) + ";";
-
-                const insertQ = "INSERT INTO shift (username, parameterID, start, end) VALUES " + values;
-
-                console.log(insertQ);
-
-                conn.query(insertQ, (err, result) => {
-
-                    if(err){
-                        console.log("Failed batch insertion")
-                    }else{
-                        console.log("No problem")
+                        employees.set(username,  availabilities);
                     }
 
-                })
+                    //get value from map and add on whatever availability there needs to be put in
 
-            });
+                    let valueToUpdate = employees.get(username);
 
-            algo.end(function (err,code,signal) {
-                if (err) throw err;
+                    const day = result[i].day;
 
-                //console.log('The exit code was: ' + code);
-                //console.log('The exit signal was: ' + signal);
-                //console.log('finished');
-                res.status(200).send('Something')
-            });
+                    const startHour = result[i].startHour;
+                    const endHour = result[i].endHour;
+                    const start = parseInt(startHour.substring(0,2))*2 + parseInt(startHour.substring(3,5))/30;
+                    const end = parseInt(endHour.substring(0,2))*2 + parseInt(endHour.substring(3,5))/30;
+
+
+                    valueToUpdate[day].push([start,end]);
+                    employees.set(username, valueToUpdate);
+                }
+
+
+                //Create the roster object
+                let roster = {
+                    "employees": [],
+                    "shiftSize": shiftSize,
+                    "scheduleStart" : scheduleStart,
+                    "scheduleEnd" : scheduleEnd,
+                    "paramID" : paramID
+                };
+
+                employees.forEach( (value, key) => {
+
+                    roster.employees.push({
+                        "username" : key,
+                        "avails" : value
+                    });
+
+                });
+
+                //Uncomment this to verify the structure of the roster object
+                //console.log(roster);
+
+                //Code that was already here
+                const message = JSON.stringify(roster)
+
+                //console.log(message);
+
+
+                algo.send(message, {mode: 'json'})     
+                
+                algo.on('message', function (message) {
+                    // received a message sent from the Python script (a simple "print" statement)
+
+                    //const shifts = message.split('?');
+
+                    //console.log(shifts[0]);
+                    //console.log(shifts[12]);
+                    const values = message.substring(0, message.length-2) + ";";
+
+                    const insertQ = "INSERT INTO shift (username, parameterID, start, end) VALUES " + values;
+
+                    console.log(insertQ);
+
+                    conn.query(insertQ, (err, result) => {
+
+                        if(err){
+                            console.log("Failed batch insertion")
+                        }else{
+                            console.log("No problem")
+                        }
+
+                    })
+
+                });          
+
+                algo.end(function (err,code,signal) {
+                    if (err) 
+                    {
+                        console.log('Error:', err)
+                        res.status(406).send('Not Acceptable')
+                    }                    
+                    else{
+                        res.status(200).send('Something')
+                    }
+                    //console.log('The exit code was: ' + code);
+                    //console.log('The exit signal was: ' + signal);
+                    //console.log('finished');
+                });
+            })
         })
-    })
-}
+    }
+
