@@ -482,7 +482,7 @@ export const getUserInfo = (req,res) => {
 
 export const getGroups = (req,res) => {
 
-    const searchQ = "SELECT * FROM grouping";
+    const searchQ = "SELECT groupName FROM parameter";
 
     conn.query(searchQ, (err,result) => {
 
