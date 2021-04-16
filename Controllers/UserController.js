@@ -6,25 +6,7 @@ import * as joi from '../Validation.js'
 const DB_URL = process.env.JAWSDB_MARIA_URL || 'mysql://n9qa33fb24h5ojln:w5ie9n0wkv2mlpvs@ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/zry2wsgus6t4stzn';
 const conn = mysql.createConnection(DB_URL);
 
-export const createGrouping = (req, res) => {
-
-    const groupName = req.body.grouping.groupName;
-    const description = req.body.grouping.description;
-
-
-    const insertQ = `INSERT INTO grouping VALUES('${groupName}','${description}')`;
-
-    conn.query(insertQ, (err, result) => {
-
-        if(err){
-            res.status(400).send(`Insertion failed: ${err}`);
-        }else{
-            res.status(201).send('Stored');
-        }
-
-    });
-
-}
+///Helper functions
 
 const splitArray = (arr) => {
 
@@ -52,10 +34,7 @@ const splitArray = (arr) => {
     }
 
     return toRet;
-
 }
-
-
 
 
 const intToString = (num) => {
@@ -67,13 +46,11 @@ const intToString = (num) => {
     return "" + num;
 }
 
-const createQueries = (arr, user, day, start, end) => {
+const createQueries = (arr, user, day, start) => {
 
     if(arr.length === 0){
         return "";
     }
-
-    //('${username}','${day}','${startHour}','${endHour}')
 
     let queries = "";
 
@@ -97,6 +74,61 @@ const createQueries = (arr, user, day, start, end) => {
     return queries;
 }
 
+const intToTime = (value) => {
+
+    let min = value % 100;
+    let hour = Math.floor(value / 100);
+
+    let identifier = "am"
+
+    if(min !== 0){
+        const multiplier = min / 25;
+        min = min - 10*multiplier;
+    }else{
+        min = "00"
+    }
+
+    if(hour > 11){
+
+        identifier = "pm"
+
+        if(hour > 12)
+            hour -= 12;
+
+    }
+
+    return "" + hour + ":" + min + identifier;
+}
+
+///Controller functions
+
+///Creates a grouping with name and description
+export const createGrouping = (req, res) => {
+
+    const groupName = req.body.grouping.groupName;
+    const description = req.body.grouping.description;
+
+    const inputs = []
+    inputs.push(groupName);
+    inputs.push(description);
+
+    const insertQ = "INSERT INTO grouping VALUES( ?, ?)"
+
+    conn.query(insertQ, inputs,(err, result) => {
+
+        if(err){
+            res.status(400).send(`Insertion failed: ${err}`);
+        }else{
+            res.status(201).send('Stored');
+        }
+
+    });
+
+}
+
+/*  Takes in user input from employee page and cleans it up for insertion into database as availabilities
+*   Deletes old availabilities to force the use of new ones
+ */
 export const createAvailability = (req, res) => {
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
@@ -181,46 +213,40 @@ export const createAvailability = (req, res) => {
             //console.log(startHour);
             //console.log(endHour);
 
-            let bulk = createQueries(temp.Sunday, username, "Sunday", startHour, endHour);
-            bulk += createQueries(temp.Monday, username, "Monday", startHour, endHour);
-            bulk += createQueries(temp.Tuesday, username, "Tuesday", startHour, endHour);
-            bulk += createQueries(temp.Wednesday, username, "Wednesday", startHour, endHour);
-            bulk += createQueries(temp.Thursday, username, "Thursday", startHour, endHour);
-            bulk += createQueries(temp.Friday, username, "Friday", startHour, endHour);
-            bulk += createQueries(temp.Saturday, username, "Saturday", startHour, endHour);
+            let bulk = createQueries(temp.Sunday, username, "Sunday", startHour);
+            bulk += createQueries(temp.Monday, username, "Monday", startHour);
+            bulk += createQueries(temp.Tuesday, username, "Tuesday", startHour);
+            bulk += createQueries(temp.Wednesday, username, "Wednesday", startHour);
+            bulk += createQueries(temp.Thursday, username, "Thursday", startHour);
+            bulk += createQueries(temp.Friday, username, "Friday", startHour);
+            bulk += createQueries(temp.Saturday, username, "Saturday", startHour);
 
 
             const values = bulk.substring(0, bulk.length-2) + ";";
             
             conn.query(deleteOldQ, [username], (err, result) => {
 
-                const insertQ = "INSERT INTO availability (username,day,startHour,endHour) VALUES " + values;
+                if(err){
+                    res.status(400).send("Something went wrong!");
+                }else{
+                    const insertQ = "INSERT INTO availability (username,day,startHour,endHour) VALUES " + values;
 
-                conn.query(insertQ, (err, result) => {
+                    conn.query(insertQ, (err, result) => {
 
-                    if(err){
-                        res.status(400).send(`Insertion failed: ${err}`);
-                    }else{
-                        res.status(201).send('Stored');
-                    }
+                        if(err){
+                            res.status(400).send(`Insertion failed: ${err}`);
+                        }else{
+                            res.status(201).send('Stored');
+                        }
 
-                });
-
+                    });
+                }
             })
-
-            //console.log(values);
-
-
-            //res.status(200).send('all good')
-
         }
     })
-
 }
 
-
-
-
+//Creates parameters from admin input
 export const createParameter = (req, res) => {
 
     const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
@@ -255,9 +281,10 @@ export const createShift = (req, res) => {
     const isHoliday = req.body.shift.isHoliday;
     const score = req.body.shift.score;
 
-    const insertQ = `INSERT INTO shift(username, parameterID, start, end, type, isHoliday, score) VALUES('${username}',${parameterID},'${start}','${end}','${type}',${isHoliday},${score})`;
+    //const insertQ = `INSERT INTO shift(username, parameterID, start, end, type, isHoliday, score) VALUES('${username}',${parameterID},'${start}','${end}','${type}',${isHoliday},${score})`;
+    const insertQ = "INSERT INTO shift (username, parameterID, start, end, type, isHoliday, score) VALUES( ?, ?, ?, ?, ?, ?, ?)"
 
-    conn.query(insertQ, (err, result) => {
+    conn.query(insertQ, [username, parameterID, start, end, type, isHoliday, score],(err, result) => {
 
         if(err){
             res.status(400).send(`Insertion failed: ${err}`);
@@ -266,158 +293,6 @@ export const createShift = (req, res) => {
         }
 
     });
-
-}
-
-export const createUser = (req, res) => {
-
-    const toValidate = {
-        Username: req.body.user.userName,
-        Password: req.body.user.password,
-        Email: req.body.user.email,
-        isEmployer: req.body.user.isEmployer
-    }
-
-    //console.log(toValidate)
-
-    const isValid = joi.userCreation.validate(toValidate);
-
-    //console.log(isValid);
-
-    if(isValid.error){
-        res.status(400).send('Some field is incorrect')
-        return;
-    }
-
-    bcrypt.genSalt(10, function(err,salt) {
-
-        bcrypt.hash(req.body.user.password, salt, function(err, hash) {
-
-            if (err){
-                res.status(400).send('Could not hash password');
-                return;
-            }
-
-            const username = req.body.user.userName;
-            const personName = req.body.user.personName || null;
-            const groupName = req.body.user.groupName || "group1";
-            const email = req.body.user.email;
-            const phoneNumber = req.body.user.phoneNumber || null;
-            const address = req.body.user.address || null;
-            const isEmployer = req.body.user.isEmployer;
-            const avgScore = req.body.user.avgScore || null;
-
-
-            //We have to change queries to meet the specs of character escaping, the below is an example of how mysql does this efficiently
-            //const insertQ = `INSERT INTO user VALUES('${username}','${hash}','${personName}','${groupName}','${email}','${phoneNumber}','${address}',${isEmployer},${avgScore})`;
-            const insertQ = 'INSERT INTO user VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-
-            //console.log(insertQ);
-
-            conn.query(insertQ, [username, hash, personName, groupName, email, phoneNumber, address, isEmployer, avgScore],(err, result) => {
-
-                if(err){
-                    res.status(400).send(`Insertion failed: ${err}`);
-                }else{
-                    res.status(201).send('Stored');
-                }
-
-            });
-        });
-    });
-}
-
-export const userLogin = (req, res) => {
-
-    const username = req.body.user.username;
-    const password = req.body.user.password;
-
-    const isValid = joi.userLogin.validate({Username: username, Password: password});
-
-    if(isValid.error){
-        res.status(400).send('Some field is incorrect')
-        return;
-    }
-
-    //const insertQ = "SELECT password, isEmployer, groupName FROM user WHERE username=\'" + username +"\'" ;
-    const insertQ = "SELECT password, isEmployer, groupName FROM user WHERE username=?" ;
-
-    conn.query(insertQ, [username], (err, result) => {
-
-        if(result.length !== 0){
-
-            const hashed = result[0].password;
-
-            bcrypt.compare(password,  hashed, (err, same) => {
-
-                if(same){
-
-                    const type = result[0].isEmployer;
-                    const groupName = result[0].groupName;
-
-                    const toSend  = {
-                        username: username,
-                        isEmployer: type,
-                        Group: groupName
-                    };
-
-                    let token = jwt.sign(toSend, 'shhhhh');
-
-                    res.cookie('UserInfo', token, {expire: 604800 + Date.now(), httpOnly: true}).status(200);
-                    res.send({
-                        isEmployer: type,
-                        message: 'Successfully logged in'
-                    });
-                }else{
-                    res.status(400).send('Password is incorrect!');
-                }
-            });
-
-        }else{
-            res.status(404).send('User does not exist');
-
-        }
-    });
-}
-
-export const getUserInfo = (req,res) => {
-
-    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
-
-    //console.log(userData)
-
-    const toSend = {
-        username : userData.username
-    }
-
-    res.status(200).send(JSON.stringify(toSend));
-}
-
-const intToTime = (value) => {
-
-    let min = value % 100;
-    let hour = Math.floor(value / 100);
-
-    let identifier = "am"
-
-    if(min !== 0){
-        const multiplier = min / 25;
-        min = min - 10*multiplier;
-    }else{
-        min = "00"
-    }
-
-    if(hour > 11){
-
-        identifier = "pm"
-
-        if(hour > 12)
-            hour -= 12;
-
-    }
-
-    return "" + hour + ":" + min + identifier;
-
 }
 
 export const getGroupParameterData = (req,res) => {
@@ -475,10 +350,212 @@ export const getGroupParameterData = (req,res) => {
             }
         }
 
-        //console.table(toReturn)
-
         res.status(200).send(toReturn);
     })
+}
+
+///Validates user input before creating new db entry. Also hashed password data
+export const createUser = (req, res) => {
+
+    const toValidate = {
+        Username: req.body.user.userName,
+        Password: req.body.user.password,
+        Email: req.body.user.email,
+        isEmployer: req.body.user.isEmployer
+    }
+
+    //console.log(toValidate)
+
+    const isValid = joi.userCreation.validate(toValidate);
+
+    //console.log(isValid);
+
+    if(isValid.error){
+        res.status(400).send('Some field is incorrect')
+        return;
+    }
+
+    bcrypt.genSalt(10, function(err,salt) {
+
+        bcrypt.hash(req.body.user.password, salt, function(err, hash) {
+
+            if (err){
+                res.status(400).send('Could not hash password');
+                return;
+            }
+
+            const username = req.body.user.userName;
+            const personName = req.body.user.personName || null;
+            const groupName = req.body.user.groupName || null;
+            const email = req.body.user.email;
+            const phoneNumber = req.body.user.phoneNumber || null;
+            const address = req.body.user.address || null;
+            const isEmployer = req.body.user.isEmployer;
+            const avgScore = req.body.user.avgScore || null;
+
+
+            //We have to change queries to meet the specs of character escaping, the below is an example of how mysql does this efficiently
+            //const insertQ = `INSERT INTO user VALUES('${username}','${hash}','${personName}','${groupName}','${email}','${phoneNumber}','${address}',${isEmployer},${avgScore})`;
+            const insertQ = 'INSERT INTO user VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+
+            //console.log(insertQ);
+
+            conn.query(insertQ, [username, hash, personName, groupName, email, phoneNumber, address, isEmployer, avgScore],(err, result) => {
+
+                if(err){
+                    res.status(400).send(`Insertion failed: ${err}`);
+                }else{
+                    res.status(201).send('Stored');
+                }
+
+            });
+        });
+    });
+}
+
+///Validates user credentials to perform login
+export const userLogin = (req, res) => {
+
+    const username = req.body.user.username;
+    const password = req.body.user.password;
+
+    const isValid = joi.userLogin.validate({Username: username, Password: password});
+
+    if(isValid.error){
+        res.status(400).send('Some field is incorrect')
+        return;
+    }
+
+    const insertQ = "SELECT password, isEmployer, groupName FROM user WHERE username=?" ;
+
+    conn.query(insertQ, [username], (err, result) => {
+
+        if(result.length !== 0){
+
+            const hashed = result[0].password;
+
+            bcrypt.compare(password,  hashed, (err, same) => {
+
+                if(same){
+
+                    const type = result[0].isEmployer;
+                    const groupName = result[0].groupName;
+
+                    const toSend  = {
+                        username: username,
+                        isEmployer: type,
+                        Group: groupName
+                    };
+
+                    let token = jwt.sign(toSend, 'shhhhh');
+
+                    res.cookie('UserInfo', token, {expire: 604800 + Date.now(), httpOnly: true}).status(200);
+                    res.send({
+                        isEmployer: type,
+                        message: 'Successfully logged in'
+                    });
+                }else{
+                    res.status(400).send('Password is incorrect!');
+                }
+            });
+
+        }else{
+            res.status(404).send('User does not exist');
+
+        }
+    });
+}
+
+///Simple example showing the functionality of jwt
+export const getUserInfo = (req,res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    //console.log(userData)
+
+    const toSend = {
+        username : userData.username
+    }
+
+    res.status(200).send(JSON.stringify(toSend));
+}
+
+export const getGroups = (req,res) => {
+
+    const searchQ = "SELECT groupName FROM parameter";
+
+    conn.query(searchQ, (err,result) => {
+
+        //console.log(result);
+
+        const toSend =[];
+
+        result.forEach( (elem) => {
+            toSend.push(elem.groupName);
+        })
+        res.status(200).send(toSend);
+
+    })
+
+}
+
+export const setNewGroup = (req, res) => {
+
+    //console.log(req.body);
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const updateQ = "UPDATE user SET groupName=? WHERE username=?";
+
+    conn.query(updateQ, [req.body.group, userData.username], (err, result) => {
+
+        if(err){
+            res.status(400).send("Something went wrong")
+        }else{
+            res.status(200).send("New group set!")
+        }
+
+    })
+
+}
+
+export const setNewEmail = (req, res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const updateQ = "UPDATE user SET email=? WHERE username=?";
+
+    conn.query(updateQ, [req.body.email, userData.username], (err, result) => {
+
+        if(err){
+            res.status(400).send("Something went wrong")
+        }else{
+            res.status(200).send("New group set!")
+        }
+
+    })
+}
+
+export const setNewPassword = (req, res) => {
+
+    const userData = jwt.verify(req.cookies.UserInfo, 'shhhhh');
+
+    const updateQ = "UPDATE user SET password=? WHERE username=?";
+
+    bcrypt.genSalt(10, function(err,salt) {
+
+        bcrypt.hash(req.body.pass, salt, function(err, hash) {
+
+            conn.query(updateQ, [hash, userData.username], (err,result) => {
+
+                if(err){
+                    res.status(400).send("Couldn't update");
+                }else{
+                    res.status(200).send("Password updated");
+                }
+
+            });
+        });
+    });
 
 }
 
@@ -517,7 +594,7 @@ export const getCalendar = (req,res) => {
 
     if(userData.isEmployer === 1){
         params.push(userData.Group)
-        searchQ = "SELECT username, start, end, FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN ? AND ? ORDER BY username ASC";
+        searchQ = "SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN ? AND ? ORDER BY username ASC";
     }else{
         params.push(userData.username);
         searchQ = "SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN ? AND ?"
@@ -529,7 +606,6 @@ export const getCalendar = (req,res) => {
     conn.query(searchQ, params,(err,result) => {
 
         if(err){
-
             res.status(400).send('Something didnt work');
         }else{
 

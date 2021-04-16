@@ -14,6 +14,7 @@ import SignUp from "./SignUp";
 import axios from 'axios'
 
 import './Navigation.css';
+import UpdateInfo from "./UpdateInfo";
 
 class Navigation extends Component {
 
@@ -61,6 +62,9 @@ class Navigation extends Component {
 
                 const temp = (
                     <div align={"center"}>
+                        <NavItem href={"/update"} style={{display: "inline-block"}}>
+                            <Nav.Link as={Link} to={"/update"}>Update Info</Nav.Link>
+                        </NavItem>
                         <NavItem eventkey={4} href="/calendar" style={{display: "inline-block"}}>
                             <Nav.Link as={Link} to="/calendar">Calendar</Nav.Link>
                         </NavItem>
@@ -104,6 +108,7 @@ class Navigation extends Component {
                         <Route exact path='/login' component={Login}/>
                         <Route exact path='/signup' component={SignUp}/>
                         <Route exact path='/database' component={DatabaseConnections}/>
+                        <Route exact path={"/update"} component={UpdateInfo}/>
                         <Route render={function () {
                             return <p>Not found</p>
                         }}/>

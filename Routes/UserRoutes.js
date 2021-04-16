@@ -14,6 +14,10 @@ userRouter.post('/getCalendar', user.getCalendar);
 userRouter.get('/isLoggedIn', user.isLoggedIn);
 userRouter.post('/logout', user.Logout);
 userRouter.get('/getGroupParameterData', user.getGroupParameterData);
+userRouter.get("/getGroups", user.getGroups);
+userRouter.post("/setNewGroup", user.setNewGroup);
+userRouter.post("/setNewEmail", user.setNewEmail);
+userRouter.post("/setNewPassword", user.setNewPassword);
 
 
 export default userRouter;

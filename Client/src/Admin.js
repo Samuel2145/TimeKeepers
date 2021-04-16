@@ -35,7 +35,6 @@ function Admin() {
     //const handleClose = () => setShow(false);
     //const handleShow = () => setShow(true);
 
-
     const onSubmit = () => {
 
         const parameter = {
@@ -53,6 +52,13 @@ function Admin() {
 
             console.log(res.data);
             setShow(false);
+
+            axios.get("/algo/newSchedule", {withCredentials: true}).then( (res) => {
+                setTimeout( () => {
+                    window.location.href = "/calendar";
+                }, 200);
+            })
+
         })
 
     }
