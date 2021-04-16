@@ -165,6 +165,7 @@ export const createAvailability = (req, res) => {
     //console.log(temp);
 
     const getGroupParametersQ = "SELECT * FROM parameter WHERE groupName=?"
+    const deleteOldQ = "DELETE FROM availability WHERE username=?"
 
     conn.query(getGroupParametersQ, [group], (err,result) => {
 
@@ -190,19 +191,25 @@ export const createAvailability = (req, res) => {
 
 
             const values = bulk.substring(0, bulk.length-2) + ";";
+            
+            conn.query(deleteOldQ, [username], (err, result) => {
+
+                const insertQ = "INSERT INTO availability (username,day,startHour,endHour) VALUES " + values;
+
+                conn.query(insertQ, (err, result) => {
+
+                    if(err){
+                        res.status(400).send(`Insertion failed: ${err}`);
+                    }else{
+                        res.status(201).send('Stored');
+                    }
+
+                });
+
+            })
 
             //console.log(values);
-            const insertQ = "INSERT INTO availability (username,day,startHour,endHour) VALUES " + values;
 
-            conn.query(insertQ, (err, result) => {
-
-                if(err){
-                    res.status(400).send(`Insertion failed: ${err}`);
-                }else{
-                    res.status(201).send('Stored');
-                }
-
-            });
 
             //res.status(200).send('all good')
 
@@ -464,11 +471,11 @@ export const getGroupParameterData = (req,res) => {
             toReturn[i][0] = times[i];
 
             for(let j = 1; j <= 7; j++){
-                toReturn[i][j] = {row:i, col: j};
+                toReturn[i][j] = {row:i, col: j, bg: 'white'};
             }
         }
 
-        //console.log(toReturn)
+        //console.table(toReturn)
 
         res.status(200).send(toReturn);
     })
@@ -503,18 +510,21 @@ export const getCalendar = (req,res) => {
     let searchQ;
     let params = [];
     let curr = new Date(req.body.curr);
-    var weekStartDate = new Date(curr.setDate(curr.getDate() - curr.getDay()));
-    var weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
-    var weekEndDate = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
-    var weekEnd = weekEndDate.getFullYear() + "-" + (parseInt(weekEndDate.getMonth())+1) + "-" +parseInt(weekEndDate.getDate());
+    let weekStartDate = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+    let weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
+    let weekEndDate = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
+    let weekEnd = weekEndDate.getFullYear() + "-" + (parseInt(weekEndDate.getMonth())+1) + "-" +parseInt(weekEndDate.getDate());
 
     if(userData.isEmployer === 1){
         params.push(userData.Group)
-        searchQ = `SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN '${weekStart}' AND '${weekEnd}' ORDER BY username ASC`;
+        searchQ = "SELECT username, start, end, FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN ? AND ? ORDER BY username ASC";
     }else{
         params.push(userData.username);
-        searchQ = `SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN '${weekStart}' AND '${weekEnd}'` ;
+        searchQ = "SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN ? AND ?"
     }
+
+    params.push(weekStart);
+    params.push(weekEnd);
 
     conn.query(searchQ, params,(err,result) => {
 
