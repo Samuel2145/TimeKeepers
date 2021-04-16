@@ -41,12 +41,23 @@ export const GenerateSchedule = (req,res) => {
     const paramQ = "SELECT * FROM parameter WHERE groupName=?"
 
 
+    ///Idea is to start new schedule in the coming week
+    let currDate = new Date();
+    const day = currDate.getDay();  ///0-6 will return 5 rn
+    currDate.setDate(currDate.getDate() + (8-day));
+    const year = currDate.getFullYear();
+    const month = currDate.getMonth() + 1;
+    const startingMonday = currDate.getDate();
+
     conn.query(paramQ, [userData.Group], (err,resp) => {
 
         const shiftSize = resp[0].shiftSize;
         const scheduleStart = resp[0].scheduleStart;
         const scheduleEnd = resp[0].scheduleEnd;
         const paramID = ""+ resp[0].parameterID;
+        const numSimult = resp[0].numSimultaneous;
+        const maxWeekly = resp[0].maxWeeklyHours * 2;
+        const maxDaily = resp[0].maxDailyHours * 2;
 
         conn.query(userQ, [userData.Group],(err, result) => {
 
@@ -99,7 +110,13 @@ export const GenerateSchedule = (req,res) => {
                 "shiftSize": shiftSize,
                 "scheduleStart" : scheduleStart,
                 "scheduleEnd" : scheduleEnd,
-                "paramID" : paramID
+                "numSimult" : numSimult,
+                "maxWeekly" : maxWeekly,
+                "maxDaily" : maxDaily,
+                "paramID" : paramID,
+                "year" : year,
+                "month" : month,
+                "start" : startingMonday
             };
 
             employees.forEach( (value, key) => {
@@ -111,8 +128,9 @@ export const GenerateSchedule = (req,res) => {
 
             });
 
+
             //Uncomment this to verify the structure of the roster object
-            //console.log(roster);
+            console.log(roster);
 
             //Code that was already here
             const message = JSON.stringify(roster)

@@ -21,10 +21,16 @@ data = json.load(sys.stdin)
 shiftSize = data['shiftSize']
 schedStart = data['scheduleStart']
 schedEnd = data['scheduleEnd']
+numSimult = data['numSimult']
+maxWeekly = data['maxWeekly']
+maxDaily = data['maxDaily']
 paramID = data['paramID']
+year = data['year']
+month = data['month']
+startDate = data['start']
 shiftLengths = np.array([shiftSize])
 
-constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, 1, ((schedEnd-schedStart)-1)*7 , 16)
+constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, numSimult, maxWeekly , maxDaily)
 
 roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['avails'], constraints) for entry in data['employees']})
 
@@ -35,18 +41,19 @@ sched = localSearchNew(sched)
 
 toJSON = ""
 
-y = int(date.today().strftime("%Y"))
-m = int(date.today().strftime("%m"))
-d = int(date.today().strftime("%d"))
+currDate = datetime.datetime(year, month, startDate)
 
 for day in sched.schedule:
         for shift in sched.schedule[day]:
+            y = currDate.year
+            m = currDate.month
+            d = currDate.day
             start = "%04d-%02d-%02d %02d:%02d:00" %(y,m,d, math.floor(shift.shiftStart/2), (shift.shiftStart%2)*30)
             end = "%04d-%02d-%02d %02d:%02d:00" %(y,m,d, math.floor(shift.shiftEnd/2), (shift.shiftEnd%2)*30)
             #temp = '{ "username":"' + shift.employeeID + '", "start":"' + start + '", "end":"' + end + '"}?'
             temp = '("'+ shift.employeeID + '", "' + paramID + '", "' + start + '", "' + end +'"), '
             toJSON += temp
 
-        d += 1
+        currDate = currDate + datetime.timedelta(days=1)
 
 print(toJSON)
