@@ -34,6 +34,7 @@ constraints = Constraints.Constraints(shiftLengths, schedStart, schedEnd, numSim
 
 roster = OrderedDict({entry['username'] : Employee(entry['username'] ,entry['avails'], constraints) for entry in data['employees']})
 
+
 #sched = buildSchedule(roster, constraints)
 sched = initializeSchedule(roster, constraints)
 sched = localSearchNew(sched)
@@ -45,6 +46,8 @@ currDate = datetime.datetime(year, month, startDate)
 
 for day in sched.schedule:
         for shift in sched.schedule[day]:
+            if shift.employeeID == "EMPTY":
+                continue
             y = currDate.year
             m = currDate.month
             d = currDate.day
