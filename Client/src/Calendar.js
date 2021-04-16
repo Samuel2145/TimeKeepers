@@ -157,9 +157,9 @@ class Calendar extends Component {
                 </Row>
                 <Row>
 
-                <button type="button" id ="PreviousWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() - 7)}, () => {this.updateSchedule()}); }}>Previous Week</button> 
+                <Button type="button" id ="PreviousWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() - 7)}, () => {this.updateSchedule()}); }}>Previous Week</button> 
                 <h2> Week of {weekStart} </h2>
-                <button type="button" id ="NextWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() + 7)}, () => {this.updateSchedule()}); }}>Next Week</button> 
+                <Button type="button" id ="NextWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() + 7)}, () => {this.updateSchedule()}); }}>Next Week</button> 
 
                 </Row>
                  
