@@ -5,6 +5,18 @@ import Constraints
 import Scorer
 import MoveSelector
 
+def localSearchSteepest(schedule):
+    """
+    local search using simulated annealing: finds the first better neighbor and chooses that as the new state
+    """
+
+    searching = True
+
+    while searching:
+        schedule, searching = MoveSelector.SteepestHillClimb(schedule)
+
+    return schedule
+
 def localSearchNew(schedule):
     """
     local search using simple hill climbing: finds the first better neighbor and chooses that as the new state

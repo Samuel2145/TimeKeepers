@@ -33,7 +33,7 @@ def buildScheduleNew(employees, constraints):
     for day in schedule.schedule.keys():
         schedule, success = MoveSelector.buildScheduleShape(copy.deepcopy(schedule), constraints, day, constraints.schedStart)
         if success == False:
-            raise Exception("Cannot build schedule with these constraints")
+            raise Exception("ScheduleInitError: Cannot build schedule with these constraints")
     return schedule
 
 def fillScheduleNew(employees, schedule):

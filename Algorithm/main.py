@@ -35,12 +35,14 @@ sched = localSearchNew(sched)
 
 toJSON = ""
 
-d = 15
+y = int(date.today().strftime("%Y"))
+m = int(date.today().strftime("%m"))
+d = int(date.today().strftime("%d"))
 
 for day in sched.schedule:
         for shift in sched.schedule[day]:
-            start = "2021-03-%02d %02d:%02d:00" %( d, math.floor(shift.shiftStart/2), (shift.shiftStart%2)*30)
-            end = "2021-03-%02d %02d:%02d:00" %(d, math.floor(shift.shiftEnd/2), (shift.shiftEnd%2)*30)
+            start = "%04d-%02d-%02d %02d:%02d:00" %(y,m,d, math.floor(shift.shiftStart/2), (shift.shiftStart%2)*30)
+            end = "%04d-%02d-%02d %02d:%02d:00" %(y,m,d, math.floor(shift.shiftEnd/2), (shift.shiftEnd%2)*30)
             #temp = '{ "username":"' + shift.employeeID + '", "start":"' + start + '", "end":"' + end + '"}?'
             temp = '("'+ shift.employeeID + '", "' + paramID + '", "' + start + '", "' + end +'"), '
             toJSON += temp

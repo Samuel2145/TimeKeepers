@@ -49,6 +49,42 @@ class Schedule:
         }
         self.score = 0 #the schedule's current score. This will be set by running it through a scoring algorithm
 
+    #reassigns an employee in a copied shift. less computationally efficient
+    def reassignShiftCopy(self, oldshift, employee):
+        success = False   
+        oldEmployee = None   
+        shift = None
+
+        #find shift in copied schedule
+        for item in self.schedule[oldshift.day]:
+            if (item.employeeID == oldshift.employeeID and item.shiftStart == oldshift.shiftStart and item.shiftEnd == oldshift.shiftEnd):
+                shift = item                
+
+
+        if shift.employeeID != "EMPTY":
+            oldEmployee = self.roster[shift.employeeID]
+            # removes the shift tuple from the old employee's list
+            for shiftTuple in self.employeeShifts[shift.day][shift.employeeID]:
+                if shiftTuple == (shift.shiftStart, shift.shiftEnd):
+                    success = True
+                    oldEmployee.currentHours -= shift.shiftLength
+                    oldEmployee.currentHoursDaily[shift.day] -= shift.shiftLength
+                    self.employeeShifts[shift.day][shift.employeeID].remove(shiftTuple)
+                    break
+        else:
+            success = True
+            self.hours += shift.shiftLength
+
+        #adds the shift tuple to the new employee's list
+        if employee == None:
+            shift.employeeID = "EMPTY"
+        else:
+            self.employeeShifts[shift.day][employee.ID].append((shift.shiftStart,shift.shiftEnd))
+            shift.employeeID = employee.ID
+            employee.currentHours += shift.shiftLength
+            employee.currentHoursDaily[shift.day] += shift.shiftLength
+        return success, oldEmployee
+
     #this method will change who is assigned to a shift
     def reassignShift(self, shift, employee):
         success = False   
