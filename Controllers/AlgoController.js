@@ -40,9 +40,6 @@ export const GenerateSchedule = (req,res) => {
     const userQ = "SELECT * FROM availability WHERE username IN (SELECT username FROM user WHERE groupName=? AND isEmployer=0)"
     const paramQ = "SELECT * FROM parameter WHERE groupName=?"
 
-        const userQ = "SELECT * FROM availability WHERE username IN (SELECT username FROM user WHERE groupName=? AND isEmployer=0)"
-        const paramQ = "SELECT * FROM parameter WHERE groupName=?"
-
     ///Idea is to start new schedule in the coming week
     let currDate = new Date();
     const day = currDate.getDay();  ///0-6 will return 5 rn
