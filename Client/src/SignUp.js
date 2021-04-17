@@ -71,6 +71,12 @@ class SignUp extends Component {
                             </Form.Text>
                         </Form.Group>
 
+                        <Form.Group controlId="formBasicGroupname">
+                            <Form.Label>Organization Name</Form.Label>
+                            <Form.Control type="username" placeholder="Enter group name"
+                                          onChange={(e) => this.setState({userName: e.target.value})}/>
+                        </Form.Group>
+
                         <Form.Group>
                             <ToggleButtonGroup type="radio" name="type">
                                 <ToggleButton value="0" onClick={(e) => this.setState({isEmployer: e.target.value})}>
