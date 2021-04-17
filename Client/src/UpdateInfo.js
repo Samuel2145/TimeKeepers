@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row';
 
 const divStyle = {
     paddingTop: '20px',
+    
 };
 
 
