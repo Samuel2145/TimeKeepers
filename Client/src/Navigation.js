@@ -58,21 +58,42 @@ class Navigation extends Component {
 
             } else {
 
-                const temp = (
-                    <div align={"center"}>
-                        <NavItem href={"/update"} style={{display: "inline-block"}}>
-                            <Nav.Link as={Link} to={"/update"}>Update Info</Nav.Link>
-                        </NavItem>
-                        <NavItem eventkey={4} href="/calendar" style={{display: "inline-block"}}>
-                            <Nav.Link as={Link} to="/calendar">Calendar</Nav.Link>
-                        </NavItem>
-                        <NavItem style={{display: "inline-block"}}>
-                            <Nav.Link onClick={this.logoutHandler}>Logout</Nav.Link>
-                        </NavItem>
-                    </div>
-                )
+                axios.get('/user/getUserInfo').then( (res) => {
 
-                this.setState({loggedIn: temp});
+                    let option;
+                    
+                    if(res.data.isEmployer === 1){
+                        option =
+                            <NavItem href={"/admin"} style={{display: "inline-block"}}>
+                                <Nav.Link as={Link} to={"/admin"}>Admin Page</Nav.Link>
+                            </NavItem>;
+                    }else{
+                        option =
+                            <NavItem href={"/employee"} style={{display: "inline-block"}}>
+                                <Nav.Link as={Link} to={"/employee"}>Availability</Nav.Link>
+                            </NavItem>;
+                    }
+
+                    const temp = (
+                        <div align={"center"}>
+                            {option}
+                            <NavItem href={"/update"} style={{display: "inline-block"}}>
+                                <Nav.Link as={Link} to={"/update"}>Update Info</Nav.Link>
+                            </NavItem>
+                            <NavItem eventkey={4} href="/calendar" style={{display: "inline-block"}}>
+                                <Nav.Link as={Link} to="/calendar">Calendar</Nav.Link>
+                            </NavItem>
+                            <NavItem style={{display: "inline-block"}}>
+                                <Nav.Link onClick={this.logoutHandler}>Logout</Nav.Link>
+                            </NavItem>
+                        </div>
+                    )
+
+                    this.setState({loggedIn: temp});
+                })
+
+
+
             }
         });
 
