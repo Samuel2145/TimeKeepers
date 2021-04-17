@@ -33,6 +33,21 @@ const UpdateInfo = (props) => {
         setGroup(e.target.value);
     }
 
+    const newGroupSubmit = (e) => {
+        e.preventDefault();
+
+        const grouping = {
+            groupName : newGroup,
+            description : "Something blah blah blah"
+        }
+
+        axios.post("/user/createGrouping", { grouping }).then((res) => {
+            console.log(res.data);
+            window.location.href = "/update"
+        })
+
+    }
+
     const groupSubmit = (e) => {
         e.preventDefault();
 
@@ -160,7 +175,7 @@ const UpdateInfo = (props) => {
                         </Col>
 
                         <Col xs="auto">
-                            <Button type="submit" className="mb-2" onClick={emailSubmit}>
+                            <Button type="submit" className="mb-2" onClick={newGroupSubmit}>
                                 Create Group
                             </Button>
                         </Col>
