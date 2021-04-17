@@ -25,6 +25,7 @@ const timeToInt = (time) => {
 function Admin() {
     
     const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
     const [shiftSize, setShiftSize] = useState(0);
     const [sTime, setSTime] = useState(0);
     const [eTime, setETime] = useState(0);
@@ -36,7 +37,7 @@ function Admin() {
     //const handleClose = () => setShow(false);
     //const handleShow = () => setShow(true);
 
-    const onSubmit = () => {
+    const onParameterSubmit = () => {
 
         const parameter = {
             shiftSize: shiftSize,
@@ -53,13 +54,16 @@ function Admin() {
 
             console.log(res.data);
             setShow(false);
+        })
 
-            axios.get("/algo/newSchedule", {withCredentials: true}).then( (res) => {
-                setTimeout( () => {
-                    window.location.href = "/calendar";
-                }, 200);
-            })
+    }
 
+    const onSchedSubmit = () => {
+
+        axios.get("/algo/newSchedule", {withCredentials: true}).then( (res) => {
+            setTimeout( () => {
+                window.location.href = "/calendar";
+            }, 200);
         })
 
     }
@@ -173,7 +177,7 @@ function Admin() {
 
                     <div> &nbsp; </div>
 
-                    <Button variant="success" width={100} onClick={()=> {setShow(true)}}>
+                    <Button variant="success" width={100} onClick={()=> {setShow2(true)}}>
                         Generate Schedule
                     </Button>
                     
@@ -186,16 +190,32 @@ function Admin() {
                 <Modal.Header closeButton>
                     <Modal.Title>Generate Schedule</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to generate a new schedule?</Modal.Body>
+                <Modal.Body>Are you sure you want to save these parameters?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => { setShow(false)}}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={onSubmit}>
+                    <Button variant="primary" onClick={onParameterSubmit}>
                         Save Changes
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={show2} onHide={()=> {setShow2(false)}}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Generate Schedule</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to generate a new schedule?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => { setShow2(false)}}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={onSchedSubmit}>
+                        Generate
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </>
     );
 }
