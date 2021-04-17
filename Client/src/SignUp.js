@@ -17,7 +17,7 @@ class SignUp extends Component {
             userName: '',
             password: '',
             email: '',
-            isEmployer: 2
+            isEmployer: 2,
         };
         this.formHandler = this.formHandler.bind(this)
     }
@@ -71,11 +71,7 @@ class SignUp extends Component {
                             </Form.Text>
                         </Form.Group>
 
-                        <Form.Group controlId="formBasicGroupname">
-                            <Form.Label>Organization Name</Form.Label>
-                            <Form.Control type="username" placeholder="Enter group name"
-                                          onChange={(e) => this.setState({userName: e.target.value})}/>
-                        </Form.Group>
+                        
 
                         <Form.Group>
                             <ToggleButtonGroup type="radio" name="type">

@@ -19,6 +19,7 @@ const UpdateInfo = (props) => {
     const [pass, setPass] = useState("");
     const [email, setEmail] = useState("");
     const [group, setGroup] = useState("");
+    const [newGroup, setNewGroup] = useState("");
 
     useEffect(() => {
         axios.get("/user/getGroups").then((res) => {
@@ -118,7 +119,7 @@ const UpdateInfo = (props) => {
                 </Form>
 
                 <div>
-                    <div>Available Groups:</div>
+                    <div>Available Organizations:</div>
     
                     <input type={"text"} list={"Groups"} name={"GroupList"} onChange={changeHandler} />
 
@@ -139,8 +140,30 @@ const UpdateInfo = (props) => {
                     <span>&nbsp;</span>
 
                     <Button type={"text"} onClick={groupSubmit}>
-                        Change Group
+                        Change Organization
                     </Button>
+
+
+                    <div>Create new Organization:</div> 
+                    <Form.Row className="align-items-center">
+                        <Col xs="auto">
+                            <Form.Label htmlFor="inlineFormInput" srOnly>
+                                Create Group:
+                            </Form.Label>
+                            <Form.Control
+                                className="mb-2"
+                                id="inlineFormInput"
+                                placeholder="Add New Group"
+                                onChange={(e) => setNewGroup(e.target.value)}
+                            />
+                        </Col>
+
+                        <Col xs="auto">
+                            <Button type="submit" className="mb-2" onClick={emailSubmit}>
+                                Create Group
+                            </Button>
+                        </Col>
+                    </Form.Row>
                 </div>
 
 
