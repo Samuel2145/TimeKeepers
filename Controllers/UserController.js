@@ -483,7 +483,7 @@ export const getUserInfo = (req,res) => {
 
 export const getGroups = (req,res) => {
 
-    const searchQ = "SELECT groupName FROM parameter";
+    const searchQ = "SELECT DISTINCT groupName FROM parameter";
 
     conn.query(searchQ, (err,result) => {
 
