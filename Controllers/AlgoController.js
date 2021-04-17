@@ -146,20 +146,37 @@ export const GenerateSchedule = (req,res) => {
                     //console.log(shifts[12]);
                     const values = message.substring(0, message.length-2) + ";";
 
-                    const insertQ = "INSERT INTO shift (username, parameterID, start, end) VALUES " + values;
-
-                    console.log(insertQ);
-
-                    conn.query(insertQ, (err, result) => {
-
+                    const deleteQ = "DELETE FROM shift WHERE parameterID IN (SELECT parameterID from parameter WHERE groupName=?) AND start >= ?"
+                    let params = []
+                    params.push(userData.Group)
+                    params.push(String(year) + "-" + String(month).padStart(2,'0') + "-" + String(startingMonday) + " 00:00:00")
+                    console.log(params)
+                    
+                    conn.query(deleteQ, params,(err,result) => {
+                        console.log(err)
                         if(err){
-                            console.log("Failed batch insertion")
+                            //res.status(400).send('Deletion did not work');
+                            console.log("Failed Deletion")
                         }else{
-                            console.log("No problem")
+                            console.log("Deletion Successful")
+
+                            const insertQ = "INSERT INTO shift (username, parameterID, start, end) VALUES " + values;
+
+                            console.log(insertQ);
+
+                            conn.query(insertQ, (err, result) => {
+
+                            if(err){
+                                console.log("Failed batch insertion")
+                            }else{
+                                console.log("Insertion successful")
+                            }
+
+                        })
+
                         }
-
-                    })
-
+                    });
+                
                 });          
 
                 algo.end(function (err,code,signal) {
@@ -169,7 +186,7 @@ export const GenerateSchedule = (req,res) => {
                         res.status(406).send('Not Acceptable')
                     }                    
                     else{
-                        res.status(200).send('Something')
+                        res.status(200).send('Success!')
                     }
                     //console.log('The exit code was: ' + code);
                     //console.log('The exit signal was: ' + signal);
