@@ -16,6 +16,7 @@ class Employee2 extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            username: '',
             buttonData: [],
             selecting: false,
             type: 0
@@ -103,12 +104,20 @@ class Employee2 extends Component {
             })
         });
 
+        axios.get('/user/getUserInfo', { withCredentials: true }).then((res) => {
+
+            this.setState({ username: res.data.username });
+          });
+
     }
 
     render() {
         return (
             <Container>
-                <div>Test Employee</div>
+                <div style={divStyle}></div>
+                <h2> Welcome, {this.state.username}! Click, then drag to update your availability.</h2>
+                <h4>Don't forget to save your changes!</h4>
+                <div style={divStyle}></div>
 
                 <div>
                     <Table bordered responsive="sm">
@@ -179,6 +188,7 @@ class Employee2 extends Component {
                 <Button variant="primary" onClick={this.submitHandler}>
                     Save Changes
                 </Button>
+                <div style={divStyle}></div>
             </Container>
 
         );

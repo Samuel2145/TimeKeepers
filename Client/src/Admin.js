@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, Component} from 'react';
 import './App.css';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -23,6 +23,7 @@ const timeToInt = (time) => {
 }
 
 function Admin() {
+    
     const [show, setShow] = useState(false);
     const [shiftSize, setShiftSize] = useState(0);
     const [sTime, setSTime] = useState(0);
@@ -165,10 +166,17 @@ function Admin() {
                 <div style={divStyle}></div>
 
 
-                <Row>
-                    <Button variant="success" block onClick={()=> {setShow(true)}}>
+                <Row className="justify-content-md-center">
+                    <Button variant="success" width={100} onClick={()=> {setShow(true)}}>
+                        Save Parameters
+                    </Button>
+
+                    <div> &nbsp; </div>
+
+                    <Button variant="success" width={100} onClick={()=> {setShow(true)}}>
                         Generate Schedule
                     </Button>
+                    
                 </Row>
 
 

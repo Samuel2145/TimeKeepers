@@ -11,8 +11,7 @@ import {LinkContainer} from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
 
 const divStyle = {
-    paddingTop: '10px',
-    marginLeft: '10px',
+    paddingTop: '20px',
 };
 
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -151,17 +150,23 @@ class Calendar extends Component {
       var weekStart = weekStartDate.getFullYear() + "-" + (parseInt(weekStartDate.getMonth())+1) + "-" + parseInt(weekStartDate.getDate());
         return (
 
+            
+
             <Container fluid="md">
+                <div style={divStyle}></div>
                 <Row className="justify-content-md-end">
                     {/* {this.state.shifts} */}
                 </Row>
-                <Row>
+                <Row className="justify-content-md-center">
 
-                <button type="button" id ="PreviousWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() - 7)}, () => {this.updateSchedule()}); }}>Previous Week</button> 
+                <Button type="button" id ="PreviousWeek" variant = "info"  onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() - 7)}, () => {this.updateSchedule()}); }}>Previous Week</Button> 
+                <div> &nbsp; </div> <div> &nbsp; </div> <div> &nbsp; </div>
                 <h2> Week of {weekStart} </h2>
-                <button type="button" id ="NextWeek" block onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() + 7)}, () => {this.updateSchedule()}); }}>Next Week</button> 
+                <div> &nbsp; </div> <div> &nbsp; </div> <div> &nbsp; </div>
+                <Button type="button" id ="NextWeek" variant = "info"  onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() + 7)}, () => {this.updateSchedule()}); }}>Next Week</Button> 
 
                 </Row>
+                <div style={divStyle}></div>
                  
                 <Table bordered responsive="sm">
                     <thead>
