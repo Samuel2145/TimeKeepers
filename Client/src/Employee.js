@@ -108,7 +108,10 @@ class Employee2 extends Component {
     render() {
         return (
             <Container>
-                <div>Test Employee</div>
+                <div style={divStyle}></div>
+                <h2> Click, then drag to update your availability.</h2>
+                <h4>Don't forget to save your changes!</h4>
+                <div style={divStyle}></div>
 
                 <div>
                     <Table bordered responsive="sm">
@@ -179,6 +182,7 @@ class Employee2 extends Component {
                 <Button variant="primary" onClick={this.submitHandler}>
                     Save Changes
                 </Button>
+                <div style={divStyle}></div>
             </Container>
 
         );
