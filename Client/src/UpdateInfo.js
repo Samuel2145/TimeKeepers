@@ -63,6 +63,7 @@ const UpdateInfo = (props) => {
 
             <div style={divStyle}></div>
             <Container>
+                <h4>Update your information!</h4> 
                 <Form>
                     Change Password:
 
