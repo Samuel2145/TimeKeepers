@@ -474,7 +474,8 @@ export const getUserInfo = (req,res) => {
     //console.log(userData)
 
     const toSend = {
-        username : userData.username
+        username : userData.username,
+        isEmployer: userData.isEmployer
     }
 
     res.status(200).send(JSON.stringify(toSend));
@@ -485,8 +486,6 @@ export const getGroups = (req,res) => {
     const searchQ = "SELECT groupName FROM parameter";
 
     conn.query(searchQ, (err,result) => {
-
-        //console.log(result);
 
         const toSend =[];
 
