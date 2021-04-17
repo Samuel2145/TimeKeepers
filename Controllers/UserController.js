@@ -594,7 +594,7 @@ export const getCalendar = (req,res) => {
 
     if(userData.isEmployer === 1){
         params.push(userData.Group)
-        searchQ = "SELECT username, start, end FROM shift WHERE parameterID=(SELECT parameterID FROM parameter WHERE groupName=?) AND start BETWEEN ? AND ? ORDER BY username ASC";
+        searchQ = "SELECT username, start, end FROM grouping NATURAL JOIN shift WHERE grouping.groupName = ? AND start BETWEEN ? AND ? ORDER BY username ASC";
     }else{
         params.push(userData.username);
         searchQ = "SELECT username, start, end FROM shift WHERE username=? AND start BETWEEN ? AND ?"
