@@ -160,7 +160,9 @@ class Calendar extends Component {
                 <Row className="justify-content-md-center">
 
                 <Button type="button" id ="PreviousWeek" variant = "info"  onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() - 7)}, () => {this.updateSchedule()}); }}>Previous Week</Button> 
+                <div> &nbsp; </div> <div> &nbsp; </div> <div> &nbsp; </div>
                 <h2> Week of {weekStart} </h2>
+                <div> &nbsp; </div> <div> &nbsp; </div> <div> &nbsp; </div>
                 <Button type="button" id ="NextWeek" variant = "info"  onClick={()=> {this.setState({curr: new Date(this.state.curr.getFullYear(), this.state.curr.getMonth(), this.state.curr.getDate() + 7)}, () => {this.updateSchedule()}); }}>Next Week</Button> 
 
                 </Row>

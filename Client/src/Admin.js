@@ -165,10 +165,17 @@ function Admin() {
                 <div style={divStyle}></div>
 
 
-                <Row>
-                    <Button variant="success" block onClick={()=> {setShow(true)}}>
+                <Row className="justify-content-md-center">
+                    <Button variant="success" width={100} onClick={()=> {setShow(true)}}>
+                        Save Parameters
+                    </Button>
+
+                    <div> &nbsp; </div>
+
+                    <Button variant="success" width={100} onClick={()=> {setShow(true)}}>
                         Generate Schedule
                     </Button>
+                    
                 </Row>
 
 

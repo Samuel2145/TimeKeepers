@@ -130,9 +130,12 @@ const UpdateInfo = (props) => {
                         })}
                     </datalist>
 
-                    <span>{" "}</span>
-                
-
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
 
                     <Button type={"text"} onClick={groupSubmit}>
                         Change Group
