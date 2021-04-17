@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, Component} from 'react';
 import './App.css';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -23,6 +23,7 @@ const timeToInt = (time) => {
 }
 
 function Admin() {
+    
     const [show, setShow] = useState(false);
     const [shiftSize, setShiftSize] = useState(0);
     const [sTime, setSTime] = useState(0);
