@@ -144,7 +144,7 @@ const UpdateInfo = (props) => {
                     </Button>
 
 
-                    <div>Create new Organization:</div> 
+                    <div>Create New Organization:</div> 
                     <Form.Row className="align-items-center">
                         <Col xs="auto">
                             <Form.Label htmlFor="inlineFormInput" srOnly>
