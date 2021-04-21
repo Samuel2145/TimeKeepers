@@ -310,6 +310,11 @@ export const getGroupParameterData = (req,res) => {
 
         //console.log(result);
 
+        if(result.length === 0){
+            res.status(400).send([]);
+            return;
+        }
+
         const scheduleS = result[0].scheduleStart * 50;
         const scheduleE = result[0].scheduleEnd * 50;
 
