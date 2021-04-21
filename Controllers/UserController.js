@@ -302,7 +302,7 @@ export const getGroupParameterData = (req,res) => {
     //console.log(userData);
     //console.log(userData.Group)
 
-    const groupQuery = "Select * FROM parameter WHERE groupName=?";
+    const groupQuery = "SELECT * FROM parameter WHERE groupName=?";
 
     //console.log(groupQuery)
 
@@ -515,7 +515,16 @@ export const setNewGroup = (req, res) => {
         if(err){
             res.status(400).send("Something went wrong")
         }else{
-            res.status(200).send("New group set!")
+
+            const toSend  = {
+                username: userData.username,
+                isEmployer: userData.isEmployer,
+                Group: req.body.group
+            };
+
+            let token = jwt.sign(toSend, 'shhhhh');
+            res.cookie('UserInfo', token, {expire: 604800 + Date.now(), httpOnly: true}).status(200);
+            res.send("New group set!")
         }
 
     })
